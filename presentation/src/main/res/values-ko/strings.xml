@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">N-Back</string>
+    <string name="confirm">확인</string>
+    <string name="n_back">N-Back</string>
+    <string name="press_back_again_to_exit">\'뒤로\' 버튼을 다시 누르시면 종료됩니다</string>
+    <string name="record">기록</string>
+    <string name="rounds">라운드</string>
+    <string name="share_the_app">앱 공유하기</string>
+    <string name="speed">속도</string>
+    <string name="start">시작</string>
+    <string name="thank_you_for_your_valuable_review">소중한 리뷰 감사합니다</string>
+    <string name="version">버전</string>
+    <string name="write_review">리뷰 쓰기</string>
+</resources>

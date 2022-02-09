@@ -1,0 +1,23 @@
+package com.wing.tree.n.back.training.di
+
+import com.wing.tree.n.back.training.data.repository.OptionRepositoryImpl
+import com.wing.tree.n.back.training.data.repository.RecordRepositoryImpl
+import com.wing.tree.n.back.training.domain.repository.OptionRepository
+import com.wing.tree.n.back.training.domain.repository.RecordRepository
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
+
+@InstallIn(SingletonComponent::class)
+@Module
+internal abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindsDiaryRepository(repository: OptionRepositoryImpl): OptionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsProfileRepository(repository: RecordRepositoryImpl): RecordRepository
+}

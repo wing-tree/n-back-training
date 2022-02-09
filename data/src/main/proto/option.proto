@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "com.wing.tree.n.back.training.data.datastore.option";
+option java_multiple_files = true;
+
+message Option {
+  int32 n = 1;
+  int32 rounds = 2;
+  int32 speed = 3;
+}
