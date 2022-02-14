@@ -32,6 +32,8 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
+import com.wing.tree.n.back.training.presentation.constant.*
+import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.Extra
 import com.wing.tree.n.back.training.presentation.constant.N
 import com.wing.tree.n.back.training.presentation.constant.Rounds
@@ -116,6 +118,20 @@ class MainActivity : ComponentActivity() {
                     val scrollState = rememberScrollState()
 
                     Column(modifier = Modifier.fillMaxSize()) {
+                        Row(modifier = Modifier.fillMaxWidth()) {
+                           Button(onClick = {
+
+                           }) {
+
+                           }
+
+                            Button(onClick = {
+
+                            }) {
+
+                            }
+                        }
+
                         Column(modifier = Modifier
                             .fillMaxWidth()
                             .weight(1.0F)
@@ -165,8 +181,8 @@ class MainActivity : ComponentActivity() {
                             },
                             modifier = Modifier
                                 .padding(16.dp)
-                                .height(40.dp)
-                                .fillMaxWidth(),
+                                .fillMaxWidth()
+                                .wrapContentHeight(),
                             shape = CircleShape
                         ) {
                             Text(
@@ -223,7 +239,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
                 text = item.title,
                 style = TextStyle(
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.Companion.Medium,
+                    fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
                 )
             )
@@ -233,7 +249,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
                     text = item.caption,
                     style = TextStyle(
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.Companion.SemiBold,
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -266,7 +282,7 @@ private fun Option(
                     text = title,
                     style = TextStyle(
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Companion.Medium,
+                        fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -277,7 +293,7 @@ private fun Option(
                     text = "${valueFinished.int}",
                     style = TextStyle(
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Companion.Medium,
+                        fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -299,7 +315,9 @@ private fun Option(
 
 @Composable
 fun AdView(modifier: Modifier = Modifier) {
-    Box(modifier = Modifier.height(50.dp).fillMaxWidth()) {
+    Box(modifier = Modifier
+        .height(50.dp)
+        .fillMaxWidth()) {
         if (LocalInspectionMode.current.not()) {
             AndroidView(
                 modifier = modifier.fillMaxWidth(),

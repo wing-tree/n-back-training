@@ -27,9 +27,9 @@ class TrainingViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     private val option = savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default
 
-    private val n = option.n
-    private val rounds = option.rounds
-    private val speed = option.speed
+    val n = option.n
+    val rounds = option.rounds
+    val speed = option.speed
 
     private val inProgress = AtomicBoolean(false)
 
@@ -121,28 +121,33 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
+    fun setIsVisible(value: Boolean) {
+        _isVisible.value = value
+    }
+
     fun progress() {
-        if (inProgress.compareAndSet(false, true)) {
-            viewModelScope.launch {
-                repeat(rounds) {
-                    _round.value = it
-                    _isVisible.value = true
-
-                    _enabled.value = n <= it
-
-                    delay(ONE_SECOND.times(speed))
-
-                    _isVisible.value = false
-
-                    delay(ONE_SECOND.quarter)
-                }
-
-                _state.value = State.Finish
-            }
-        }
+//        if (inProgress.compareAndSet(false, true)) {
+//            viewModelScope.launch {
+//                repeat(rounds) {
+//                    _round.value = it
+//                    _isVisible.value = true
+//
+//                    _enabled.value = n <= it
+//
+//                    delay(ONE_SECOND.times(speed))
+//
+//                    _isVisible.value = false
+//
+//                    delay(ONE_SECOND.quarter)
+//                }
+//
+//                _state.value = State.Finish
+//            }
+//        }
     }
 
     fun finish() {
+        _state.value = State.Finish
         val viewModel = this
 
         viewModelScope.launch(Dispatchers.IO) {

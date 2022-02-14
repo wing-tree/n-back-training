@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,11 +47,10 @@ import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
-import com.wing.tree.n.back.training.presentation.util.isNull
-import com.wing.tree.n.back.training.presentation.util.notNull
-import com.wing.tree.n.back.training.presentation.util.twice
+import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class TrainingActivity : ComponentActivity() {
@@ -98,7 +98,7 @@ class TrainingActivity : ComponentActivity() {
 
                     NavHost(navController = navController, startDestination = Route.READY) {
                         composable(Route.READY) { Ready(countDown) }
-                        composable(Route.TRAINING) { Progress(viewModel, round, isVisible, enabled) }
+                        composable(Route.TRAINING) { Progress(viewModel, isVisible ?: true) }
                         composable(Route.RESULT) {
                             Finish(viewModel) {
                                 interstitialAd?.show(this@TrainingActivity) ?: finish()
@@ -117,7 +117,7 @@ class TrainingActivity : ComponentActivity() {
                             popUpTo(Route.READY) { inclusive = true }
                         }
                         is State.Finish -> navController.navigate(Route.RESULT) {
-                            viewModel.finish()
+                            //viewModel.finish()
 
                             launchSingleTop = true
                             popUpTo(Route.TRAINING) { inclusive = true }
@@ -215,44 +215,77 @@ fun Ready(countDown: Int?) {
 }
 
 @Composable
-fun Progress(viewModel: TrainingViewModel, round: Int?, isVisible: Boolean?, enabled: Boolean?) {
-    Column {
+fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
+    var round by rememberSaveable { mutableStateOf(0) }
+
+    val isVisible by rememberUpdatedState(isVisibleNewVal)
+
+    LaunchedEffect(round) {
+        delay(ONE_SECOND.quarter)
+
+        viewModel.setIsVisible(true)
+
+        delay(ONE_SECOND.times(viewModel.speed))
+
+        round += 1
+        viewModel.setIsVisible(false)
+    }
+
+    if (round >= viewModel.rounds) {
+        viewModel.finish()
+        return
+    }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = "${round.inc()}/${viewModel.rounds}")
+
         Box(modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
             .background(Color.Gray, RoundedCornerShape(12.dp))
         ) {
-            if (isVisible == true) {
-                round?.let {
-                    Text(
-                        text = "${viewModel.problemList[it].value}",
-                        modifier = Modifier.align(Alignment.Center),
-                        fontSize = 57.sp,
-                        textAlign = TextAlign.Center
-                    )
-                }
+            val text = if (isVisible == true) {
+                "${viewModel.problemList[round].value}"
+            } else {
+                BLANK
             }
+
+            Text(
+                text = text,
+                modifier = Modifier.align(Alignment.Center),
+                fontSize = 57.sp,
+                textAlign = TextAlign.Center
+            )
         }
 
-        Row(Modifier
-            .align(Alignment.CenterHorizontally)
-            .padding(16.dp)
+        val enabled = if (round == viewModel.n && isVisible) {
+            true
+        } else {
+            round > viewModel.n
+        }
+
+        Row(
+            Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(16.dp)
         ) {
             Button(
                 onClick = {
-                    round?.let {
-                        if (viewModel.problemList[it].answer.isNull) {
-                            viewModel.problemList[it].answer = true
-                        }
+                    val problem = viewModel.problemList[round]
+
+                    if (problem.answer.isNull) {
+                        problem.answer = true
+                        round += 1
+                        viewModel.setIsVisible(false)
                     }
                 },
                 modifier = Modifier.weight(1.0F),
-                enabled = enabled ?: false,
+                enabled = enabled,
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_true_32),
+                    painter = painterResource(id = R.drawable.ic_o_24),
                     contentDescription = BLANK,
                     colorFilter = ColorFilter.tint(Color.White)
                 )
@@ -262,19 +295,21 @@ fun Progress(viewModel: TrainingViewModel, round: Int?, isVisible: Boolean?, ena
 
             Button(
                 onClick = {
-                    round?.let {
-                        if (viewModel.problemList[it].answer.isNull) {
-                            viewModel.problemList[it].answer = false
-                        }
+                    val problem = viewModel.problemList[round]
+
+                    if (problem.answer.isNull) {
+                        problem.answer = false
+                        round += 1
+                        viewModel.setIsVisible(false)
                     }
                 },
                 modifier = Modifier.weight(1.0F),
-                enabled = enabled ?: false,
+                enabled = enabled,
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_false_32),
+                    painter = painterResource(id = R.drawable.ic_x_24),
                     contentDescription = BLANK,
                     colorFilter = ColorFilter.tint(Color.White)
                 )
