@@ -7,14 +7,14 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class Problem(
     override val solution: Boolean?,
-    override val value: Int,
+    override val number: Int,
     override var answer: Boolean?
 ) : DomainModel(), Parcelable {
     companion object {
         fun from(model: DomainModel) = with(model) {
             Problem(
                 solution = solution,
-                value = value,
+                number = number,
                 answer = answer
             )
         }

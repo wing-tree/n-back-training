@@ -201,7 +201,7 @@ fun Record(record: Record) {
         LazyVerticalGrid(cells = GridCells.Adaptive(minSize = 72.dp)) {
             items(record.problemList) { item ->
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(text = "${item.value}")
+                    Text(text = "${item.number}")
                     Text(text = "${item.solution}")
                     Text(text = "${item.answer}")
                 }

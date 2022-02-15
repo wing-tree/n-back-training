@@ -6,19 +6,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -93,44 +91,32 @@ class MainActivity : ComponentActivity() {
                         Drawer(menuList)
                     },
                     topBar = {
-                        TopAppBar(
-                            title = { Text(getString(R.string.app_name)) },
-                            navigationIcon = {
-                                Icon(
-                                    Icons.Rounded.Menu,
-                                    null,
-                                    modifier = Modifier.clickable(onClick = {
-                                        coroutineScope.launch {
-                                            with(scaffoldState.drawerState) {
-                                                if (isClosed) {
-                                                    open()
-                                                } else {
-                                                    close()
-                                                }
-                                            }
-                                        }
-                                    })
-                                )
-                            }
-                        )
+//                        TopAppBar(
+//                            title = { Text(getString(R.string.app_name)) },
+//                            navigationIcon = {
+//                                Icon(
+//                                    Icons.Rounded.Menu,
+//                                    null,
+//                                    modifier = Modifier.clickable(onClick = {
+//                                        coroutineScope.launch {
+//                                            with(scaffoldState.drawerState) {
+//                                                if (isClosed) {
+//                                                    open()
+//                                                } else {
+//                                                    close()
+//                                                }
+//                                            }
+//                                        }
+//                                    })
+//                                )
+//                            }
+//                        )
                     }
                 ) {
                     val scrollState = rememberScrollState()
 
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                           Button(onClick = {
-
-                           }) {
-
-                           }
-
-                            Button(onClick = {
-
-                            }) {
-
-                            }
-                        }
+                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Header(scaffoldState = scaffoldState)
 
                         Column(modifier = Modifier
                             .fillMaxWidth()
@@ -198,6 +184,73 @@ class MainActivity : ComponentActivity() {
                         AdView()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Header(modifier: Modifier = Modifier, scaffoldState: ScaffoldState) {
+    val coroutineScope = rememberCoroutineScope()
+    val localContext = LocalContext.current
+
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(modifier = Modifier.fillMaxWidth().height(48.dp)) {
+            Icon(
+                imageVector = Icons.Rounded.Menu,
+                contentDescription = BLANK,
+                modifier = Modifier.clickable(
+                    onClick = {
+                        coroutineScope.launch {
+                            with(scaffoldState.drawerState) {
+                                if (isClosed) {
+                                    open()
+                                } else {
+                                    close()
+                                }
+                            }
+                        }
+                    }
+                ).padding(12.dp)
+            )
+        }
+
+        Text(
+            text = localContext.getString(R.string.app_name),
+            style = TextStyle(
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+        ) {
+            Button(
+                onClick = {
+
+                },
+                modifier = Modifier.weight(1.0F),
+                shape = CircleShape
+            ) {
+                Text(text = localContext.getString(R.string.how_to_play))
+            }
+            
+            Spacer(modifier = Modifier.width(24.dp))
+
+            Button(
+                onClick = {
+
+                },
+                modifier = Modifier.weight(1.0F),
+                shape = CircleShape
+            ) {
+                Text(text = localContext.getString(R.string.ranking))
             }
         }
     }

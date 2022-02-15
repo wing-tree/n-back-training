@@ -85,7 +85,7 @@ class TrainingViewModel @Inject constructor(
             object : Problem() {
                 override val solution: Boolean?
                     get() = solution
-                override val value: Int
+                override val number: Int
                     get() = value
                 override var answer: Boolean? = null
             }

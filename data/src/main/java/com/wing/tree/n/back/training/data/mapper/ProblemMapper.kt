@@ -6,7 +6,7 @@ import com.wing.tree.n.back.training.domain.model.Problem
 internal object ProblemMapper {
     fun Problem.toEntity() =  Entity(
         solution = solution,
-        value = value,
+        number = number,
         answer = answer
     )
 }

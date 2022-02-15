@@ -245,7 +245,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
             .background(Color.Gray, RoundedCornerShape(12.dp))
         ) {
             val text = if (isVisible == true) {
-                "${viewModel.problemList[round].value}"
+                "${viewModel.problemList[round].number}"
             } else {
                 BLANK
             }
@@ -258,16 +258,12 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
             )
         }
 
-        val enabled = if (round == viewModel.n && isVisible) {
-            true
-        } else {
-            round > viewModel.n
-        }
+        val enabled = round >= viewModel.n && isVisible
 
         Row(
             Modifier
                 .align(Alignment.CenterHorizontally)
-                .padding(16.dp)
+                .padding(24.dp)
         ) {
             Button(
                 onClick = {
@@ -279,7 +275,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
                         viewModel.setIsVisible(false)
                     }
                 },
-                modifier = Modifier.weight(1.0F),
+                modifier = Modifier.height(48.dp).weight(1.0F),
                 enabled = enabled,
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
@@ -291,7 +287,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
                 )
             }
 
-            Spacer(modifier = Modifier.width(8.dp))
+            Spacer(modifier = Modifier.width(24.dp))
 
             Button(
                 onClick = {
@@ -303,7 +299,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
                         viewModel.setIsVisible(false)
                     }
                 },
-                modifier = Modifier.weight(1.0F),
+                modifier = Modifier.height(48.dp).weight(1.0F),
                 enabled = enabled,
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
@@ -335,16 +331,40 @@ fun Finish(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
 
         LazyVerticalGrid(
             modifier = Modifier.weight(1.0F),
-            cells = GridCells.Adaptive(minSize = 64.dp)
+            cells = GridCells.Adaptive(minSize = 72.dp)
         ) {
             items(viewModel.problemList) { item ->
                 Column(
                     modifier = Modifier.padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(text = "${item.value}")
-                    Text(text = "${item.solution}")
-                    Text(text = "${item.answer}")
+                    val color = when {
+                        item.isCorrect -> Green500
+                        item.answer.isNull && item.solution.isNull -> Color.Gray
+                        else -> Red500
+                    }
+
+                    Text(
+                        text = "${item.number}",
+                        fontSize = 24.sp,
+                        color = color,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    when(item.answer) {
+                        true -> R.drawable.ic_o_24
+                        false -> R.drawable.ic_x_24
+                        else -> R.drawable.ic_hypen_24
+                    }.also {
+                        Image(
+                            painter = painterResource(id = it),
+                            contentDescription = BLANK,
+                            colorFilter = ColorFilter.tint(color)
+                        )
+                    }
                 }
             }
         }
