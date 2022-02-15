@@ -35,12 +35,13 @@ import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.Extra
-import com.wing.tree.n.back.training.presentation.constant.N
+import com.wing.tree.n.back.training.presentation.constant.Back
 import com.wing.tree.n.back.training.presentation.constant.Rounds
 import com.wing.tree.n.back.training.presentation.constant.Speed
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.util.*
+import com.wing.tree.n.back.training.presentation.view.RankingActivity
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
@@ -91,40 +92,28 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    drawerContent = {
-                        Drawer(menuList)
-                    },
-                    topBar = {
-//                        TopAppBar(
-//                            title = { Text(getString(R.string.app_name)) },
-//                            navigationIcon = {
-//                                Icon(
-//                                    Icons.Rounded.Menu,
-//                                    null,
-//                                    modifier = Modifier.clickable(onClick = {
-//                                        coroutineScope.launch {
-//                                            with(scaffoldState.drawerState) {
-//                                                if (isClosed) {
-//                                                    open()
-//                                                } else {
-//                                                    close()
-//                                                }
-//                                            }
-//                                        }
-//                                    })
-//                                )
-//                            }
-//                        )
-                    }
+                    drawerContent = { Drawer(menuList) }
                 ) {
                     val scrollState = rememberScrollState()
 
                     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                         Header(scaffoldState = scaffoldState)
 
+                        HorizontalTextButtonGroup(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            getString(R.string.how_to_play) to {
+
+                            },
+                            getString(R.string.ranking) to {
+                                startActivity(Intent(applicationContext, RankingActivity::class.java))
+                            }
+                        )
+
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1.0F)
+                            //.weight(1.0F)
                             .verticalScroll(scrollState)
                             .padding(16.dp)
                         ) {
@@ -136,8 +125,8 @@ class MainActivity : ComponentActivity() {
                                 modifier = modifier,
                                 title = getString(R.string.n_back),
                                 initialValue = option.n.float,
-                                valueRange = N.ValueRange,
-                                steps = N.STEPS
+                                valueRange = Back.ValueRange,
+                                steps = Back.STEPS
                             ) { option.n = it.int }
 
                             Spacer(modifier = Modifier.height(8.dp))
@@ -163,25 +152,35 @@ class MainActivity : ComponentActivity() {
                             ) { option.speed = it.int }
                         }
 
-                        Button(
-                            onClick = {
-                                with(Intent(applicationContext, TrainingActivity::class.java)) {
-                                    putExtra(Extra.OPTION, option)
+                        StartButtonGroup(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)) {
+                            with(Intent(applicationContext, TrainingActivity::class.java)) {
+                                putExtra(Extra.OPTION, option)
 
-                                    startActivity(this)
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .height(48.dp),
-                            shape = CircleShape
-                        ) {
-                            Text(
-                                text = "${getString(R.string.start).uppercase()}!",
-                                style = typography.button
-                            )
+                                startActivity(this)
+                            }
                         }
+
+//                        Button(
+//                            onClick = {
+//                                with(Intent(applicationContext, TrainingActivity::class.java)) {
+//                                    putExtra(Extra.OPTION, option)
+//
+//                                    startActivity(this)
+//                                }
+//                            },
+//                            modifier = Modifier
+//                                .padding(16.dp)
+//                                .fillMaxWidth()
+//                                .height(48.dp),
+//                            shape = CircleShape
+//                        ) {
+//                            Text(
+//                                text = "${getString(R.string.start).uppercase()}!",
+//                                style = typography.button
+//                            )
+//                        }
 
                         AdView()
                     }
@@ -192,7 +191,65 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Header(modifier: Modifier = Modifier, scaffoldState: ScaffoldState) {
+private fun Drawer(menuList: List<Menu>) {
+    menuList.forEach {
+        when(it) {
+            is Menu.Divider -> Divider()
+            is Menu.Item -> Menu(item = it)
+        }
+    }
+}
+
+@Composable
+private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
+    val height = if (item.caption.isBlank()) {
+        56.dp
+    } else {
+        72.dp
+    }
+
+    Row(
+        modifier = modifier
+            .height(height)
+            .fillMaxWidth()
+            .clickable(item.onClick.notNull) { item.onClick?.invoke() },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Image(painter = painterResource(item.icon), contentDescription = null)
+
+        Spacer(modifier = Modifier.width(32.dp))
+
+        Column {
+            Text(
+                text = item.title,
+                style = TextStyle(
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
+            )
+
+            if (item.caption.isNotBlank()) {
+                Text(
+                    text = item.caption,
+                    style = TextStyle(
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun Header(
+    modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState
+) {
     val coroutineScope = rememberCoroutineScope()
     val localContext = LocalContext.current
 
@@ -231,92 +288,35 @@ private fun Header(modifier: Modifier = Modifier, scaffoldState: ScaffoldState) 
                 textAlign = TextAlign.Center
             )
         )
+    }
+}
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
+@Composable
+private fun HorizontalTextButtonGroup(modifier: Modifier = Modifier, vararg pairs: Pair<String, () -> Unit>) {
+    val count = pairs.count()
+    
+    Row(modifier = modifier) {
+        pairs.forEachIndexed { index, pair ->
             Button(
-                onClick = {
-
-                },
-                modifier = Modifier.weight(1.0F),
+                onClick = { pair.second.invoke() },
+                modifier = Modifier
+                    .height(48.dp)
+                    .weight(1.0F),
                 shape = CircleShape
             ) {
-                Text(text = localContext.getString(R.string.how_to_play))
+                Text(text = pair.first)
             }
             
-            Spacer(modifier = Modifier.width(24.dp))
-
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier.weight(1.0F),
-                shape = CircleShape
-            ) {
-                Text(text = localContext.getString(R.string.ranking))
+            if (index.not(count.dec())) {
+                Spacer(modifier = Modifier.width(24.dp))
             }
         }
     }
 }
 
 @Composable
-private fun Drawer(menuList: List<Menu>) {
-    menuList.forEach {
-        when(it) {
-            is Menu.Divider -> Divider()
-            is Menu.Item -> Menu(item = it)
-        }
-    }
-}
+private fun OptionGroup() {
 
-@Composable
-private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
-    val height = if (item.caption.isBlank()) {
-        56.dp
-    } else {
-        72.dp
-    }
-
-    Row(
-        modifier = modifier
-            .height(height)
-            .fillMaxWidth()
-            .clickable(item.onClick.notNull) { item.onClick?.invoke() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Spacer(modifier = Modifier.width(16.dp))
-        
-        Image(painter = painterResource(item.icon), contentDescription = null)
-        
-        Spacer(modifier = Modifier.width(32.dp))
-
-        Column {
-            Text(
-                text = item.title,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
-            )
-            
-            if (item.caption.isNotBlank()) {
-                Text(
-                    text = item.caption,
-                    style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center
-                    )
-                )
-            }
-        }
-    }
 }
 
 @Composable
@@ -378,6 +378,27 @@ private fun Option(
 private fun GameModePicker(modifier: Modifier = Modifier) {
     Row(modifier = modifier) {
 
+    }
+}
+
+@Composable
+private fun StartButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
+    val scrollState = rememberScrollState()
+
+    Column(modifier = modifier.verticalScroll(scrollState)) {
+        Back.IntRange.forEach {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = { onClick(it) },
+                modifier = Modifier
+                    .height(48.dp)
+                    .fillMaxWidth(),
+                shape = CircleShape
+            ) {
+                Text(text = "$it-Back")
+            }
+        }
     }
 }
 
