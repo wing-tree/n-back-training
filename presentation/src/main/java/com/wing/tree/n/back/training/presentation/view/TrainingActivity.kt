@@ -244,7 +244,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
             .padding(16.dp)
             .background(Color.Gray, RoundedCornerShape(12.dp))
         ) {
-            val text = if (isVisible == true) {
+            val text = if (isVisible) {
                 "${viewModel.problemList[round].number}"
             } else {
                 BLANK

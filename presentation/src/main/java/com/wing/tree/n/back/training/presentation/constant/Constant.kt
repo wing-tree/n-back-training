@@ -9,14 +9,14 @@ internal object N {
     const val DEFAULT = 2
     const val STEPS = 5
 
-    val ValueRange = 2F..8F
+    val ValueRange = 2.0F..9.0F
 }
 
 internal object Rounds {
     const val DEFAULT = 20
     const val STEPS = 3
 
-    val ValueRange = 10F..50F
+    val ValueRange = 10.0F..50.0F
 }
 
 internal object Speed {

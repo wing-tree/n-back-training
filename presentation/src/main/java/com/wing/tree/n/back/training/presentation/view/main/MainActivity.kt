@@ -1,4 +1,4 @@
-package com.wing.tree.n.back.training.presentation.view
+package com.wing.tree.n.back.training.presentation.view.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +7,15 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +33,6 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
-import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.Extra
 import com.wing.tree.n.back.training.presentation.constant.N
@@ -39,6 +41,8 @@ import com.wing.tree.n.back.training.presentation.constant.Speed
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.util.*
+import com.wing.tree.n.back.training.presentation.view.RecordActivity
+import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -148,6 +152,8 @@ class MainActivity : ComponentActivity() {
 
                             Spacer(modifier = Modifier.height(8.dp))
 
+                            GameModePicker(modifier.fillMaxWidth())
+
                             Option(
                                 modifier = modifier,
                                 title = getString(R.string.speed),
@@ -168,16 +174,12 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier
                                 .padding(16.dp)
                                 .fillMaxWidth()
-                                .wrapContentHeight(),
+                                .height(48.dp),
                             shape = CircleShape
                         ) {
                             Text(
                                 text = "${getString(R.string.start).uppercase()}!",
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    textAlign = TextAlign.Center
-                                )
+                                style = typography.button
                             )
                         }
 
@@ -195,23 +197,29 @@ private fun Header(modifier: Modifier = Modifier, scaffoldState: ScaffoldState) 
     val localContext = LocalContext.current
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(modifier = Modifier.fillMaxWidth().height(48.dp)) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)) {
             Icon(
                 imageVector = Icons.Rounded.Menu,
                 contentDescription = BLANK,
-                modifier = Modifier.clickable(
-                    onClick = {
-                        coroutineScope.launch {
-                            with(scaffoldState.drawerState) {
-                                if (isClosed) {
-                                    open()
-                                } else {
-                                    close()
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false),
+                        onClick = {
+                            coroutineScope.launch {
+                                with(scaffoldState.drawerState) {
+                                    if (isClosed) {
+                                        open()
+                                    } else {
+                                        close()
+                                    }
                                 }
                             }
                         }
-                    }
-                ).padding(12.dp)
+                    )
+                    .padding(12.dp)
             )
         }
 
@@ -367,7 +375,14 @@ private fun Option(
 }
 
 @Composable
-fun AdView(modifier: Modifier = Modifier) {
+private fun GameModePicker(modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
+
+    }
+}
+
+@Composable
+private fun AdView(modifier: Modifier = Modifier) {
     Box(modifier = Modifier
         .height(50.dp)
         .fillMaxWidth()) {
