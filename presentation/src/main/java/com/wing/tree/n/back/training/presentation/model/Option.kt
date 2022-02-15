@@ -1,7 +1,7 @@
 package com.wing.tree.n.back.training.presentation.model
 
 import android.os.Parcelable
-import com.wing.tree.n.back.training.presentation.constant.N
+import com.wing.tree.n.back.training.presentation.constant.Back
 import com.wing.tree.n.back.training.presentation.constant.Rounds
 import com.wing.tree.n.back.training.presentation.constant.Speed
 import kotlinx.parcelize.Parcelize
@@ -21,7 +21,7 @@ data class Option(
         )
 
         val Default = Option(
-            n = N.DEFAULT,
+            n = Back.DEFAULT,
             rounds = Rounds.DEFAULT,
             speed = Speed.DEFAULT,
         )

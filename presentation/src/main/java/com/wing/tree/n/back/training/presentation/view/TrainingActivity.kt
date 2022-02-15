@@ -10,6 +10,8 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -17,6 +19,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -96,33 +102,37 @@ class TrainingActivity : ComponentActivity() {
                     val isVisible by viewModel.isVisible.observeAsState()
                     val enabled by viewModel.enabled.observeAsState()
 
-                    NavHost(navController = navController, startDestination = Route.READY) {
-                        composable(Route.READY) { Ready(countDown) }
-                        composable(Route.TRAINING) { Progress(viewModel, isVisible ?: true) }
-                        composable(Route.RESULT) {
-                            Finish(viewModel) {
-                                interstitialAd?.show(this@TrainingActivity) ?: finish()
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Header()
+
+                        NavHost(navController = navController, startDestination = Route.READY) {
+                            composable(Route.READY) { Ready(countDown) }
+                            composable(Route.TRAINING) { InTraining(viewModel, isVisible ?: true) }
+                            composable(Route.RESULT) {
+                                Result(viewModel) {
+                                    interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                }
                             }
                         }
-                    }
 
-                    when(state) {
-                        is State.Ready -> {
-                            viewModel.ready()
-                        }
-                        is State.Progress -> navController.navigate(Route.TRAINING) {
-                            viewModel.progress()
+                        when(state) {
+                            is State.Ready -> {
+                                viewModel.ready()
+                            }
+                            is State.Progress -> navController.navigate(Route.TRAINING) {
+                                viewModel.progress()
 
-                            launchSingleTop = true
-                            popUpTo(Route.READY) { inclusive = true }
-                        }
-                        is State.Finish -> navController.navigate(Route.RESULT) {
-                            //viewModel.finish()
+                                launchSingleTop = true
+                                popUpTo(Route.READY) { inclusive = true }
+                            }
+                            is State.Finish -> navController.navigate(Route.RESULT) {
+                                //viewModel.finish()
 
-                            launchSingleTop = true
-                            popUpTo(Route.TRAINING) { inclusive = true }
+                                launchSingleTop = true
+                                popUpTo(Route.TRAINING) { inclusive = true }
+                            }
+                            else -> throw IllegalStateException("state :$state")
                         }
-                        else -> throw IllegalStateException("state :$state")
                     }
                 }
             }
@@ -193,6 +203,42 @@ class TrainingActivity : ComponentActivity() {
 }
 
 @Composable
+private fun Header(modifier: Modifier = Modifier) {
+    val localContext = LocalContext.current
+
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)) {
+            Icon(
+                imageVector = Icons.Rounded.Menu,
+                contentDescription = BLANK,
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false),
+                        onClick = {
+
+                        }
+                    )
+                    .padding(12.dp)
+            )
+        }
+
+        Text(
+            text = localContext.getString(R.string.app_name),
+            style = TextStyle(
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+    }
+}
+
+@Composable
 fun Ready(countDown: Int?) {
     val context = LocalContext.current
 
@@ -215,7 +261,7 @@ fun Ready(countDown: Int?) {
 }
 
 @Composable
-fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
+fun InTraining(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
     var round by rememberSaveable { mutableStateOf(0) }
 
     val isVisible by rememberUpdatedState(isVisibleNewVal)
@@ -244,7 +290,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
             .padding(16.dp)
             .background(Color.Gray, RoundedCornerShape(12.dp))
         ) {
-            val text = if (isVisible == true) {
+            val text = if (isVisible) {
                 "${viewModel.problemList[round].number}"
             } else {
                 BLANK
@@ -275,7 +321,9 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
                         viewModel.setIsVisible(false)
                     }
                 },
-                modifier = Modifier.height(48.dp).weight(1.0F),
+                modifier = Modifier
+                    .height(48.dp)
+                    .weight(1.0F),
                 enabled = enabled,
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
@@ -299,7 +347,9 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
                         viewModel.setIsVisible(false)
                     }
                 },
-                modifier = Modifier.height(48.dp).weight(1.0F),
+                modifier = Modifier
+                    .height(48.dp)
+                    .weight(1.0F),
                 enabled = enabled,
                 shape = CircleShape,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
@@ -316,7 +366,7 @@ fun Progress(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
 
 @ExperimentalFoundationApi
 @Composable
-fun Finish(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
+fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
     val correctAnswerCount = viewModel.problemList.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problemList.filter { it.solution.notNull }.count()

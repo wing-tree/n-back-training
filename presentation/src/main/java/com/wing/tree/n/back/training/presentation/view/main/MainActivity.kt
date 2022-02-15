@@ -1,4 +1,4 @@
-package com.wing.tree.n.back.training.presentation.view
+package com.wing.tree.n.back.training.presentation.view.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +7,15 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,15 +33,17 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
-import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.Extra
-import com.wing.tree.n.back.training.presentation.constant.N
+import com.wing.tree.n.back.training.presentation.constant.Back
 import com.wing.tree.n.back.training.presentation.constant.Rounds
 import com.wing.tree.n.back.training.presentation.constant.Speed
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.util.*
+import com.wing.tree.n.back.training.presentation.view.RankingActivity
+import com.wing.tree.n.back.training.presentation.view.RecordActivity
+import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -87,40 +92,28 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    drawerContent = {
-                        Drawer(menuList)
-                    },
-                    topBar = {
-//                        TopAppBar(
-//                            title = { Text(getString(R.string.app_name)) },
-//                            navigationIcon = {
-//                                Icon(
-//                                    Icons.Rounded.Menu,
-//                                    null,
-//                                    modifier = Modifier.clickable(onClick = {
-//                                        coroutineScope.launch {
-//                                            with(scaffoldState.drawerState) {
-//                                                if (isClosed) {
-//                                                    open()
-//                                                } else {
-//                                                    close()
-//                                                }
-//                                            }
-//                                        }
-//                                    })
-//                                )
-//                            }
-//                        )
-                    }
+                    drawerContent = { Drawer(menuList) }
                 ) {
                     val scrollState = rememberScrollState()
 
                     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                         Header(scaffoldState = scaffoldState)
 
+                        HorizontalTextButtonGroup(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp),
+                            getString(R.string.how_to_play) to {
+
+                            },
+                            getString(R.string.ranking) to {
+                                startActivity(Intent(applicationContext, RankingActivity::class.java))
+                            }
+                        )
+
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .weight(1.0F)
+                            //.weight(1.0F)
                             .verticalScroll(scrollState)
                             .padding(16.dp)
                         ) {
@@ -132,8 +125,8 @@ class MainActivity : ComponentActivity() {
                                 modifier = modifier,
                                 title = getString(R.string.n_back),
                                 initialValue = option.n.float,
-                                valueRange = N.ValueRange,
-                                steps = N.STEPS
+                                valueRange = Back.ValueRange,
+                                steps = Back.STEPS
                             ) { option.n = it.int }
 
                             Spacer(modifier = Modifier.height(8.dp))
@@ -148,6 +141,8 @@ class MainActivity : ComponentActivity() {
 
                             Spacer(modifier = Modifier.height(8.dp))
 
+                            GameModePicker(modifier.fillMaxWidth())
+
                             Option(
                                 modifier = modifier,
                                 title = getString(R.string.speed),
@@ -157,100 +152,39 @@ class MainActivity : ComponentActivity() {
                             ) { option.speed = it.int }
                         }
 
-                        Button(
-                            onClick = {
-                                with(Intent(applicationContext, TrainingActivity::class.java)) {
-                                    putExtra(Extra.OPTION, option)
+                        StartButtonGroup(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)) {
+                            with(Intent(applicationContext, TrainingActivity::class.java)) {
+                                putExtra(Extra.OPTION, option)
 
-                                    startActivity(this)
-                                }
-                            },
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth()
-                                .wrapContentHeight(),
-                            shape = CircleShape
-                        ) {
-                            Text(
-                                text = "${getString(R.string.start).uppercase()}!",
-                                style = TextStyle(
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    textAlign = TextAlign.Center
-                                )
-                            )
+                                startActivity(this)
+                            }
                         }
+
+//                        Button(
+//                            onClick = {
+//                                with(Intent(applicationContext, TrainingActivity::class.java)) {
+//                                    putExtra(Extra.OPTION, option)
+//
+//                                    startActivity(this)
+//                                }
+//                            },
+//                            modifier = Modifier
+//                                .padding(16.dp)
+//                                .fillMaxWidth()
+//                                .height(48.dp),
+//                            shape = CircleShape
+//                        ) {
+//                            Text(
+//                                text = "${getString(R.string.start).uppercase()}!",
+//                                style = typography.button
+//                            )
+//                        }
 
                         AdView()
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun Header(modifier: Modifier = Modifier, scaffoldState: ScaffoldState) {
-    val coroutineScope = rememberCoroutineScope()
-    val localContext = LocalContext.current
-
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(modifier = Modifier.fillMaxWidth().height(48.dp)) {
-            Icon(
-                imageVector = Icons.Rounded.Menu,
-                contentDescription = BLANK,
-                modifier = Modifier.clickable(
-                    onClick = {
-                        coroutineScope.launch {
-                            with(scaffoldState.drawerState) {
-                                if (isClosed) {
-                                    open()
-                                } else {
-                                    close()
-                                }
-                            }
-                        }
-                    }
-                ).padding(12.dp)
-            )
-        }
-
-        Text(
-            text = localContext.getString(R.string.app_name),
-            style = TextStyle(
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier.weight(1.0F),
-                shape = CircleShape
-            ) {
-                Text(text = localContext.getString(R.string.how_to_play))
-            }
-            
-            Spacer(modifier = Modifier.width(24.dp))
-
-            Button(
-                onClick = {
-
-                },
-                modifier = Modifier.weight(1.0F),
-                shape = CircleShape
-            ) {
-                Text(text = localContext.getString(R.string.ranking))
             }
         }
     }
@@ -282,9 +216,9 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(16.dp))
-        
+
         Image(painter = painterResource(item.icon), contentDescription = null)
-        
+
         Spacer(modifier = Modifier.width(32.dp))
 
         Column {
@@ -296,7 +230,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
                     textAlign = TextAlign.Center
                 )
             )
-            
+
             if (item.caption.isNotBlank()) {
                 Text(
                     text = item.caption,
@@ -309,6 +243,80 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
             }
         }
     }
+}
+
+@Composable
+private fun Header(
+    modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState
+) {
+    val coroutineScope = rememberCoroutineScope()
+    val localContext = LocalContext.current
+
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(48.dp)) {
+            Icon(
+                imageVector = Icons.Rounded.Menu,
+                contentDescription = BLANK,
+                modifier = Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(bounded = false),
+                        onClick = {
+                            coroutineScope.launch {
+                                with(scaffoldState.drawerState) {
+                                    if (isClosed) {
+                                        open()
+                                    } else {
+                                        close()
+                                    }
+                                }
+                            }
+                        }
+                    )
+                    .padding(12.dp)
+            )
+        }
+
+        Text(
+            text = localContext.getString(R.string.app_name),
+            style = TextStyle(
+                fontSize = 34.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+            )
+        )
+    }
+}
+
+@Composable
+private fun HorizontalTextButtonGroup(modifier: Modifier = Modifier, vararg pairs: Pair<String, () -> Unit>) {
+    val count = pairs.count()
+    
+    Row(modifier = modifier) {
+        pairs.forEachIndexed { index, pair ->
+            Button(
+                onClick = { pair.second.invoke() },
+                modifier = Modifier
+                    .height(48.dp)
+                    .weight(1.0F),
+                shape = CircleShape
+            ) {
+                Text(text = pair.first)
+            }
+            
+            if (index.not(count.dec())) {
+                Spacer(modifier = Modifier.width(24.dp))
+            }
+        }
+    }
+}
+
+@Composable
+private fun OptionGroup() {
+
 }
 
 @Composable
@@ -367,7 +375,35 @@ private fun Option(
 }
 
 @Composable
-fun AdView(modifier: Modifier = Modifier) {
+private fun GameModePicker(modifier: Modifier = Modifier) {
+    Row(modifier = modifier) {
+
+    }
+}
+
+@Composable
+private fun StartButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
+    val scrollState = rememberScrollState()
+
+    Column(modifier = modifier.verticalScroll(scrollState)) {
+        Back.IntRange.forEach {
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = { onClick(it) },
+                modifier = Modifier
+                    .height(48.dp)
+                    .fillMaxWidth(),
+                shape = CircleShape
+            ) {
+                Text(text = "$it-Back")
+            }
+        }
+    }
+}
+
+@Composable
+private fun AdView(modifier: Modifier = Modifier) {
     Box(modifier = Modifier
         .height(50.dp)
         .fillMaxWidth()) {
