@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class RecordRepositoryImpl @Inject constructor(private val dataSource: RecordDataSource) : RecordRepository {
-    override fun nList(): Flow<List<Int>> {
+    override fun backList(): Flow<List<Int>> {
         return dataSource.nList()
     }
 

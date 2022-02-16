@@ -20,7 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -76,7 +76,7 @@ class TrainingActivity : ComponentActivity() {
             val state by viewModel.state.observeAsState()
 
             BackHandler(true) {
-                if (state is State.Finish) {
+                if (state is State.Result) {
                     interstitialAd?.show(this) ?: finish()
 
                     return@BackHandler
@@ -103,11 +103,17 @@ class TrainingActivity : ComponentActivity() {
                     val enabled by viewModel.enabled.observeAsState()
 
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Header()
+                        Header(back = viewModel.back) {
+                            if (state is State.Result) {
+                                interstitialAd?.show(this@TrainingActivity) ?: finish()
+                            } else {
+                                finish()
+                            }
+                        }
 
                         NavHost(navController = navController, startDestination = Route.READY) {
                             composable(Route.READY) { Ready(countDown) }
-                            composable(Route.TRAINING) { InTraining(viewModel, isVisible ?: true) }
+                            composable(Route.TRAINING) { Training(viewModel, isVisible ?: true) }
                             composable(Route.RESULT) {
                                 Result(viewModel) {
                                     interstitialAd?.show(this@TrainingActivity) ?: finish()
@@ -119,15 +125,13 @@ class TrainingActivity : ComponentActivity() {
                             is State.Ready -> {
                                 viewModel.ready()
                             }
-                            is State.Progress -> navController.navigate(Route.TRAINING) {
+                            is State.Training -> navController.navigate(Route.TRAINING) {
                                 viewModel.progress()
 
                                 launchSingleTop = true
                                 popUpTo(Route.READY) { inclusive = true }
                             }
-                            is State.Finish -> navController.navigate(Route.RESULT) {
-                                //viewModel.finish()
-
+                            is State.Result -> navController.navigate(Route.RESULT) {
                                 launchSingleTop = true
                                 popUpTo(Route.TRAINING) { inclusive = true }
                             }
@@ -197,36 +201,32 @@ class TrainingActivity : ComponentActivity() {
 
     sealed class State {
         object Ready : State()
-        object Progress : State()
-        object Finish : State()
+        object Training : State()
+        object Result : State()
     }
 }
 
 @Composable
-private fun Header(modifier: Modifier = Modifier) {
-    val localContext = LocalContext.current
-
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+private fun Header(modifier: Modifier = Modifier, back: Int, navigationOnClick: () -> Unit) {
+   Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)) {
             Icon(
-                imageVector = Icons.Rounded.Menu,
+                imageVector = Icons.Rounded.ArrowBack,
                 contentDescription = BLANK,
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple(bounded = false),
-                        onClick = {
-
-                        }
+                        onClick = { navigationOnClick.invoke() }
                     )
                     .padding(12.dp)
             )
         }
 
         Text(
-            text = localContext.getString(R.string.app_name),
+            text = "$back-Back",
             style = TextStyle(
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
@@ -261,29 +261,46 @@ fun Ready(countDown: Int?) {
 }
 
 @Composable
-fun InTraining(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
+fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
+    val context = LocalContext.current
+    val isVisible by rememberUpdatedState(isVisibleNewVal)
+    val rounds = viewModel.rounds
+
     var round by rememberSaveable { mutableStateOf(0) }
 
-    val isVisible by rememberUpdatedState(isVisibleNewVal)
+    if (round >= rounds) {
+        LaunchedEffect(round) {
+            viewModel.complete()
+        }
 
-    LaunchedEffect(round) {
-        delay(ONE_SECOND.quarter)
-
-        viewModel.setIsVisible(true)
-
-        delay(ONE_SECOND.times(viewModel.speed))
-
-        round += 1
-        viewModel.setIsVisible(false)
-    }
-
-    if (round >= viewModel.rounds) {
-        viewModel.finish()
         return
+    } else {
+        LaunchedEffect(round) {
+            delay(ONE_SECOND.quarter)
+
+            viewModel.setIsVisible(true)
+
+            delay(ONE_SECOND.times(viewModel.speed))
+
+            round += 1
+            viewModel.setIsVisible(false)
+        }
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "${round.inc()}/${viewModel.rounds}")
+        Text(
+            text = "${round.inc()}/$rounds",
+            modifier = Modifier.height(48.dp),
+            fontSize = 24.sp
+        )
+
+        val unit = if (viewModel.speed.`is`(1)) {
+            context.getString(R.string.second)
+        } else {
+            context.getString(R.string.seconds)
+        }
+
+        Text(text = "${viewModel.speed} $unit")
 
         Box(modifier = Modifier
             .fillMaxWidth()
@@ -304,7 +321,7 @@ fun InTraining(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
             )
         }
 
-        val enabled = round >= viewModel.n && isVisible
+        val enabled = round >= viewModel.back && isVisible
 
         Row(
             Modifier

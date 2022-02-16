@@ -8,7 +8,7 @@ import com.wing.tree.n.back.training.domain.model.Record
 data class Record(
     @PrimaryKey(autoGenerate = true)
     override val id: Long = 0L,
-    override val n: Int,
+    override val back: Int,
     override val problemList: List<Problem>,
     override val rounds: Int,
     override val speed: Int,

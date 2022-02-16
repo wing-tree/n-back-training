@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetNListUseCase @Inject constructor(
+class GetBackListUseCase @Inject constructor(
     private val repository: RecordRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, List<Int>>(coroutineDispatcher) {
     override fun execute(parameter: Unit): Flow<Result<List<Int>>> {
-        return repository.nList()
+        return repository.backList()
             .map { Result.Success(it) }
             .catch { Result.Error(it) }
     }

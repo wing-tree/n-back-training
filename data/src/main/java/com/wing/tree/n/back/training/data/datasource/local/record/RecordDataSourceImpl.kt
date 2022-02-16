@@ -9,7 +9,7 @@ class RecordDataSourceImpl @Inject constructor(database: Database) : RecordDataS
     private val dao = database.recordDao()
 
     override fun nList(): Flow<List<Int>> {
-        return dao.nList()
+        return dao.backList()
     }
 
     override fun recordList(n: Int): Flow<List<Record>> {

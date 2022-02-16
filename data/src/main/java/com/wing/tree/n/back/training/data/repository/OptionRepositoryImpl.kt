@@ -20,7 +20,6 @@ class OptionRepositoryImpl @Inject constructor(@ApplicationContext context: Cont
     override suspend fun update(option: Option) {
         dataStore.updateData {
             it.toBuilder()
-                .setN(option.n)
                 .setRounds(option.rounds)
                 .setSpeed(option.speed)
                 .build()

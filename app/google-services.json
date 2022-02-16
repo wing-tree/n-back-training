@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "999034016144",
+    "project_id": "n-back-game",
+    "storage_bucket": "n-back-game.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999034016144:android:480b158c331ceb1b6be315",
+        "android_client_info": {
+          "package_name": "com.wing.tree.n.back.training"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999034016144-o0ptpe46jbogo7qarrvi76om4ch73ubv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wing.tree.n.back.training",
+            "certificate_hash": "3e936a2917ee5367a6ac56a686b85b5762701bb4"
+          }
+        },
+        {
+          "client_id": "999034016144-8tn8uq0agb5dj1spgs09ehgtjcb0d463.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEourd0GMRV_dsHoKEZAnCAL60zHC52eM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999034016144-8tn8uq0agb5dj1spgs09ehgtjcb0d463.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

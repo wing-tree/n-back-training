@@ -5,7 +5,6 @@ import com.wing.tree.n.back.training.domain.model.Option as Model
 
 internal object OptionMapper {
     fun Option.toModel() = object : Model() {
-        override var n: Int = this@toModel.n
         override var rounds = this@toModel.rounds
         override var speed = this@toModel.speed
     }

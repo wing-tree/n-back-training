@@ -11,7 +11,6 @@ import java.io.OutputStream
 
 internal object OptionSerializer : Serializer<Option> {
     override val defaultValue: Option = Option.newBuilder()
-        .setN(N.DEFAULT)
         .setRounds(Rounds.DEFAULT)
         .setSpeed(Speed.DEFAULT)
         .build()

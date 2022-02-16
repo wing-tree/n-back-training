@@ -14,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -27,11 +26,9 @@ class TrainingViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     private val option = savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default
 
-    val n = option.n
+    val back = savedStateHandle.get<Int>(Extra.BACK) ?: Back.DEFAULT
     val rounds = option.rounds
     val speed = option.speed
-
-    private val inProgress = AtomicBoolean(false)
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -53,8 +50,8 @@ class TrainingViewModel @Inject constructor(
 
             with(IntArray(rounds) { intRange.random() }) {
                 repeat(rounds) {
-                    if (it >= n) {
-                        if (get(it - n) == get(it)) {
+                    if (it >= back) {
+                        if (get(it - back) == get(it)) {
                             ++trueCount
                         }
                     }
@@ -71,10 +68,10 @@ class TrainingViewModel @Inject constructor(
             val array = arrayOfNulls<Boolean?>(rounds)
 
             repeat(rounds) {
-               array[it] = if (it < n) {
+               array[it] = if (it < back) {
                     null
                 } else {
-                    intArray[it - n] == intArray[it]
+                    intArray[it - back] == intArray[it]
                 }
             }
 
@@ -117,7 +114,7 @@ class TrainingViewModel @Inject constructor(
 
             delay(ONE_SECOND)
 
-            _state.value = State.Progress
+            _state.value = State.Training
         }
     }
 
@@ -146,14 +143,19 @@ class TrainingViewModel @Inject constructor(
 //        }
     }
 
-    fun finish() {
-        _state.value = State.Finish
+    fun complete() {
+        insertRecord()
+
+        _state.value = State.Result
+    }
+
+    private fun insertRecord() {
         val viewModel = this
 
         viewModelScope.launch(Dispatchers.IO) {
             insertRecordUseCase.invoke(
                 object : Record() {
-                    override val n: Int = viewModel.n
+                    override val back: Int = viewModel.back
                     override val problemList: List<Problem> = viewModel.problemList
                     override val rounds: Int = viewModel.rounds
                     override val speed: Int = viewModel.speed

@@ -113,21 +113,12 @@ class MainActivity : ComponentActivity() {
 
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            //.weight(1.0F)
                             .verticalScroll(scrollState)
                             .padding(16.dp)
                         ) {
                             val modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-
-                            Option(
-                                modifier = modifier,
-                                title = getString(R.string.n_back),
-                                initialValue = option.n.float,
-                                valueRange = Back.ValueRange,
-                                steps = Back.STEPS
-                            ) { option.n = it.int }
 
                             Spacer(modifier = Modifier.height(8.dp))
 
@@ -154,8 +145,9 @@ class MainActivity : ComponentActivity() {
 
                         StartButtonGroup(modifier = Modifier
                             .fillMaxWidth()
-                            .padding(24.dp)) {
+                            .weight(1.0F)) {
                             with(Intent(applicationContext, TrainingActivity::class.java)) {
+                                putExtra(Extra.BACK, it)
                                 putExtra(Extra.OPTION, option)
 
                                 startActivity(this)
@@ -385,7 +377,9 @@ private fun GameModePicker(modifier: Modifier = Modifier) {
 private fun StartButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
     val scrollState = rememberScrollState()
 
-    Column(modifier = modifier.verticalScroll(scrollState)) {
+    Column(modifier = modifier
+        .verticalScroll(scrollState)
+        .padding(24.dp, 0.dp)) {
         Back.IntRange.forEach {
             Spacer(modifier = Modifier.height(12.dp))
 
