@@ -154,26 +154,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-//                        Button(
-//                            onClick = {
-//                                with(Intent(applicationContext, TrainingActivity::class.java)) {
-//                                    putExtra(Extra.OPTION, option)
-//
-//                                    startActivity(this)
-//                                }
-//                            },
-//                            modifier = Modifier
-//                                .padding(16.dp)
-//                                .fillMaxWidth()
-//                                .height(48.dp),
-//                            shape = CircleShape
-//                        ) {
-//                            Text(
-//                                text = "${getString(R.string.start).uppercase()}!",
-//                                style = typography.button
-//                            )
-//                        }
-
                         AdView()
                     }
                 }
@@ -304,11 +284,6 @@ private fun HorizontalTextButtonGroup(modifier: Modifier = Modifier, vararg pair
             }
         }
     }
-}
-
-@Composable
-private fun OptionGroup() {
-
 }
 
 @Composable

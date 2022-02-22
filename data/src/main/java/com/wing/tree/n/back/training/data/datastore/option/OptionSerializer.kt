@@ -3,7 +3,6 @@ package com.wing.tree.n.back.training.data.datastore.option
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer
 import androidx.datastore.preferences.protobuf.InvalidProtocolBufferException
-import com.wing.tree.n.back.training.data.constant.N
 import com.wing.tree.n.back.training.data.constant.Rounds
 import com.wing.tree.n.back.training.data.constant.Speed
 import java.io.InputStream

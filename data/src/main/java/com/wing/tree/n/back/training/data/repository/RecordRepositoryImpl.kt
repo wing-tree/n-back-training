@@ -9,11 +9,11 @@ import javax.inject.Inject
 
 class RecordRepositoryImpl @Inject constructor(private val dataSource: RecordDataSource) : RecordRepository {
     override fun backList(): Flow<List<Int>> {
-        return dataSource.nList()
+        return dataSource.getBackList()
     }
 
     override fun recordList(n: Int): Flow<List<Record>> {
-        return dataSource.recordList(n)
+        return dataSource.getRecordList(n)
     }
 
     override suspend fun insert(record: Record) {

@@ -1,10 +1,12 @@
 package com.wing.tree.n.back.training.di
 
 import com.wing.tree.n.back.training.domain.repository.OptionRepository
+import com.wing.tree.n.back.training.domain.repository.RankingRepository
 import com.wing.tree.n.back.training.domain.repository.RecordRepository
 import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.GetRecordListUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import dagger.Module
@@ -51,5 +53,14 @@ internal object UseCaseModule {
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): InsertRecordUseCase {
         return InsertRecordUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesRegisterRankingUseCase(
+        repository: RankingRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): RegisterRankingUseCase {
+        return RegisterRankingUseCase(repository, coroutineDispatcher)
     }
 }

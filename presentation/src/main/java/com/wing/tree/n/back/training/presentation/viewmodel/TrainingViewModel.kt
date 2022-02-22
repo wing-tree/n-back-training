@@ -3,8 +3,10 @@ package com.wing.tree.n.back.training.presentation.viewmodel
 import android.app.Application
 import androidx.lifecycle.*
 import com.wing.tree.n.back.training.domain.model.Problem
+import com.wing.tree.n.back.training.domain.model.Ranking
 import com.wing.tree.n.back.training.domain.model.Record
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Option
@@ -14,17 +16,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
+import kotlin.properties.Delegates
 import kotlin.random.Random
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
     private val insertRecordUseCase: InsertRecordUseCase,
+    private val registerRankingUseCase: RegisterRankingUseCase,
     private val updateOptionUseCase: UpdateOptionUseCase,
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     private val option = savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default
+
+    private var endTime by Delegates.notNull<Long>()
+    private var startTime by Delegates.notNull<Long>()
 
     val back = savedStateHandle.get<Int>(Extra.BACK) ?: Back.DEFAULT
     val rounds = option.rounds
@@ -123,6 +132,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun progress() {
+        startTime = System.nanoTime()
 //        if (inProgress.compareAndSet(false, true)) {
 //            viewModelScope.launch {
 //                repeat(rounds) {
@@ -144,9 +154,13 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun complete() {
+        endTime = System.nanoTime()
+
         insertRecord()
 
         _state.value = State.Result
+
+        registerRanking()
     }
 
     private fun insertRecord() {
@@ -162,6 +176,38 @@ class TrainingViewModel @Inject constructor(
                     override val time: Long = System.currentTimeMillis()
                 }
             )
+        }
+    }
+
+    fun checkRankingRegistrationConditions(): Boolean {
+        if (back < 4) return false
+        if (option.rounds < 30) return false
+
+        return true
+    }
+
+    fun registerRanking() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val ranking = Ranking(
+                n = back,
+                elapsedTime = endTime - startTime,
+                nation = "",
+                nickname = "nickname",
+                rounds = rounds,
+                timestamp = Date(),
+            )
+
+            val parameter = RegisterRankingUseCase.Parameter(
+                ranking = ranking,
+                onSuccess = {
+
+                },
+                onFailure = {
+
+                }
+            )
+
+            registerRankingUseCase.invoke(parameter)
         }
     }
 }
