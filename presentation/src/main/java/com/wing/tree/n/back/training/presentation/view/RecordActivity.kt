@@ -62,7 +62,7 @@ class RecordActivity : ComponentActivity() {
                             RecordList(viewModel, navController, it.arguments?.getInt(Name.N) ?: 0)
                         }
                         composable(route = Route.RECORD) { navBackStackEntry ->
-                            navBackStackEntry.arguments?.getParcelable<com.wing.tree.n.back.training.presentation.model.Record>(Name.RECORD)?.let {
+                            navBackStackEntry.arguments?.getParcelable<Record>(Name.RECORD)?.let {
                                 Record(it)
                             }
                         }

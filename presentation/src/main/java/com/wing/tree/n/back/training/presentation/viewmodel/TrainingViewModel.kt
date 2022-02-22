@@ -1,6 +1,7 @@
 package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.wing.tree.n.back.training.domain.model.Problem
 import com.wing.tree.n.back.training.domain.model.Ranking
@@ -200,10 +201,10 @@ class TrainingViewModel @Inject constructor(
             val parameter = RegisterRankingUseCase.Parameter(
                 ranking = ranking,
                 onSuccess = {
-
+                            println("zioziosssssss, $it")
                 },
                 onFailure = {
-
+                    Log.e("sjk", it.message ?: "")
                 }
             )
 

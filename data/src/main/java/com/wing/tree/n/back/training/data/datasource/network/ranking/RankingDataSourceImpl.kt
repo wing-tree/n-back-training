@@ -3,6 +3,7 @@ package com.wing.tree.n.back.training.data.datasource.network.ranking
 import androidx.annotation.MainThread
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.toObject
 import com.wing.tree.n.back.training.data.model.Ranking
 import javax.inject.Inject
@@ -20,7 +21,21 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         collectionReference.limit(50)
             .get()
             .addOnSuccessListener { querySnapshot ->
+
                 val documents = querySnapshot.documents
+
+                println("querySnapshotsssss:${querySnapshot.size()}")
+                if (querySnapshot.size() < 1) {
+                    updateRanking(
+                        documents,
+                        ranking, {
+                            onSuccess(0)
+                        },
+                        onFailure
+                    )
+
+                    return@addOnSuccessListener
+                }
 
                 querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
                     with(queryDocumentSnapshot.toObject<Ranking>()) {
@@ -32,6 +47,8 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                                 },
                                 onFailure
                             )
+
+                            return@with
                         }
                     }
                 }
@@ -56,11 +73,13 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                     transaction.delete(it)
                 }
             }
-
+            println("mmmmmmmmmmmmm")
             transaction.set(documentReference, ranking)
         }.addOnSuccessListener {
+            println("ssssssssss")
             onSuccess()
         }.addOnFailureListener {
+            println("dddddddd")
             onFailure(it)
         }
     }
