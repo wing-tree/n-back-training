@@ -17,7 +17,12 @@ class GetRecordListUseCase @Inject constructor(
 ) : FlowUseCase<Unit, List<Record>>(coroutineDispatcher) {
     override fun execute(parameter: Unit): Flow<Result<List<Record>>> {
         return repository.getRecordList()
-            .map { Result.Success(it) }
-            .catch { Result.Error(it) }
+            .map {
+                try {
+                    Result.Success(it)
+                } catch (throwable: Throwable) {
+                    Result.Error(throwable)
+                }
+            }
     }
 }

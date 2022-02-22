@@ -21,10 +21,8 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         collectionReference.limit(50)
             .get()
             .addOnSuccessListener { querySnapshot ->
-
                 val documents = querySnapshot.documents
 
-                println("querySnapshotsssss:${querySnapshot.size()}")
                 if (querySnapshot.size() < 1) {
                     updateRanking(
                         documents,
@@ -73,13 +71,11 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                     transaction.delete(it)
                 }
             }
-            println("mmmmmmmmmmmmm")
+
             transaction.set(documentReference, ranking)
         }.addOnSuccessListener {
-            println("ssssssssss")
             onSuccess()
         }.addOnFailureListener {
-            println("dddddddd")
             onFailure(it)
         }
     }

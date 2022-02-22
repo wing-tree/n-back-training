@@ -97,10 +97,7 @@ class TrainingActivity : ComponentActivity() {
             ApplicationTheme {
                 Scaffold {
                     val countDown by viewModel.countDown.observeAsState()
-
-                    val round by viewModel.round.observeAsState()
                     val isVisible by viewModel.isVisible.observeAsState()
-                    val enabled by viewModel.enabled.observeAsState()
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Header(back = viewModel.back) {
@@ -115,7 +112,7 @@ class TrainingActivity : ComponentActivity() {
                             composable(Route.READY) { Ready(countDown) }
                             composable(Route.TRAINING) { Training(viewModel, isVisible ?: true) }
                             composable(Route.RESULT) {
-                                Detail(viewModel) {
+                                Result(viewModel) {
                                     interstitialAd?.show(this@TrainingActivity) ?: finish()
                                 }
                             }
@@ -239,7 +236,7 @@ private fun Header(modifier: Modifier = Modifier, back: Int, navigationOnClick: 
 }
 
 @Composable
-fun Ready(countDown: Int?) {
+private fun Ready(countDown: Int?) {
     val context = LocalContext.current
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -261,7 +258,7 @@ fun Ready(countDown: Int?) {
 }
 
 @Composable
-fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
+private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
     val context = LocalContext.current
     val isVisible by rememberUpdatedState(isVisibleNewVal)
     val rounds = viewModel.rounds
@@ -383,7 +380,7 @@ fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
 
 @ExperimentalFoundationApi
 @Composable
-fun Detail(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
+private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
     val correctAnswerCount = viewModel.problemList.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problemList.filter { it.solution.notNull }.count()
