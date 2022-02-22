@@ -6,19 +6,19 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class Record(
-    override val back: Int,
+    override val n: Int,
     override val rounds: Int,
     override val speed: Int,
-    override val time: Long,
+    override val timestamp: Long,
     override val problemList: List<Problem>
 ) : DomainModel(), Parcelable {
     companion object {
         fun from(model: DomainModel) = with(model) {
             Record(
-                back = back,
+                n = n,
                 rounds = rounds,
                 speed = speed,
-                time = time,
+                timestamp = timestamp,
                 problemList = model.problemList.map { Problem.from(it) }
             )
         }

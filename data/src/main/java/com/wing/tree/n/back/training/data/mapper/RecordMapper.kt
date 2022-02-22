@@ -6,10 +6,10 @@ import com.wing.tree.n.back.training.domain.model.Record as Model
 
 internal object RecordMapper {
     fun Model.toEntity() = Entity(
-        back = back,
+        n = n,
         problemList = problemList.map { it.toEntity() },
         rounds = rounds,
         speed = speed,
-        time = time
+        timestamp = timestamp
     )
 }

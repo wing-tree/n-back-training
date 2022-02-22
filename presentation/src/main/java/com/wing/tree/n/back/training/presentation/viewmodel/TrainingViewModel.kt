@@ -170,11 +170,11 @@ class TrainingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             insertRecordUseCase.invoke(
                 object : Record() {
-                    override val back: Int = viewModel.back
+                    override val n: Int = viewModel.back
                     override val problemList: List<Problem> = viewModel.problemList
                     override val rounds: Int = viewModel.rounds
                     override val speed: Int = viewModel.speed
-                    override val time: Long = System.currentTimeMillis()
+                    override val timestamp: Long = System.currentTimeMillis()
                 }
             )
         }

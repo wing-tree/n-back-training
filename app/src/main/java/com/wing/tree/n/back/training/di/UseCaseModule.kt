@@ -39,7 +39,7 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun providesGetRecordsUseCase(
+    fun providesGetRecordListUseCase(
         repository: RecordRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): GetRecordListUseCase {

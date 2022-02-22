@@ -12,9 +12,6 @@ interface RecordDao {
     @Insert(onConflict = REPLACE)
     suspend fun insert(record: Record)
 
-    @Query("SELECT back FROM record")
-    fun backList(): Flow<List<Int>>
-
-    @Query("SELECT * FROM record WHERE back = :back ORDER BY time DESC")
-    fun recordList(back: Int): Flow<List<Record>>
+    @Query("SELECT * FROM record ORDER BY timestamp DESC")
+    fun getRecordList(): Flow<List<Record>>
 }

@@ -115,7 +115,7 @@ class TrainingActivity : ComponentActivity() {
                             composable(Route.READY) { Ready(countDown) }
                             composable(Route.TRAINING) { Training(viewModel, isVisible ?: true) }
                             composable(Route.RESULT) {
-                                Result(viewModel) {
+                                Detail(viewModel) {
                                     interstitialAd?.show(this@TrainingActivity) ?: finish()
                                 }
                             }
@@ -383,7 +383,7 @@ fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
 
 @ExperimentalFoundationApi
 @Composable
-fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
+fun Detail(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
     val correctAnswerCount = viewModel.problemList.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problemList.filter { it.solution.notNull }.count()

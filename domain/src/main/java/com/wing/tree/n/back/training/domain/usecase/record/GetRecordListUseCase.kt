@@ -14,12 +14,10 @@ import javax.inject.Inject
 class GetRecordListUseCase @Inject constructor(
     private val repository: RecordRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<GetRecordListUseCase.Parameter, List<Record>>(coroutineDispatcher) {
-    override fun execute(parameter: Parameter): Flow<Result<List<Record>>> {
-        return repository.recordList(parameter.n)
+) : FlowUseCase<Unit, List<Record>>(coroutineDispatcher) {
+    override fun execute(parameter: Unit): Flow<Result<List<Record>>> {
+        return repository.getRecordList()
             .map { Result.Success(it) }
             .catch { Result.Error(it) }
     }
-
-    class Parameter(val n: Int)
 }

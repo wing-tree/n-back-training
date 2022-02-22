@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.wing.tree.n.back.training.domain.usecase.Result
-import com.wing.tree.n.back.training.domain.usecase.record.GetBackListUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.GetRecordListUseCase
 import com.wing.tree.n.back.training.presentation.model.Record
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,20 +13,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecordViewModel @Inject constructor(
-    getBackListUseCase: GetBackListUseCase,
     private val getRecordListUseCase: GetRecordListUseCase,
     application: Application
 ) : AndroidViewModel(application) {
-    val nList = getBackListUseCase.invoke(Unit)
-        .map {
-            when(it) {
-                is Result.Error -> emptyList()
-                is Result.Loading -> emptyList()
-                is Result.Success -> it.data
-            }
-        }.asLiveData(viewModelScope.coroutineContext)
 
-    fun recordList(n: Int) = getRecordListUseCase.invoke(GetRecordListUseCase.Parameter(n)).map {
+    val recordList = getRecordListUseCase.invoke(Unit).map {
         when(it) {
             is Result.Error -> emptyList()
             is Result.Loading -> emptyList()
