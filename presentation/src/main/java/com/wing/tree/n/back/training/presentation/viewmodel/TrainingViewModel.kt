@@ -190,8 +190,8 @@ class TrainingViewModel @Inject constructor(
     fun registerRanking() {
         viewModelScope.launch(Dispatchers.IO) {
             val ranking = Ranking(
-                n = back,
                 elapsedTime = endTime - startTime,
+                n = back,
                 nation = "",
                 nickname = "nickname",
                 rounds = rounds,
@@ -201,10 +201,10 @@ class TrainingViewModel @Inject constructor(
             val parameter = RegisterRankingUseCase.Parameter(
                 ranking = ranking,
                 onSuccess = {
-                            println("zioziosssssss, $it")
+
                 },
                 onFailure = {
-                    Log.e("sjk", it.message ?: "")
+
                 }
             )
 

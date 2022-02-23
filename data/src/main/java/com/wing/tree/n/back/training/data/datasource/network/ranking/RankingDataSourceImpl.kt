@@ -3,7 +3,6 @@ package com.wing.tree.n.back.training.data.datasource.network.ranking
 import androidx.annotation.MainThread
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.toObject
 import com.wing.tree.n.back.training.data.model.Ranking
 import javax.inject.Inject
@@ -105,11 +104,16 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
     ) {
         val count = documents.count()
         val documentReference = collectionReference.document()
+        val id = documentReference.id
+
+        ranking.id = id
 
         firebaseFirestore.runTransaction { transaction ->
             if (count >= 50) {
-                documents.last()?.reference?.let {
-                    transaction.delete(it)
+                if (documents.isNotEmpty()) {
+                    documents.last()?.reference?.let {
+                        transaction.delete(it)
+                    }
                 }
             }
 

@@ -1,5 +1,6 @@
 package com.wing.tree.n.back.training.data.constant
 
+internal const val BLANK = ""
 internal const val PACKAGE_NAME = "com.wing.tree.n.back.training.data"
 
 internal object Rounds {

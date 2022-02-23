@@ -1,5 +1,6 @@
 package com.wing.tree.n.back.training.domain.model
 
+import com.wing.tree.n.back.training.domain.constant.BLANK
 import java.util.*
 
 data class Ranking(
@@ -8,5 +9,6 @@ data class Ranking(
     val nation: String,
     val nickname: String,
     val rounds: Int,
-    val timestamp: Date
+    val timestamp: Date,
+    var id: String = BLANK,
 )

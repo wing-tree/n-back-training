@@ -37,7 +37,7 @@ import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.Header
-import com.wing.tree.n.back.training.presentation.view.RankingActivity
+import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel

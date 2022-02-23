@@ -19,4 +19,6 @@
     <string name="thank_you_for_your_valuable_review">Thank you for your valuable review</string>
     <string name="version">Version</string>
     <string name="write_review">Write review</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

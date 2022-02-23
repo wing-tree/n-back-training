@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.view.RankingActivity" />
+        <activity android:name=".presentation.view.ranking.RankingActivity" />
 
         <activity android:name=".presentation.view.RecordActivity" />
 

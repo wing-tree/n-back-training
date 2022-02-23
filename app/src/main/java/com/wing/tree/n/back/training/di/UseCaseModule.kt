@@ -6,6 +6,7 @@ import com.wing.tree.n.back.training.domain.repository.RecordRepository
 import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingListUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.GetRecordListUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
@@ -30,11 +31,11 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun providesUpdateOptionUseCase(
-        repository: OptionRepository,
+    fun providesGetRankingListUseCase(
+        repository: RankingRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): UpdateOptionUseCase {
-        return UpdateOptionUseCase(repository, coroutineDispatcher)
+    ): GetRankingListUseCase {
+        return GetRankingListUseCase(repository, coroutineDispatcher)
     }
 
     @Provides
@@ -63,4 +64,15 @@ internal object UseCaseModule {
     ): RegisterRankingUseCase {
         return RegisterRankingUseCase(repository, coroutineDispatcher)
     }
+
+    @Provides
+    @ViewModelScoped
+    fun providesUpdateOptionUseCase(
+        repository: OptionRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): UpdateOptionUseCase {
+        return UpdateOptionUseCase(repository, coroutineDispatcher)
+    }
+
+
 }
