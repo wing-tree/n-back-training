@@ -4,6 +4,15 @@ import androidx.annotation.MainThread
 import com.wing.tree.n.back.training.domain.model.Ranking
 
 interface RankingRepository {
+    suspend fun getRankingList(
+        page: Int,
+        pageSize: Long,
+        @MainThread
+        onSuccess: (List<Ranking>) -> Unit,
+        @MainThread
+        onFailure: (Exception) -> Unit
+    )
+
     suspend fun registerRanking(
         ranking: Ranking,
         @MainThread

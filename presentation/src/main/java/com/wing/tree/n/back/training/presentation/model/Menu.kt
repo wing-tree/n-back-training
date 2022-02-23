@@ -9,7 +9,7 @@ sealed class Menu {
     data class Item(
         @DrawableRes val icon: Int,
         val title: String,
-        val caption: String = BLANK,
+        val subtext: String = BLANK,
         val onClick: (() -> Unit)? = null
     ) : Menu()
 }

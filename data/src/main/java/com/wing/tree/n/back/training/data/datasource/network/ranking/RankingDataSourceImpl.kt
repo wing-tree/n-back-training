@@ -10,6 +10,47 @@ import javax.inject.Inject
 
 class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: FirebaseFirestore) : RankingDataSource {
     private val collectionReference = firebaseFirestore.collection(COLLECTION_PATH)
+    private val queryCursorArray = arrayOfNulls<DocumentSnapshot>(5)
+
+    override suspend fun getRankingList(
+        page: Int,
+        pageSize: Long,
+        @MainThread
+        onSuccess: (List<Ranking>) -> Unit,
+        @MainThread
+        onFailure: (Exception) -> Unit
+    ) {
+        if (page == 0) {
+            collectionReference.limit(pageSize)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.count() >= pageSize) {
+                        queryCursorArray[1] = querySnapshot.last()
+                    }
+
+                    onSuccess(querySnapshot.mapNotNull(DocumentSnapshot::toObject))
+                }.addOnFailureListener {
+                    onFailure(it)
+                }
+        } else {
+            val queryCursor = queryCursorArray[page] ?: return
+
+            collectionReference.limit(pageSize)
+                .startAfter(queryCursor)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    if (querySnapshot.count() >= pageSize) {
+                        if (page < 4) {
+                            queryCursorArray[page.inc()] = querySnapshot.last()
+                        }
+                    }
+
+                    onSuccess(querySnapshot.mapNotNull(DocumentSnapshot::toObject))
+                }.addOnFailureListener {
+                    onFailure(it)
+                }
+        }
+    }
 
     override suspend fun registerRanking(
         ranking: Ranking,

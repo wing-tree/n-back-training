@@ -2,15 +2,18 @@
 <resources>
     <string name="app_name">N-Back 트레이닝</string>
     <string name="confirm">확인</string>
+    <string name="filter">필터</string>
     <string name="how_to_play">게임 방법</string>
     <string name="n_back">N-Back</string>
     <string name="press_back_again_to_exit">\'뒤로\' 버튼을 다시 누르시면 종료됩니다</string>
     <string name="ranking">랭킹</string>
     <string name="record">기록</string>
+    <string name="records">기록</string>
     <string name="rounds">라운드</string>
     <string name="second">초</string>
     <string name="seconds">초</string>
     <string name="share_the_app">앱 공유하기</string>
+    <string name="sort">정렬</string>
     <string name="speed">속도</string>
     <string name="start">시작</string>
     <string name="thank_you_for_your_valuable_review">소중한 리뷰 감사합니다</string>

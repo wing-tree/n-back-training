@@ -13,10 +13,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -39,13 +39,13 @@ import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
+import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.model.Record
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
-import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,13 +63,40 @@ class RecordActivity : ComponentActivity() {
 
             ApplicationTheme {
                 Scaffold {
-                    NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
-                        composable(route = Route.RECORD_LIST) {
-                            RecordList(viewModel, navController)
-                        }
-                        composable(route = Route.DETAIL) { navBackStackEntry ->
-                            navBackStackEntry.arguments?.getParcelable<Record>(Key.RECORD)?.let {
-                                Detail(it) { onBackPressed() }
+                    Column {
+                        Header(
+                            modifier = Modifier,
+                            title = getString(R.string.records),
+                            navigationIcon = {
+                                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK)
+                            },
+                            navigationOnClick = {
+                                onBackPressed()
+                            },
+                            Menu.Item(
+                                icon = R.drawable.ic_round_sort_24,
+                                title = getString(R.string.sort),
+                                onClick = {
+
+                                }
+                            ),
+                            Menu.Item(
+                                icon = R.drawable.ic_round_filter_alt_24,
+                                title = getString(R.string.filter),
+                                onClick = {
+
+                                }
+                            )
+                        )
+
+                        NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
+                            composable(route = Route.RECORD_LIST) {
+                                RecordList(viewModel, navController)
+                            }
+                            composable(route = Route.DETAIL) { navBackStackEntry ->
+                                navBackStackEntry.arguments?.getParcelable<Record>(Key.RECORD)?.let {
+                                    Detail(it) { onBackPressed() }
+                                }
                             }
                         }
                     }

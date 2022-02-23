@@ -6,20 +6,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.typography
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -33,14 +32,11 @@ import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
-import com.wing.tree.n.back.training.presentation.constant.BLANK
-import com.wing.tree.n.back.training.presentation.constant.Extra
-import com.wing.tree.n.back.training.presentation.constant.Back
-import com.wing.tree.n.back.training.presentation.constant.Rounds
-import com.wing.tree.n.back.training.presentation.constant.Speed
+import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.util.*
+import com.wing.tree.n.back.training.presentation.view.Header
 import com.wing.tree.n.back.training.presentation.view.RankingActivity
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
@@ -65,14 +61,6 @@ class MainActivity : ComponentActivity() {
                 val menuList = listOf(
                     Menu.Item(R.drawable.ic_round_history_24, getString(R.string.record)) {
                         startActivity(Intent(this, RecordActivity::class.java))
-
-                        coroutineScope.launch {
-                            with(scaffoldState.drawerState) {
-                                if (isOpen) {
-                                    close()
-                                }
-                            }
-                        }
                     },
                     Menu.Divider,
                     Menu.Item(R.drawable.ic_round_review_24, getString(R.string.write_review)) {
@@ -97,12 +85,30 @@ class MainActivity : ComponentActivity() {
                     val scrollState = rememberScrollState()
 
                     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Header(scaffoldState = scaffoldState)
+                        Header(
+                            title = getString(R.string.app_name),
+                            navigationIcon = {
+                                Icon(imageVector = Icons.Rounded.Menu, contentDescription = BLANK)
+                            },
+                            navigationOnClick = {
+                                coroutineScope.launch {
+                                    with(scaffoldState.drawerState) {
+                                        if (isClosed) {
+                                            open()
+                                        } else {
+                                            close()
+                                        }
+                                    }
+                                }
+                            },
+                        )
 
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
                         HorizontalTextButtonGroup(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(24.dp),
+                                .padding(24.dp, 12.dp),
                             getString(R.string.how_to_play) to {
 
                             },
@@ -114,13 +120,11 @@ class MainActivity : ComponentActivity() {
                         Column(modifier = Modifier
                             .fillMaxWidth()
                             .verticalScroll(scrollState)
-                            .padding(16.dp)
+                            .padding(24.dp, 12.dp)
                         ) {
                             val modifier = Modifier
                                 .fillMaxWidth()
                                 .wrapContentHeight()
-
-                            Spacer(modifier = Modifier.height(8.dp))
 
                             Option(
                                 modifier = modifier,
@@ -130,7 +134,7 @@ class MainActivity : ComponentActivity() {
                                 steps = Rounds.STEPS
                             ) { option.rounds = it.int }
 
-                            Spacer(modifier = Modifier.height(8.dp))
+                            Spacer(modifier = Modifier.height(12.dp))
 
                             GameModePicker(modifier.fillMaxWidth())
 
@@ -143,7 +147,7 @@ class MainActivity : ComponentActivity() {
                             ) { option.speed = it.int }
                         }
 
-                        StartButtonGroup(modifier = Modifier
+                        NBackButtonGroup(modifier = Modifier
                             .fillMaxWidth()
                             .weight(1.0F)) {
                             with(Intent(applicationContext, TrainingActivity::class.java)) {
@@ -174,7 +178,7 @@ private fun Drawer(menuList: List<Menu>) {
 
 @Composable
 private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
-    val height = if (item.caption.isBlank()) {
+    val height = if (item.subtext.isBlank()) {
         56.dp
     } else {
         72.dp
@@ -203,9 +207,9 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
                 )
             )
 
-            if (item.caption.isNotBlank()) {
+            if (item.subtext.isNotBlank()) {
                 Text(
-                    text = item.caption,
+                    text = item.subtext,
                     style = TextStyle(
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -214,52 +218,6 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun Header(
-    modifier: Modifier = Modifier,
-    scaffoldState: ScaffoldState
-) {
-    val coroutineScope = rememberCoroutineScope()
-    val localContext = LocalContext.current
-
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)) {
-            Icon(
-                imageVector = Icons.Rounded.Menu,
-                contentDescription = BLANK,
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
-                        onClick = {
-                            coroutineScope.launch {
-                                with(scaffoldState.drawerState) {
-                                    if (isClosed) {
-                                        open()
-                                    } else {
-                                        close()
-                                    }
-                                }
-                            }
-                        }
-                    )
-                    .padding(12.dp)
-            )
-        }
-
-        Text(
-            text = localContext.getString(R.string.app_name),
-            style = TextStyle(
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        )
     }
 }
 
@@ -349,7 +307,7 @@ private fun GameModePicker(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun StartButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
+private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
     val scrollState = rememberScrollState()
 
     Column(modifier = modifier

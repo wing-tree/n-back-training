@@ -2,15 +2,18 @@
 <resources>
     <string name="app_name">N-Back Training</string>
     <string name="confirm">Confirm</string>
+    <string name="filter">Filter</string>
     <string name="how_to_play">How to play</string>
     <string name="n_back">N-Back</string>
     <string name="press_back_again_to_exit">Press \'Back\' again to exit</string>
     <string name="ranking">Ranking</string>
     <string name="record">Record</string>
+    <string name="records">Records</string>
     <string name="rounds">Rounds</string>
     <string name="second">second</string>
     <string name="seconds">seconds</string>
     <string name="share_the_app">Share the app</string>
+    <string name="sort">Sort</string>
     <string name="speed">Speed</string>
     <string name="start">Start</string>
     <string name="thank_you_for_your_valuable_review">Thank you for your valuable review</string>
