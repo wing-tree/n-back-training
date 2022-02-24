@@ -1,5 +1,6 @@
 package com.wing.tree.n.back.training.presentation.adapter.ranking
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -9,14 +10,30 @@ import com.wing.tree.n.back.training.presentation.databinding.RankingItemBinding
 import java.util.*
 
 class RankingListAdapter : ListAdapter<RankingListAdapter.AdapterItem, RankingListAdapter.ViewHolder>(DiffCallback()) {
-    inner class ViewHolder(viewBinding: RankingItemBinding): RecyclerView.ViewHolder(viewBinding.root)
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
+        val layoutInflater = LayoutInflater.from(parent.context)
+
+        return ViewHolder(RankingItemBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.bind(getItem(position))
+    }
+
+    inner class ViewHolder(private val viewBinding: RankingItemBinding): RecyclerView.ViewHolder(viewBinding.root) {
+        fun bind(item: AdapterItem) {
+            when(item) {
+                is AdapterItem.Ranking -> {
+                    with(viewBinding) {
+                        textViewRank.text = "${item.rank}"
+                        textViewNickname.text = item.nickname
+                        textViewElapsedTime.text = "${item.elapsedTime}"
+                        textViewN.text = "${item.n}"
+                        textViewRounds.text = "${item.rounds}"
+                    }
+                }
+            }
+        }
     }
 
     class DiffCallback: DiffUtil.ItemCallback<AdapterItem>() {
@@ -38,17 +55,19 @@ class RankingListAdapter : ListAdapter<RankingListAdapter.AdapterItem, RankingLi
             val n: Int,
             val nation: String,
             val nickname: String,
+            val rank: Int,
             val rounds: Int,
             val timestamp: Date,
         ) : AdapterItem() {
             companion object {
-                fun from(domainModel: DomainModel) = with(domainModel) {
+                fun from(rank: Int, domainModel: DomainModel) = with(domainModel) {
                     Ranking(
                         id = id,
                         elapsedTime = elapsedTime,
                         n = n,
                         nation = nation,
                         nickname = nickname,
+                        rank = rank,
                         rounds = rounds,
                         timestamp = timestamp
                     )

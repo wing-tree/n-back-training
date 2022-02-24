@@ -112,7 +112,7 @@ class TrainingActivity : ComponentActivity() {
                             composable(Route.READY) { Ready(countDown) }
                             composable(Route.TRAINING) { Training(viewModel, isVisible ?: true) }
                             composable(Route.RESULT) {
-                                Result(viewModel) {
+                               Result(viewModel) {
                                     interstitialAd?.show(this@TrainingActivity) ?: finish()
                                 }
                             }
@@ -265,8 +265,10 @@ private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
 
     var round by rememberSaveable { mutableStateOf(0) }
 
-    if (round >= rounds) {
+    if (round == rounds) {
         LaunchedEffect(round) {
+            // todo 2번 호출되는 이슈 round 말고 다른 상태로 처리하는게 나을 듯.
+            println("zinzinzin:$round")
             viewModel.complete()
         }
 

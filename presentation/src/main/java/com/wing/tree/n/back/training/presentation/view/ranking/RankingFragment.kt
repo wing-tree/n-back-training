@@ -59,7 +59,9 @@ class RankingFragment : Fragment() {
     private fun initData() {
         viewModel.rankingList.observe(viewLifecycleOwner) { list ->
             rankingListAdapter.submitList(
-                list.map { RankingListAdapter.AdapterItem.Ranking.from(it) }
+                list.mapIndexed { rank, ranking ->
+                    RankingListAdapter.AdapterItem.Ranking.from(rank, ranking)
+                }
             )
         }
     }

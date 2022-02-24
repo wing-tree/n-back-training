@@ -8,6 +8,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -58,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
                 val option = viewModel.option
 
-                val menuList = listOf(
+                val menu = listOf(
                     Menu.Item(R.drawable.ic_round_history_24, getString(R.string.record)) {
                         startActivity(Intent(this, RecordActivity::class.java))
                     },
@@ -80,11 +83,12 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    drawerContent = { Drawer(menuList) }
+                    drawerContent = { Drawer(menu) }
                 ) {
-                    val scrollState = rememberScrollState()
-
-                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Header(
                             title = getString(R.string.app_name),
                             navigationIcon = {
@@ -119,7 +123,7 @@ class MainActivity : ComponentActivity() {
 
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .verticalScroll(scrollState)
+                            .verticalScroll(rememberScrollState())
                             .padding(24.dp, 12.dp)
                         ) {
                             val modifier = Modifier

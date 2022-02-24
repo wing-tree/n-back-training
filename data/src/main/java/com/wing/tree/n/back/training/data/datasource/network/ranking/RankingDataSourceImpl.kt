@@ -3,9 +3,11 @@ package com.wing.tree.n.back.training.data.datasource.network.ranking
 import androidx.annotation.MainThread
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.wing.tree.n.back.training.data.model.Ranking
 import javax.inject.Inject
+import kotlin.NullPointerException
 
 class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: FirebaseFirestore) : RankingDataSource {
     private val collectionReference = firebaseFirestore.collection(COLLECTION_PATH)
@@ -20,33 +22,51 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         onFailure: (Exception) -> Unit
     ) {
         if (page == 0) {
-            collectionReference.limit(pageSize)
+            collectionReference
+                .orderBy(Field.N, Query.Direction.DESCENDING)
+                .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
+                .orderBy(Field.ELAPSED_TIME)
+                .limit(pageSize)
                 .get()
-                .addOnSuccessListener { querySnapshot ->
-                    if (querySnapshot.count() >= pageSize) {
-                        queryCursorArray[1] = querySnapshot.last()
-                    }
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        task.result?.let { querySnapshot ->
+                            if (querySnapshot.count() >= pageSize) {
+                                queryCursorArray[1] = querySnapshot.last()
+                            }
 
-                    onSuccess(querySnapshot.mapNotNull(DocumentSnapshot::toObject))
-                }.addOnFailureListener {
-                    onFailure(it)
+                            onSuccess(querySnapshot.mapNotNull(DocumentSnapshot::toObject))
+                        } ?: onFailure(NullPointerException("task.result :${task.result}"))
+                    } else {
+                        task.exception?.let { onFailure(it) }
+                    }
                 }
         } else {
+            println("aaaaaaa:${queryCursorArray.get(page)}")
             val queryCursor = queryCursorArray[page] ?: return
 
-            collectionReference.limit(pageSize)
+            collectionReference
+                .orderBy(Field.N, Query.Direction.DESCENDING)
+                .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
+                .orderBy(Field.ELAPSED_TIME)
                 .startAfter(queryCursor)
+                .limit(pageSize)
                 .get()
-                .addOnSuccessListener { querySnapshot ->
-                    if (querySnapshot.count() >= pageSize) {
-                        if (page < 4) {
-                            queryCursorArray[page.inc()] = querySnapshot.last()
-                        }
-                    }
+                .addOnCompleteListener { task ->
+                    println("ttttttttt")
+                    if (task.isSuccessful) {
+                        task.result?.let { querySnapshot ->
+                            if (querySnapshot.count() >= pageSize) {
+                                if (page < 4) {
+                                    queryCursorArray[page.inc()] = querySnapshot.last()
+                                }
+                            }
 
-                    onSuccess(querySnapshot.mapNotNull(DocumentSnapshot::toObject))
-                }.addOnFailureListener {
-                    onFailure(it)
+                            onSuccess(querySnapshot.mapNotNull(DocumentSnapshot::toObject))
+                        } ?: onFailure(NullPointerException("task.result :${task.result}"))
+                    } else {
+                        task.exception?.let { onFailure(it) }
+                    }
                 }
         }
     }
@@ -59,6 +79,9 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         onFailure: (Exception) -> Unit
     ) {
         collectionReference.limit(50)
+            .orderBy(Field.N, Query.Direction.DESCENDING)
+            .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
+            .orderBy(Field.ELAPSED_TIME)
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val documents = querySnapshot.documents
@@ -75,18 +98,20 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                     return@addOnSuccessListener
                 }
 
-                querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
-                    with(queryDocumentSnapshot.toObject<Ranking>()) {
-                        if (isHigher(ranking)) {
-                            updateRanking(
-                                documents,
-                                ranking, {
-                                    onSuccess(index)
-                                },
-                                onFailure
-                            )
+                run {
+                    querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
+                        with(queryDocumentSnapshot.toObject<Ranking>()) {
+                            if (isHigher(ranking)) {
+                                updateRanking(
+                                    documents,
+                                    ranking, {
+                                        onSuccess(index)
+                                    },
+                                    onFailure
+                                )
 
-                            return@with
+                                return@run
+                            }
                         }
                     }
                 }
@@ -123,6 +148,12 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         }.addOnFailureListener {
             onFailure(it)
         }
+    }
+
+    private object Field {
+        const val ELAPSED_TIME = "elapsedTime"
+        const val N = "n"
+        const val ROUNDS = "rounds"
     }
 
     companion object {
