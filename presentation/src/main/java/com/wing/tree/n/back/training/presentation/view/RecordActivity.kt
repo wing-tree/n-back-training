@@ -133,7 +133,7 @@ fun RecordList(viewModel: RecordViewModel, navController: NavController) {
 
     LazyColumn {
         items(items) { record ->
-            RecordItem(Modifier.padding(16.dp, 8.dp), record) {
+            RecordItem(Modifier.padding(24.dp, 12.dp), record) {
                 navController.navigate(route = RecordActivity.Route.DETAIL, Bundle().apply {
                     putParcelable(RecordActivity.Key.RECORD, it)
                 })

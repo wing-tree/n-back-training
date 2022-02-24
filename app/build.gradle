@@ -70,6 +70,9 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation 'com.google.protobuf:protobuf-javalite:4.0.0-rc-2'
+
     implementation "androidx.room:room-ktx:2.4.1"
     implementation "androidx.room:room-runtime:2.4.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"

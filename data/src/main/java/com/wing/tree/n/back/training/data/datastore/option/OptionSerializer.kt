@@ -8,7 +8,7 @@ import com.wing.tree.n.back.training.data.constant.Speed
 import java.io.InputStream
 import java.io.OutputStream
 
-internal object OptionSerializer : Serializer<Option> {
+object OptionSerializer : Serializer<Option> {
     override val defaultValue: Option = Option.newBuilder()
         .setRounds(Rounds.DEFAULT)
         .setSpeed(Speed.DEFAULT)
