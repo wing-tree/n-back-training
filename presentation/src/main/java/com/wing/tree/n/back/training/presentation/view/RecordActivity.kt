@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -90,7 +91,7 @@ class RecordActivity : ComponentActivity() {
                         )
 
                         if (showSortDialog) {
-                            SortDialog(SortBy.Latest) {
+                            SortDialog(SortBy.Newest) {
                                 showSortDialog = false
                             }
                         }
@@ -246,26 +247,60 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
 }
 
 enum class SortBy(val value: Int) {
-    Latest(0), Oldest(1)
+    Newest(0), Oldest(1)
 }
 
 @Composable
 private fun SortDialog(value: SortBy, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = onDismissRequest) {
+        val context = LocalContext.current
         var sortBy by remember { mutableStateOf(value) }
 
-        Column {
-            RadioButton(
-                selected = sortBy.value == SortBy.Latest.value,
-                onClick = { sortBy = SortBy.Latest },
-                enabled = true
-            )
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Column(modifier = Modifier.padding(12.dp, 12.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable {
+                            sortBy = SortBy.Newest
+                        },
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = context.getString(R.string.newest),
+                        modifier = Modifier.weight(1.0F).padding(12.dp, 0.dp)
+                    )
 
-            RadioButton(
-                selected = sortBy.value == SortBy.Oldest.value,
-                onClick = { sortBy = SortBy.Oldest },
-                enabled = true
-            )
+                    RadioButton(
+                        selected = sortBy.value == SortBy.Newest.value,
+                        onClick = { sortBy = SortBy.Newest },
+                        enabled = true
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable {
+                            sortBy = SortBy.Oldest
+                        },
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = context.getString(R.string.oldest),
+                        modifier = Modifier.weight(1.0F).padding(12.dp, 0.dp)
+                    )
+
+                    RadioButton(
+                        selected = sortBy.value == SortBy.Oldest.value,
+                        onClick = { sortBy = SortBy.Oldest },
+                        enabled = true
+                    )
+                }
+            }
         }
     }
 }
