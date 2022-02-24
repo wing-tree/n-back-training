@@ -16,9 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,12 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.core.net.toUri
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
@@ -46,6 +44,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
+import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.*
@@ -60,6 +59,7 @@ class RecordActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            var showSortDialog by remember { mutableStateOf(false) }
 
             ApplicationTheme {
                 Scaffold {
@@ -77,7 +77,7 @@ class RecordActivity : ComponentActivity() {
                                 icon = R.drawable.ic_round_sort_24,
                                 title = getString(R.string.sort),
                                 onClick = {
-
+                                    showSortDialog = true
                                 }
                             ),
                             Menu.Item(
@@ -88,6 +88,12 @@ class RecordActivity : ComponentActivity() {
                                 }
                             )
                         )
+
+                        if (showSortDialog) {
+                            SortDialog(SortBy.Latest) {
+                                showSortDialog = false
+                            }
+                        }
 
                         NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
                             composable(route = Route.RECORD_LIST) {
@@ -239,7 +245,32 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
     }
 }
 
-fun NavController.navigate(
+enum class SortBy(val value: Int) {
+    Latest(0), Oldest(1)
+}
+
+@Composable
+private fun SortDialog(value: SortBy, onDismissRequest: () -> Unit) {
+    Dialog(onDismissRequest = onDismissRequest) {
+        var sortBy by remember { mutableStateOf(value) }
+
+        Column {
+            RadioButton(
+                selected = sortBy.value == SortBy.Latest.value,
+                onClick = { sortBy = SortBy.Latest },
+                enabled = true
+            )
+
+            RadioButton(
+                selected = sortBy.value == SortBy.Oldest.value,
+                onClick = { sortBy = SortBy.Oldest },
+                enabled = true
+            )
+        }
+    }
+}
+
+private fun NavController.navigate(
     route: String,
     args: Bundle,
     navOptions: NavOptions? = null,

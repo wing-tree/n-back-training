@@ -9,12 +9,11 @@
         android:name=".application.MainApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.NBackTraning">
+        android:theme="@style/Theme.NBackTraining">
         <activity
             android:name=".presentation.view.main.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.NBackTraning.NoActionBar">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

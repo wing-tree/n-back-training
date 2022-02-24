@@ -8,9 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.rememberScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -22,6 +19,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -38,11 +36,12 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
+import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.Header
-import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
+import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -109,7 +108,7 @@ class MainActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(24.dp))
                         
-                        HorizontalTextButtonGroup(
+                        HorizontalButtonGroup(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(24.dp, 12.dp),
@@ -226,7 +225,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
 }
 
 @Composable
-private fun HorizontalTextButtonGroup(modifier: Modifier = Modifier, vararg pairs: Pair<String, () -> Unit>) {
+private fun HorizontalButtonGroup(modifier: Modifier = Modifier, vararg pairs: Pair<String, () -> Unit>) {
     val count = pairs.count()
     
     Row(modifier = modifier) {
@@ -234,11 +233,17 @@ private fun HorizontalTextButtonGroup(modifier: Modifier = Modifier, vararg pair
             Button(
                 onClick = { pair.second.invoke() },
                 modifier = Modifier
-                    .height(48.dp)
+                    .height(40.dp)
                     .weight(1.0F),
                 shape = CircleShape
             ) {
-                Text(text = pair.first)
+                Text(
+                    text = pair.first,
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(
+                        fontFamily = sebangFamily
+                    )
+                )
             }
             
             if (index.not(count.dec())) {

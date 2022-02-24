@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wing.tree.n.back.training.presentation.model.Menu
+import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 
 @Composable
 internal fun Header(
@@ -48,6 +49,7 @@ internal fun Header(
             style = TextStyle(
                 fontSize = 34.sp,
                 fontWeight = FontWeight.Bold,
+                fontFamily = sebangFamily,
                 textAlign = TextAlign.Center
             )
         )

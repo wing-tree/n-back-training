@@ -13,3 +13,8 @@ val notoSansKrFamily = FontFamily(
     Font(R.font.noto_sans_kr_bold, FontWeight.Bold),
     Font(R.font.noto_sans_kr_black, FontWeight.Black)
 )
+
+val sebangFamily = FontFamily(
+    Font(R.font.sebang_gothic_regular, FontWeight.Normal),
+    Font(R.font.sebang_gothic_bold, FontWeight.Bold)
+)
