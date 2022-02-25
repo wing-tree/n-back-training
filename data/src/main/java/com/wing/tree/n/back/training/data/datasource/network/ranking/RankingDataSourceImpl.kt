@@ -7,6 +7,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.toObject
 import com.wing.tree.n.back.training.data.constant.long
 import com.wing.tree.n.back.training.data.model.Ranking
+import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 import javax.inject.Inject
 import kotlin.NullPointerException
 
@@ -15,7 +16,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
     private val queryCursorArray = arrayOfNulls<DocumentSnapshot>(5)
 
     override suspend fun checkRanking(
-        ranking: Ranking,
+        rankCheckParameter: RankCheckParameter,
         @MainThread
         onSuccess: (Boolean) -> Unit,
         @MainThread
@@ -30,8 +31,14 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     task.result?.let { querySnapshot ->
-                        with(querySnapshot.last()) {
-                            onSuccess(ranking.isHigher(this.toObject()))
+                        if (querySnapshot.count() < LOWEST_RANK) {
+                            with(querySnapshot.last()) {
+                                val ranking = this.toObject<Ranking>()
+
+                                onSuccess(ranking.rankCheckParameter.isHigher(rankCheckParameter))
+                            }
+                        } else {
+                            onSuccess(true)
                         }
                     } ?: onFailure(NullPointerException("task.result :${task.result}"))
                 } else {

@@ -3,17 +3,18 @@ package com.wing.tree.n.back.training.data.repository
 import com.wing.tree.n.back.training.data.datasource.network.ranking.RankingDataSource
 import com.wing.tree.n.back.training.data.mapper.RankingMapper.toDataModel
 import com.wing.tree.n.back.training.data.mapper.RankingMapper.toDomainModel
+import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 import com.wing.tree.n.back.training.domain.model.Ranking
 import com.wing.tree.n.back.training.domain.repository.RankingRepository
 import javax.inject.Inject
 
 class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingDataSource) : RankingRepository {
     override suspend fun checkRanking(
-        ranking: Ranking,
+        rankCheckParameter: RankCheckParameter,
         onSuccess: (Boolean) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        dataSource.checkRanking(ranking.toDataModel(), onSuccess, onFailure)
+        dataSource.checkRanking(rankCheckParameter, onSuccess, onFailure)
     }
 
     override suspend fun getRankings(

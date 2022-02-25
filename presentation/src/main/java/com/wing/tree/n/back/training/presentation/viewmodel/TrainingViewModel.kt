@@ -2,10 +2,13 @@ package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wing.tree.n.back.training.domain.model.Problem
+import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 import com.wing.tree.n.back.training.domain.model.Ranking
 import com.wing.tree.n.back.training.domain.model.Record
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import com.wing.tree.n.back.training.presentation.constant.*
@@ -23,6 +26,7 @@ import kotlin.random.Random
 
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
+    private val checkRankingUseCase: CheckRankingUseCase,
     private val insertRecordUseCase: InsertRecordUseCase,
     private val registerForRankingUseCase: RegisterForRankingUseCase,
     private val updateOptionUseCase: UpdateOptionUseCase,
@@ -155,37 +159,61 @@ class TrainingViewModel @Inject constructor(
     fun complete() {
         endTime = System.nanoTime()
 
-        insertRecord()
-
-        _state.value = State.Result
-
-        registerForRanking()
-    }
-
-    private fun insertRecord() {
         val viewModel = this
+
         val record = object : Record() {
             override val n: Int = viewModel.n
-            override val problemList: List<Problem> = viewModel.problemList
+            override val problems: List<Problem> = viewModel.problemList
             override val rounds: Int = viewModel.rounds
             override val speed: Int = viewModel.speed
             override val timestamp: Long = System.currentTimeMillis()
         }
 
+        insertRecord(record)
+
+        val rankCheckParameter = RankCheckParameter(
+            elapsedTime = endTime - startTime,
+            n = n,
+            rounds = rounds
+        )
+
+        if (record.isPerfect) {
+            checkRanking(
+                rankCheckParameter, {
+                    if (it) {
+                        registerForRanking()
+                    } else {
+                        _state.value = State.Result
+                    }
+                }
+            ) {
+                _state.value = State.Result
+            }
+        } else {
+            _state.value = State.Result
+        }
+    }
+
+    private fun insertRecord(record: Record) {
         viewModelScope.launch(Dispatchers.IO) {
             insertRecordUseCase.invoke(record)
         }
     }
 
-    fun checkRankingRegistrationConditions(): Boolean {
-        if (n < 4) return false
-        if (option.rounds < 30) return false
+    private fun checkRanking(
+        rankCheckParameter: RankCheckParameter,
+        onSuccess: (Boolean) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val parameter = CheckRankingUseCase.Parameter(
+                rankCheckParameter,
+                onSuccess,
+                onFailure
+            )
 
-        return true
-    }
-
-    private fun checkRanking() {
-
+            checkRankingUseCase.invoke(parameter)
+        }
     }
 
     private fun registerForRanking() {

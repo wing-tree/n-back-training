@@ -2,10 +2,11 @@ package com.wing.tree.n.back.training.data.datasource.network.ranking
 
 import androidx.annotation.MainThread
 import com.wing.tree.n.back.training.data.model.Ranking
+import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 
 interface RankingDataSource {
     suspend fun checkRanking(
-        ranking: Ranking,
+        rankCheckParameter: RankCheckParameter,
         @MainThread
         onSuccess: (Boolean) -> Unit,
         @MainThread

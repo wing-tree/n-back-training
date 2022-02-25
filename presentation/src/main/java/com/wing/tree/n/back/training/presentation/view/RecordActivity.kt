@@ -170,8 +170,8 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit) {
                 Text(text = time)
             }
 
-            val correctAnswerCount = record.problemList.map { it.isCorrect }.count()
-            val solutionNotNullCount = record.problemList.map { it.solution.notNull }.count()
+            val correctAnswerCount = record.problems.map { it.isCorrect }.count()
+            val solutionNotNullCount = record.problems.map { it.solution.notNull }.count()
 
             Text(text = "$correctAnswerCount/$solutionNotNullCount")
         }
@@ -182,8 +182,8 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit) {
 @Composable
 fun Detail(record: Record, onButtonClick: () -> Unit) {
     val context = LocalContext.current
-    val correctAnswerCount = record.problemList.filter { it.isCorrect }.count()
-    val solutionNotNullCount = record.problemList.filter { it.solution.notNull }.count()
+    val correctAnswerCount = record.problems.filter { it.isCorrect }.count()
+    val solutionNotNullCount = record.problems.filter { it.solution.notNull }.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -197,7 +197,7 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
             modifier = Modifier.weight(1.0F),
             cells = GridCells.Adaptive(minSize = 72.dp)
         ) {
-            items(record.problemList) { item ->
+            items(record.problems) { item ->
                 Column(
                     modifier = Modifier.padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally

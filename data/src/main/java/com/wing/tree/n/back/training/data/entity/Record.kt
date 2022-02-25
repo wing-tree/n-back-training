@@ -9,7 +9,7 @@ data class Record(
     @PrimaryKey(autoGenerate = true)
     override val id: Long = 0L,
     override val n: Int,
-    override val problemList: List<Problem>,
+    override val problems: List<Problem>,
     override val rounds: Int,
     override val speed: Int,
     override val timestamp: Long

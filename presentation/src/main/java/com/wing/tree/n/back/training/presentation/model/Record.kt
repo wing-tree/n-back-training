@@ -10,7 +10,7 @@ class Record(
     override val rounds: Int,
     override val speed: Int,
     override val timestamp: Long,
-    override val problemList: List<Problem>
+    override val problems: List<Problem>
 ) : DomainModel(), Parcelable {
     companion object {
         fun from(model: DomainModel) = with(model) {
@@ -19,7 +19,7 @@ class Record(
                 rounds = rounds,
                 speed = speed,
                 timestamp = timestamp,
-                problemList = model.problemList.map { Problem.from(it) }
+                problems = model.problems.map { Problem.from(it) }
             )
         }
     }

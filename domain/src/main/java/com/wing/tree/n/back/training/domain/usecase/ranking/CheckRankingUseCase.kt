@@ -1,6 +1,7 @@
 package com.wing.tree.n.back.training.domain.usecase.ranking
 
 import androidx.annotation.MainThread
+import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 import com.wing.tree.n.back.training.domain.model.Ranking
 import com.wing.tree.n.back.training.domain.repository.RankingRepository
 import com.wing.tree.n.back.training.domain.usecase.CoroutineUseCase
@@ -15,7 +16,7 @@ class CheckRankingUseCase @Inject constructor(
     override suspend fun execute(parameter: Parameter) {
         with(parameter) {
             repository.checkRanking(
-                ranking,
+                rankCheckParameter,
                 onSuccess,
                 onFailure
             )
@@ -23,7 +24,7 @@ class CheckRankingUseCase @Inject constructor(
     }
 
     class Parameter(
-        val ranking: Ranking,
+        val rankCheckParameter: RankCheckParameter,
         @MainThread
         val onSuccess: (Boolean) -> Unit,
         @MainThread

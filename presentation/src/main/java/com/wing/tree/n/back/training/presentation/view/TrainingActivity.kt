@@ -99,14 +99,20 @@ class TrainingActivity : ComponentActivity() {
                     val countDown by viewModel.countDown.observeAsState()
                     val isVisible by viewModel.isVisible.observeAsState()
 
+                    val title = "${viewModel.n}-Back"
+
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Header(back = viewModel.n) {
-                            if (state is State.Result) {
-                                interstitialAd?.show(this@TrainingActivity) ?: finish()
-                            } else {
-                                finish()
+                        Header(
+                            title = title,
+                            navigationIcon = { Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK) },
+                            navigationOnClick = {
+                                if (state is State.Result) {
+                                    interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                } else {
+                                    finish()
+                                }
                             }
-                        }
+                        )
 
                         NavHost(navController = navController, startDestination = Route.READY) {
                             composable(Route.READY) { Ready(countDown) }
@@ -204,38 +210,6 @@ class TrainingActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Header(modifier: Modifier = Modifier, back: Int, navigationOnClick: () -> Unit) {
-   Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)) {
-            Icon(
-                imageVector = Icons.Rounded.ArrowBack,
-                contentDescription = BLANK,
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
-                        onClick = { navigationOnClick.invoke() }
-                    )
-                    .padding(12.dp)
-            )
-        }
-
-        Text(
-            text = "$back-Back",
-            style = TextStyle(
-                fontSize = 34.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-    }
-}
-
-@Composable
 private fun Ready(countDown: Int?) {
     val context = LocalContext.current
 
@@ -267,8 +241,6 @@ private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
 
     if (round == rounds) {
         LaunchedEffect(round) {
-            // todo 2번 호출되는 이슈 round 말고 다른 상태로 처리하는게 나을 듯.
-            println("zinzinzin:$round")
             viewModel.complete()
         }
 
@@ -380,14 +352,17 @@ private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
     }
 }
 
+@Composable
+private fun RankingRegistration() {
+
+}
+
 @ExperimentalFoundationApi
 @Composable
 private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
     val correctAnswerCount = viewModel.problemList.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problemList.filter { it.solution.notNull }.count()
-
-    val isPerfect = correctAnswerCount == viewModel.problemList.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(

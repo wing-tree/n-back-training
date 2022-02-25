@@ -7,7 +7,7 @@ import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
-import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingListUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingsUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.GetRecordListUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
@@ -41,11 +41,11 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun providesGetRankingListUseCase(
+    fun providesGetRankingsUseCase(
         repository: RankingRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetRankingListUseCase {
-        return GetRankingListUseCase(repository, coroutineDispatcher)
+    ): GetRankingsUseCase {
+        return GetRankingsUseCase(repository, coroutineDispatcher)
     }
 
     @Provides

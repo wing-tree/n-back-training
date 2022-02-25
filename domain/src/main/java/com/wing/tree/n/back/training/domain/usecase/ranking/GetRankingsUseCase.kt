@@ -8,10 +8,10 @@ import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
-class GetRankingListUseCase @Inject constructor(
+class GetRankingsUseCase @Inject constructor(
     private val repository: RankingRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<GetRankingListUseCase.Parameter, Unit>(coroutineDispatcher) {
+) : CoroutineUseCase<GetRankingsUseCase.Parameter, Unit>(coroutineDispatcher) {
     override suspend fun execute(parameter: Parameter) {
         repository.getRankings(
             parameter.page,
