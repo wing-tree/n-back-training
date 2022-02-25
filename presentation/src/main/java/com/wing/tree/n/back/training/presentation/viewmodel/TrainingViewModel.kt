@@ -1,13 +1,12 @@
 package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.wing.tree.n.back.training.domain.model.Problem
 import com.wing.tree.n.back.training.domain.model.Ranking
 import com.wing.tree.n.back.training.domain.model.Record
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
-import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterRankingUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Option
@@ -17,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import kotlin.properties.Delegates
@@ -26,7 +24,7 @@ import kotlin.random.Random
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
     private val insertRecordUseCase: InsertRecordUseCase,
-    private val registerRankingUseCase: RegisterRankingUseCase,
+    private val registerForRankingUseCase: RegisterForRankingUseCase,
     private val updateOptionUseCase: UpdateOptionUseCase,
     application: Application,
     savedStateHandle: SavedStateHandle
@@ -36,7 +34,7 @@ class TrainingViewModel @Inject constructor(
     private var endTime by Delegates.notNull<Long>()
     private var startTime by Delegates.notNull<Long>()
 
-    val back = savedStateHandle.get<Int>(Extra.BACK) ?: Back.DEFAULT
+    val n = savedStateHandle.get<Int>(Extra.BACK) ?: Back.DEFAULT
     val rounds = option.rounds
     val speed = option.speed
 
@@ -60,8 +58,8 @@ class TrainingViewModel @Inject constructor(
 
             with(IntArray(rounds) { intRange.random() }) {
                 repeat(rounds) {
-                    if (it >= back) {
-                        if (get(it - back) == get(it)) {
+                    if (it >= n) {
+                        if (get(it - n) == get(it)) {
                             ++trueCount
                         }
                     }
@@ -78,10 +76,10 @@ class TrainingViewModel @Inject constructor(
             val array = arrayOfNulls<Boolean?>(rounds)
 
             repeat(rounds) {
-               array[it] = if (it < back) {
+               array[it] = if (it < n) {
                     null
                 } else {
-                    intArray[it - back] == intArray[it]
+                    intArray[it - n] == intArray[it]
                 }
             }
 
@@ -161,44 +159,47 @@ class TrainingViewModel @Inject constructor(
 
         _state.value = State.Result
 
-        registerRanking()
+        registerForRanking()
     }
 
     private fun insertRecord() {
         val viewModel = this
+        val record = object : Record() {
+            override val n: Int = viewModel.n
+            override val problemList: List<Problem> = viewModel.problemList
+            override val rounds: Int = viewModel.rounds
+            override val speed: Int = viewModel.speed
+            override val timestamp: Long = System.currentTimeMillis()
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
-            insertRecordUseCase.invoke(
-                object : Record() {
-                    override val n: Int = viewModel.back
-                    override val problemList: List<Problem> = viewModel.problemList
-                    override val rounds: Int = viewModel.rounds
-                    override val speed: Int = viewModel.speed
-                    override val timestamp: Long = System.currentTimeMillis()
-                }
-            )
+            insertRecordUseCase.invoke(record)
         }
     }
 
     fun checkRankingRegistrationConditions(): Boolean {
-        if (back < 4) return false
+        if (n < 4) return false
         if (option.rounds < 30) return false
 
         return true
     }
 
-    fun registerRanking() {
+    private fun checkRanking() {
+
+    }
+
+    private fun registerForRanking() {
         viewModelScope.launch(Dispatchers.IO) {
             val ranking = Ranking(
                 elapsedTime = endTime - startTime,
-                n = back,
+                n = n,
                 nation = "",
                 nickname = "nickname",
                 rounds = rounds,
                 timestamp = Date(),
             )
 
-            val parameter = RegisterRankingUseCase.Parameter(
+            val parameter = RegisterForRankingUseCase.Parameter(
                 ranking = ranking,
                 onSuccess = {
 
@@ -208,7 +209,7 @@ class TrainingViewModel @Inject constructor(
                 }
             )
 
-            registerRankingUseCase.invoke(parameter)
+            registerForRankingUseCase.invoke(parameter)
         }
     }
 }

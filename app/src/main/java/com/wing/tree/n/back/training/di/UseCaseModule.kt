@@ -6,8 +6,9 @@ import com.wing.tree.n.back.training.domain.repository.RecordRepository
 import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingListUseCase
-import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterRankingUseCase
+import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.GetRecordListUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import dagger.Module
@@ -20,6 +21,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 @InstallIn(ViewModelComponent::class)
 @Module
 internal object UseCaseModule {
+    @Provides
+    @ViewModelScoped
+    fun providesCheckRankingUseCase(
+        repository: RankingRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): CheckRankingUseCase {
+        return CheckRankingUseCase(repository, coroutineDispatcher)
+    }
+
     @Provides
     @ViewModelScoped
     fun providesGetOptionUseCase(
@@ -61,8 +71,8 @@ internal object UseCaseModule {
     fun providesRegisterRankingUseCase(
         repository: RankingRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): RegisterRankingUseCase {
-        return RegisterRankingUseCase(repository, coroutineDispatcher)
+    ): RegisterForRankingUseCase {
+        return RegisterForRankingUseCase(repository, coroutineDispatcher)
     }
 
     @Provides

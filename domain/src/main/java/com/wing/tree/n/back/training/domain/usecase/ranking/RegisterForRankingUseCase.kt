@@ -8,24 +8,22 @@ import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
-class GetRankingListUseCase @Inject constructor(
+class RegisterForRankingUseCase @Inject constructor(
     private val repository: RankingRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<GetRankingListUseCase.Parameter, Unit>(coroutineDispatcher) {
+) : CoroutineUseCase<RegisterForRankingUseCase.Parameter, Unit>(coroutineDispatcher) {
     override suspend fun execute(parameter: Parameter) {
-        repository.getRankings(
-            parameter.page,
-            parameter.pageSize,
+        repository.registerRanking(
+            parameter.ranking,
             parameter.onSuccess,
             parameter.onFailure
         )
     }
 
     class Parameter(
-        val page: Int,
-        val pageSize: Long,
+        val ranking: Ranking,
         @MainThread
-        val onSuccess: (List<Ranking>) -> Unit,
+        val onSuccess: (Int) -> Unit,
         @MainThread
         val onFailure: (Exception) -> Unit
     )

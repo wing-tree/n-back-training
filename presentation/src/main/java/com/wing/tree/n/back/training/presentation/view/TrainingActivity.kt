@@ -100,7 +100,7 @@ class TrainingActivity : ComponentActivity() {
                     val isVisible by viewModel.isVisible.observeAsState()
 
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Header(back = viewModel.back) {
+                        Header(back = viewModel.n) {
                             if (state is State.Result) {
                                 interstitialAd?.show(this@TrainingActivity) ?: finish()
                             } else {
@@ -320,7 +320,7 @@ private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
             )
         }
 
-        val enabled = round >= viewModel.back && isVisible
+        val enabled = round >= viewModel.n && isVisible
 
         Row(
             Modifier
@@ -386,6 +386,8 @@ private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
     val correctAnswerCount = viewModel.problemList.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problemList.filter { it.solution.notNull }.count()
+
+    val isPerfect = correctAnswerCount == viewModel.problemList.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(

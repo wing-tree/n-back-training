@@ -10,3 +10,6 @@ internal object Rounds {
 internal object Speed {
     const val DEFAULT = 3
 }
+
+internal val Int.long: Long
+    get() = toLong()

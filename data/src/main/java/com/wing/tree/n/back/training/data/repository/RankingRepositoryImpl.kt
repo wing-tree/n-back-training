@@ -8,7 +8,15 @@ import com.wing.tree.n.back.training.domain.repository.RankingRepository
 import javax.inject.Inject
 
 class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingDataSource) : RankingRepository {
-    override suspend fun getRankingList(
+    override suspend fun checkRanking(
+        ranking: Ranking,
+        onSuccess: (Boolean) -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
+        dataSource.checkRanking(ranking.toDataModel(), onSuccess, onFailure)
+    }
+
+    override suspend fun getRankings(
         page: Int,
         pageSize: Long,
         onSuccess: (List<Ranking>) -> Unit,
@@ -29,6 +37,6 @@ class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingD
         onSuccess: (Int) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        dataSource.registerRanking(ranking.toDataModel(), onSuccess, onFailure)
+        dataSource.registerForRanking(ranking.toDataModel(), onSuccess, onFailure)
     }
 }
