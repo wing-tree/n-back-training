@@ -61,6 +61,7 @@ class RecordActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             var showSortDialog by remember { mutableStateOf(false) }
+            var sortBy by remember { mutableStateOf(SortBy.Newest) }
 
             ApplicationTheme {
                 Scaffold {
@@ -92,13 +93,14 @@ class RecordActivity : ComponentActivity() {
 
                         if (showSortDialog) {
                             SortDialog(SortBy.Newest) {
+                                sortBy = it
                                 showSortDialog = false
                             }
                         }
 
                         NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
                             composable(route = Route.RECORD_LIST) {
-                                RecordList(viewModel, navController)
+                                RecordList(navController, viewModel, sortBy)
                             }
                             composable(route = Route.DETAIL) { navBackStackEntry ->
                                 navBackStackEntry.arguments?.getParcelable<Record>(Key.RECORD)?.let {
@@ -127,9 +129,12 @@ class RecordActivity : ComponentActivity() {
 }
 
 @Composable
-fun RecordList(viewModel: RecordViewModel, navController: NavController) {
-    val records: List<Record>? by viewModel.recordList.observeAsState()
-    val items = records ?: emptyList()
+fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy: SortBy) {
+    val recordList: List<Record>? by viewModel.recordList.observeAsState()
+    val items = when(sortBy) {
+        SortBy.Newest -> recordList?.sortedByDescending { it.timestamp }
+        SortBy.Oldest -> recordList?.sortedBy { it.timestamp }
+    } ?: return
 
     LazyColumn {
         items(items) { record ->
@@ -251,18 +256,21 @@ enum class SortBy(val value: Int) {
 }
 
 @Composable
-private fun SortDialog(value: SortBy, onDismissRequest: () -> Unit) {
-    Dialog(onDismissRequest = onDismissRequest) {
-        val context = LocalContext.current
-        var sortBy by remember { mutableStateOf(value) }
+private fun SortDialog(value: SortBy, onDismissRequest: (SortBy) -> Unit) {
+    val context = LocalContext.current
+    var sortBy by remember { mutableStateOf(value) }
 
+    Dialog(onDismissRequest = {
+        onDismissRequest.invoke(sortBy)
+    }) {
         Surface(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column(modifier = Modifier.padding(12.dp, 12.dp)) {
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clickable {
                             sortBy = SortBy.Newest
                         },
@@ -271,7 +279,9 @@ private fun SortDialog(value: SortBy, onDismissRequest: () -> Unit) {
                 ) {
                     Text(
                         text = context.getString(R.string.newest),
-                        modifier = Modifier.weight(1.0F).padding(12.dp, 0.dp)
+                        modifier = Modifier
+                            .weight(1.0F)
+                            .padding(12.dp, 0.dp)
                     )
 
                     RadioButton(
@@ -282,7 +292,8 @@ private fun SortDialog(value: SortBy, onDismissRequest: () -> Unit) {
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .clickable {
                             sortBy = SortBy.Oldest
                         },
@@ -291,7 +302,9 @@ private fun SortDialog(value: SortBy, onDismissRequest: () -> Unit) {
                 ) {
                     Text(
                         text = context.getString(R.string.oldest),
-                        modifier = Modifier.weight(1.0F).padding(12.dp, 0.dp)
+                        modifier = Modifier
+                            .weight(1.0F)
+                            .padding(12.dp, 0.dp)
                     )
 
                     RadioButton(
