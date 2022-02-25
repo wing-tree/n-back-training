@@ -10,8 +10,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -21,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -31,7 +28,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -122,6 +118,11 @@ class TrainingActivity : ComponentActivity() {
                                     interstitialAd?.show(this@TrainingActivity) ?: finish()
                                 }
                             }
+                            composable(Route.RANKING_REGISTRATION) {
+                                RankingRegistration(viewModel = viewModel) {
+
+                                }
+                            }
                         }
 
                         when(state) {
@@ -200,12 +201,14 @@ class TrainingActivity : ComponentActivity() {
         const val READY = "$PACKAGE_NAME.$OBJECT_NAME.READY"
         const val TRAINING = "$PACKAGE_NAME.$OBJECT_NAME.TRAINING"
         const val RESULT = "$PACKAGE_NAME.$OBJECT_NAME.RESULT"
+        const val RANKING_REGISTRATION = "$PACKAGE_NAME.$OBJECT_NAME.RANKING_REGISTRATION"
     }
 
     sealed class State {
         object Ready : State()
         object Training : State()
         object Result : State()
+        object RankingRegistration: State()
     }
 }
 
@@ -352,11 +355,6 @@ private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
     }
 }
 
-@Composable
-private fun RankingRegistration() {
-
-}
-
 @ExperimentalFoundationApi
 @Composable
 private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
@@ -411,6 +409,41 @@ private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
                 }
             }
         }
+
+        Button(
+            onClick = { onButtonClick() },
+            modifier = Modifier
+                .padding(16.dp)
+                .height(40.dp)
+                .fillMaxWidth(),
+            shape = CircleShape
+        ) {
+            Text(
+                text = context.getString(R.string.confirm).uppercase(),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Companion.Medium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+private fun RankingRegistration(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
+    val context = LocalContext.current
+
+    Column {
+        Text(text = viewModel.elapsedTime.toString())
+        Text(text = viewModel.n.toString())
+        Text(text = viewModel.rounds.toString())
+
+        var text by remember { mutableStateOf(BLANK) }
+
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            label = { Text(context.getString(R.string.nickname)) }
+        )
 
         Button(
             onClick = { onButtonClick() },

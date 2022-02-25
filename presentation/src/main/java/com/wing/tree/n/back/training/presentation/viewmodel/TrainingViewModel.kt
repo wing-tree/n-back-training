@@ -38,6 +38,9 @@ class TrainingViewModel @Inject constructor(
     private var endTime by Delegates.notNull<Long>()
     private var startTime by Delegates.notNull<Long>()
 
+    val elapsedTime: Long
+        get() = endTime - startTime
+
     val n = savedStateHandle.get<Int>(Extra.BACK) ?: Back.DEFAULT
     val rounds = option.rounds
     val speed = option.speed
@@ -172,7 +175,7 @@ class TrainingViewModel @Inject constructor(
         insertRecord(record)
 
         val rankCheckParameter = RankCheckParameter(
-            elapsedTime = endTime - startTime,
+            elapsedTime = elapsedTime,
             n = n,
             rounds = rounds
         )
@@ -181,7 +184,7 @@ class TrainingViewModel @Inject constructor(
             checkRanking(
                 rankCheckParameter, {
                     if (it) {
-                        registerForRanking()
+                        _state.value = State.RankingRegistration
                     } else {
                         _state.value = State.Result
                     }
@@ -216,13 +219,13 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    private fun registerForRanking() {
+    private fun registerForRanking(nickname: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val ranking = Ranking(
-                elapsedTime = endTime - startTime,
+                elapsedTime = elapsedTime,
                 n = n,
                 nation = "",
-                nickname = "nickname",
+                nickname = nickname,
                 rounds = rounds,
                 timestamp = Date(),
             )
