@@ -10,8 +10,12 @@ import javax.inject.Inject
 class UpdateOptionUseCase @Inject constructor(
     private val repository: OptionRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Option, Unit>(coroutineDispatcher) {
-    override suspend fun execute(parameter: Option) {
-        repository.update(parameter)
+) : CoroutineUseCase<UpdateOptionUseCase.Parameter, Unit>(coroutineDispatcher) {
+    override suspend fun execute(parameter: Parameter) {
+        repository.update(parameter.option)
     }
+
+    data class Parameter(
+        val option: Option
+    )
 }

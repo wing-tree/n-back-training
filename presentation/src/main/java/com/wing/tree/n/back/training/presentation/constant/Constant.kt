@@ -30,20 +30,8 @@ internal object SpeedMode {
 }
 
 internal object From {
-    const val COUNT_DOWN = 3
+    const val COUNT_DOWN = 1
     const val RANDOM = 0
-}
-
-internal object MaxValue {
-    const val N = 8
-    const val ROUNDS = 5
-    const val SPEED = 5
-}
-
-internal object MinValue {
-    const val N = 2
-    const val ROUNDS = 1
-    const val SPEED = 1
 }
 
 internal object Offset {

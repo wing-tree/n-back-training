@@ -8,8 +8,7 @@ import com.wing.tree.n.back.training.domain.repository.OptionRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class OptionRepositoryImpl @Inject constructor(
-    private val dataStore: DataStore<Option>) : OptionRepository {
+class OptionRepositoryImpl @Inject constructor(private val dataStore: DataStore<Option>) : OptionRepository {
     private val data = dataStore.data
 
     override suspend fun option(): DomainModel {
@@ -21,6 +20,7 @@ class OptionRepositoryImpl @Inject constructor(
             it.toBuilder()
                 .setRounds(option.rounds)
                 .setSpeed(option.speed)
+                .setSpeedMode(option.speedMode)
                 .build()
         }
     }

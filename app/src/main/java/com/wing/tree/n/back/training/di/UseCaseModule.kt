@@ -1,15 +1,18 @@
 package com.wing.tree.n.back.training.di
 
 import com.wing.tree.n.back.training.domain.repository.OptionRepository
+import com.wing.tree.n.back.training.domain.repository.PreferencesRepository
 import com.wing.tree.n.back.training.domain.repository.RankingRepository
 import com.wing.tree.n.back.training.domain.repository.RecordRepository
 import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.preferences.GetSortByUseCase
+import com.wing.tree.n.back.training.domain.usecase.preferences.PutSortByUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingsUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
-import com.wing.tree.n.back.training.domain.usecase.record.GetRecordListUseCase
+import com.wing.tree.n.back.training.domain.usecase.record.GetRecordsUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import dagger.Module
 import dagger.Provides
@@ -50,11 +53,20 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun providesGetRecordListUseCase(
+    fun providesGetRecordsUseCase(
         repository: RecordRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetRecordListUseCase {
-        return GetRecordListUseCase(repository, coroutineDispatcher)
+    ): GetRecordsUseCase {
+        return GetRecordsUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesGetSortByUseCase(
+        repository: PreferencesRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): GetSortByUseCase {
+        return GetSortByUseCase(repository, coroutineDispatcher)
     }
 
     @Provides
@@ -68,7 +80,16 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun providesRegisterRankingUseCase(
+    fun providesPutSortByUseCase(
+        repository: PreferencesRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): PutSortByUseCase {
+        return PutSortByUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesRegisterForRankingUseCase(
         repository: RankingRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): RegisterForRankingUseCase {
@@ -83,6 +104,4 @@ internal object UseCaseModule {
     ): UpdateOptionUseCase {
         return UpdateOptionUseCase(repository, coroutineDispatcher)
     }
-
-
 }

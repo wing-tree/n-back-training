@@ -35,6 +35,7 @@ import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.wing.tree.n.back.training.domain.model.SortBy
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
@@ -61,7 +62,7 @@ class RecordActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             var showSortDialog by remember { mutableStateOf(false) }
-            var sortBy by remember { mutableStateOf(SortBy.Newest) }
+            var sortBy by remember { mutableStateOf(viewModel.sortBy) }
 
             ApplicationTheme {
                 Scaffold {
@@ -81,18 +82,13 @@ class RecordActivity : ComponentActivity() {
                                 onClick = {
                                     showSortDialog = true
                                 }
-                            ),
-                            Menu.Item(
-                                icon = R.drawable.ic_round_filter_alt_24,
-                                title = getString(R.string.filter),
-                                onClick = {
-
-                                }
                             )
                         )
 
                         if (showSortDialog) {
-                            SortDialog(SortBy.Newest) {
+                            SortDialog(sortBy) {
+                                viewModel.putSortBy(it.value)
+
                                 sortBy = it
                                 showSortDialog = false
                             }
@@ -130,10 +126,11 @@ class RecordActivity : ComponentActivity() {
 
 @Composable
 fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy: SortBy) {
-    val recordList: List<Record>? by viewModel.recordList.observeAsState()
+    val records: List<Record>? by viewModel.records.observeAsState()
+
     val items = when(sortBy) {
-        SortBy.Newest -> recordList?.sortedByDescending { it.timestamp }
-        SortBy.Oldest -> recordList?.sortedBy { it.timestamp }
+        SortBy.Newest -> records?.sortedByDescending { it.timestamp }
+        SortBy.Oldest -> records?.sortedBy { it.timestamp }
     } ?: return
 
     LazyColumn {
@@ -249,10 +246,6 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
             )
         }
     }
-}
-
-enum class SortBy(val value: Int) {
-    Newest(0), Oldest(1)
 }
 
 @Composable

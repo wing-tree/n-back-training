@@ -23,7 +23,7 @@ class CheckRankingUseCase @Inject constructor(
         }
     }
 
-    class Parameter(
+    data class Parameter(
         val rankCheckParameter: RankCheckParameter,
         @MainThread
         val onSuccess: (Boolean) -> Unit,

@@ -7,16 +7,15 @@ import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetRecordListUseCase @Inject constructor(
+class GetRecordsUseCase @Inject constructor(
     private val repository: RecordRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, List<Record>>(coroutineDispatcher) {
     override fun execute(parameter: Unit): Flow<Result<List<Record>>> {
-        return repository.getRecordList()
+        return repository.getRecords()
             .map {
                 try {
                     Result.Success(it)

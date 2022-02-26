@@ -21,7 +21,7 @@ class GetRankingsUseCase @Inject constructor(
         )
     }
 
-    class Parameter(
+    data class Parameter(
         val page: Int,
         val pageSize: Long,
         @MainThread

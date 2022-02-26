@@ -14,6 +14,7 @@ import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Option
 import com.wing.tree.n.back.training.presentation.util.quarter
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity.State
+import com.wing.tree.n.back.training.presentation.view.TrainingParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -43,14 +44,15 @@ class TrainingViewModel @Inject constructor(
     val n = savedStateHandle.get<Int>(Extra.BACK) ?: N.DEFAULT
     val rounds = option.rounds
     val speed = option.speed
+    val speedMode = option.speedMode
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            updateOptionUseCase.invoke(option)
+            updateOptionUseCase.invoke(UpdateOptionUseCase.Parameter(option))
         }
     }
 
-    val problemList: List<Problem> = run {
+    val problems: List<Problem> = run {
         val seed = System.currentTimeMillis()
 
         var intArray = IntArray(option.rounds)
@@ -106,14 +108,14 @@ class TrainingViewModel @Inject constructor(
     private val _countDown = MutableLiveData(From.COUNT_DOWN)
     val countDown: LiveData<Int?> get() = _countDown
 
-    private val _enabled = MutableLiveData(true)
-    val enabled: LiveData<Boolean> get() = _enabled
+    private val _trainingParameter = MutableLiveData(
+        TrainingParameter(
+            enabled = false,
+            visible = true
+        )
+    )
 
-    private val _isVisible = MutableLiveData(true)
-    val isVisible: LiveData<Boolean> get() = _isVisible
-
-    private val _round = MutableLiveData(0)
-    val round: LiveData<Int> get() = _round
+    val trainingParameter: LiveData<TrainingParameter> get() = _trainingParameter
 
     private val _state = MutableLiveData<State>(State.Ready)
     val state: LiveData<State> get() = _state
@@ -132,8 +134,16 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    fun setIsVisible(value: Boolean) {
-        _isVisible.value = value
+    fun setEnabled(enabled: Boolean) {
+        val value = _trainingParameter.value ?: return
+
+        _trainingParameter.value = TrainingParameter(enabled, value.visible)
+    }
+
+    fun setVisible(visible: Boolean) {
+        val value = _trainingParameter.value ?: return
+
+        _trainingParameter.value = TrainingParameter(value.enabled, visible)
     }
 
     fun progress() {
@@ -165,7 +175,7 @@ class TrainingViewModel @Inject constructor(
 
         val record = object : Record() {
             override val n: Int = viewModel.n
-            override val problems: List<Problem> = viewModel.problemList
+            override val problems: List<Problem> = viewModel.problems
             override val rounds: Int = viewModel.rounds
             override val speed: Int = viewModel.speed
             override val timestamp: Long = System.currentTimeMillis()

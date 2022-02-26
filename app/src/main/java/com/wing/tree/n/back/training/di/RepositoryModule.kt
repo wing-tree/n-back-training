@@ -1,9 +1,11 @@
 package com.wing.tree.n.back.training.di
 
 import com.wing.tree.n.back.training.data.repository.OptionRepositoryImpl
+import com.wing.tree.n.back.training.data.repository.PreferencesRepositoryImpl
 import com.wing.tree.n.back.training.data.repository.RankingRepositoryImpl
 import com.wing.tree.n.back.training.data.repository.RecordRepositoryImpl
 import com.wing.tree.n.back.training.domain.repository.OptionRepository
+import com.wing.tree.n.back.training.domain.repository.PreferencesRepository
 import com.wing.tree.n.back.training.domain.repository.RankingRepository
 import com.wing.tree.n.back.training.domain.repository.RecordRepository
 import dagger.Binds
@@ -18,6 +20,10 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsOptionRepository(repository: OptionRepositoryImpl): OptionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsPreferencesRepository(repository: PreferencesRepositoryImpl): PreferencesRepository
 
     @Binds
     @Singleton

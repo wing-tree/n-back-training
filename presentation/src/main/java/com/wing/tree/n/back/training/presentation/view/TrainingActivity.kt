@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -49,6 +50,7 @@ import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
+import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,7 +95,7 @@ class TrainingActivity : ComponentActivity() {
             ApplicationTheme {
                 Scaffold {
                     val countDown by viewModel.countDown.observeAsState()
-                    val isVisible by viewModel.isVisible.observeAsState()
+                    val trainingParameter by viewModel.trainingParameter.observeAsState()
 
                     val title = "${viewModel.n}-Back"
 
@@ -110,9 +112,11 @@ class TrainingActivity : ComponentActivity() {
                             }
                         )
 
+                        Spacer(modifier = Modifier.height(24.dp))
+
                         NavHost(navController = navController, startDestination = Route.READY) {
                             composable(Route.READY) { Ready(countDown) }
-                            composable(Route.TRAINING) { Training(viewModel, isVisible ?: true) }
+                            composable(Route.TRAINING) { Training(viewModel, trainingParameter) }
                             composable(Route.RESULT) {
                                Result(viewModel) {
                                     interstitialAd?.show(this@TrainingActivity) ?: finish()
@@ -235,14 +239,17 @@ private fun Ready(countDown: Int?) {
 }
 
 @Composable
-private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
+private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingParameter?) {
     val context = LocalContext.current
-    val isVisible by rememberUpdatedState(isVisibleNewVal)
+
+    val enabled by rememberUpdatedState(trainingParameter?.enabled ?: true)
+    val visible by rememberUpdatedState(trainingParameter?.visible ?: true)
+
     val rounds = viewModel.rounds
 
     var round by rememberSaveable { mutableStateOf(0) }
 
-    if (round == rounds) {
+    if (round.`is`(rounds)) {
         LaunchedEffect(round) {
             viewModel.complete()
         }
@@ -252,115 +259,165 @@ private fun Training(viewModel: TrainingViewModel, isVisibleNewVal: Boolean) {
         LaunchedEffect(round) {
             delay(ONE_SECOND.quarter)
 
-            viewModel.setIsVisible(true)
+            viewModel.setEnabled(round >= viewModel.n)
+            viewModel.setVisible(true)
 
             delay(ONE_SECOND.times(viewModel.speed))
 
             round += 1
-            viewModel.setIsVisible(false)
+            viewModel.setVisible(false)
         }
     }
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
-            text = "${round.inc()}/$rounds",
-            modifier = Modifier.height(48.dp),
-            fontSize = 24.sp
-        )
-
         val unit = if (viewModel.speed.`is`(1)) {
             context.getString(R.string.second)
         } else {
             context.getString(R.string.seconds)
         }
 
-        Text(text = "${viewModel.speed} $unit")
-
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .background(Color.Gray, RoundedCornerShape(12.dp))
-        ) {
-            val text = if (isVisible) {
-                "${viewModel.problemList[round].number}"
+        Text(
+            text = if (viewModel.speedMode) {
+                context.getString(R.string.speed_mode)
             } else {
-                BLANK
-            }
-
-            Text(
-                text = text,
-                modifier = Modifier.align(Alignment.Center),
-                fontSize = 57.sp,
+                context.getString(R.string.normal_mode)
+            },
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Normal,
+                fontFamily = sebangFamily,
                 textAlign = TextAlign.Center
             )
-        }
+        )
 
-        val enabled = round >= viewModel.n && isVisible
+        Spacer(modifier = Modifier.height(12.dp))
 
-        Row(
-            Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(24.dp)
-        ) {
-            Button(
-                onClick = {
-                    val problem = viewModel.problemList[round]
+        Text(
+            text = "${context.getString(R.string.speed)} ${viewModel.speed}$unit",
+            style = TextStyle(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Normal,
+                fontFamily = sebangFamily,
+                textAlign = TextAlign.Center
+            )
+        )
 
-                    if (problem.answer.isNull) {
-                        problem.answer = true
-                        round += 1
-                        viewModel.setIsVisible(false)
-                    }
-                },
-                modifier = Modifier
-                    .height(48.dp)
-                    .weight(1.0F),
-                enabled = enabled,
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            text = "${round.inc()}/$rounds",
+            modifier = Modifier.height(48.dp),
+            style = TextStyle(
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Normal,
+                fontFamily = sebangFamily,
+                textAlign = TextAlign.Center
+            )
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        Column {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .weight(1.0F)
+                .padding(24.dp, 0.dp)
+                .background(Color.Gray, RoundedCornerShape(12.dp))
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_o_24),
-                    contentDescription = BLANK,
-                    colorFilter = ColorFilter.tint(Color.White)
+                val text = if (visible) {
+                    "${viewModel.problems[round].number}"
+                } else {
+                    BLANK
+                }
+
+                Text(
+                    text = text,
+                    modifier = Modifier.align(Alignment.Center),
+                    fontSize = 57.sp,
+                    textAlign = TextAlign.Center
                 )
             }
 
-            Spacer(modifier = Modifier.width(24.dp))
-
-            Button(
-                onClick = {
-                    val problem = viewModel.problemList[round]
-
-                    if (problem.answer.isNull) {
-                        problem.answer = false
-                        round += 1
-                        viewModel.setIsVisible(false)
-                    }
-                },
-                modifier = Modifier
-                    .height(48.dp)
-                    .weight(1.0F),
-                enabled = enabled,
-                shape = CircleShape,
-                colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
+            Row(
+                Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(24.dp, 48.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_x_24),
-                    contentDescription = BLANK,
-                    colorFilter = ColorFilter.tint(Color.White)
-                )
+                Button(
+                    onClick = {
+                        val problem = viewModel.problems[round]
+
+                        if (problem.answer.isNull) {
+                            problem.answer = true
+
+                            viewModel.setEnabled(false)
+
+                            if (viewModel.speedMode) {
+                                round += 1
+                                viewModel.setVisible(false)
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .height(48.dp)
+                        .weight(1.0F),
+                    enabled = enabled,
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_o_24),
+                        contentDescription = BLANK,
+                        colorFilter = ColorFilter.tint(Color.White)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(24.dp))
+
+                Button(
+                    onClick = {
+                        val problem = viewModel.problems[round]
+
+                        if (problem.answer.isNull) {
+                            problem.answer = false
+
+                            viewModel.setEnabled(false)
+
+                            if (viewModel.speedMode) {
+                                round += 1
+                                viewModel.setVisible(false)
+                            }
+                        }
+                    },
+                    modifier = Modifier
+                        .height(48.dp)
+                        .weight(1.0F),
+                    enabled = enabled,
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_x_24),
+                        contentDescription = BLANK,
+                        colorFilter = ColorFilter.tint(Color.White)
+                    )
+                }
             }
         }
     }
 }
 
+data class TrainingParameter(
+    val enabled: Boolean,
+    val visible: Boolean
+)
+
 @ExperimentalFoundationApi
 @Composable
 private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
-    val correctAnswerCount = viewModel.problemList.filter { it.isCorrect }.count()
-    val solutionNotNullCount = viewModel.problemList.filter { it.solution.notNull }.count()
+    val correctAnswerCount = viewModel.problems.filter { it.isCorrect }.count()
+    val solutionNotNullCount = viewModel.problems.filter { it.solution.notNull }.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
@@ -374,7 +431,7 @@ private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
             modifier = Modifier.weight(1.0F),
             cells = GridCells.Adaptive(minSize = 72.dp)
         ) {
-            items(viewModel.problemList) { item ->
+            items(viewModel.problems) { item ->
                 Column(
                     modifier = Modifier.padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally

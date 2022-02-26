@@ -20,7 +20,7 @@ class RegisterForRankingUseCase @Inject constructor(
         )
     }
 
-    class Parameter(
+    data class Parameter(
         val ranking: Ranking,
         @MainThread
         val onSuccess: (Int) -> Unit,

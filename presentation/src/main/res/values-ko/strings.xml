@@ -7,6 +7,7 @@
     <string name="n_back">N-Back</string>
     <string name="newest">최신순</string>
     <string name="nickname">닉네임</string>
+    <string name="normal_mode">일반 모드</string>
     <string name="oldest">오래된순</string>
     <string name="press_back_again_to_exit">\'뒤로\' 버튼을 다시 누르시면 종료됩니다</string>
     <string name="ranking">랭킹</string>

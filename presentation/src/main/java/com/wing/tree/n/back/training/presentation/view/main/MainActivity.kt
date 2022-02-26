@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,10 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -106,7 +111,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
                             Menu.Switch(
-                                true,
+                                option.speedMode,
                                 getString(R.string.speed_mode),
                                 getString(R.string.speed_mode)
                             ) {
@@ -115,7 +120,7 @@ class MainActivity : ComponentActivity() {
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
-                        
+
                         HorizontalButtonGroup(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -130,7 +135,6 @@ class MainActivity : ComponentActivity() {
 
                         Column(modifier = Modifier
                             .fillMaxWidth()
-                            .verticalScroll(rememberScrollState())
                             .padding(24.dp, 12.dp)
                         ) {
                             val modifier = Modifier
@@ -143,7 +147,13 @@ class MainActivity : ComponentActivity() {
                                 initialValue = option.rounds.float,
                                 valueRange = Rounds.ValueRange,
                                 steps = Rounds.STEPS
-                            ) { option.rounds = it.int }
+                            ) {
+                                if (it < Rounds.ValueRange.start) {
+                                    option.rounds = Rounds.DEFAULT
+                                } else {
+                                    option.rounds = it.int
+                                }
+                            }
 
                             Spacer(modifier = Modifier.height(12.dp))
 
@@ -153,12 +163,20 @@ class MainActivity : ComponentActivity() {
                                 initialValue = option.speed.float,
                                 valueRange = Speed.ValueRange,
                                 steps = Speed.STEPS
-                            ) { option.speed = it.int }
+                            ) {
+                                if (it < Speed.ValueRange.start) {
+                                    option.speed = Speed.DEFAULT
+                                } else {
+                                    option.speed = it.int
+                                }
+                            }
                         }
 
-                        NBackButtonGroup(modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1.0F)) {
+                        NBackButtonGroup(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1.0F)
+                        ) {
                             with(Intent(applicationContext, TrainingActivity::class.java)) {
                                 putExtra(Extra.BACK, it)
                                 putExtra(Extra.OPTION, option)
@@ -319,11 +337,11 @@ private fun Option(
 
 @Composable
 private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
-    val scrollState = rememberScrollState()
-
-    Column(modifier = modifier
-        .verticalScroll(scrollState)
-        .padding(24.dp, 0.dp)) {
+    Column(
+        modifier = modifier
+            .padding(24.dp, 0.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
         N.IntRange.forEach {
             Spacer(modifier = Modifier.height(12.dp))
 
