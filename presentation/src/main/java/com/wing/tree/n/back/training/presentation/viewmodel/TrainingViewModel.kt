@@ -2,7 +2,6 @@ package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wing.tree.n.back.training.domain.model.Problem
 import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 import com.wing.tree.n.back.training.domain.model.Ranking
@@ -41,7 +40,7 @@ class TrainingViewModel @Inject constructor(
     val elapsedTime: Long
         get() = endTime - startTime
 
-    val n = savedStateHandle.get<Int>(Extra.BACK) ?: Back.DEFAULT
+    val n = savedStateHandle.get<Int>(Extra.BACK) ?: N.DEFAULT
     val rounds = option.rounds
     val speed = option.speed
 

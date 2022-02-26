@@ -4,6 +4,7 @@ option java_package = "com.wing.tree.n.back.training.data.datastore.option";
 option java_multiple_files = true;
 
 message Option {
-  int32 rounds = 2;
-  int32 speed = 3;
+  int32 rounds = 1;
+  int32 speed = 2;
+  bool speed_mode = 3;
 }

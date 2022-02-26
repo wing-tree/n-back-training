@@ -7,5 +7,6 @@ internal object OptionMapper {
     fun Option.toDomainModel() = object : DomainModel() {
         override var rounds = this@toDomainModel.rounds
         override var speed = this@toDomainModel.speed
+        override var speedMode = this@toDomainModel.speedMode
     }
 }

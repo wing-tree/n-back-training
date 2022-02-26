@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RecordViewModel @Inject constructor(
-    private val getRecordListUseCase: GetRecordListUseCase,
+    getRecordListUseCase: GetRecordListUseCase,
     application: Application
 ) : AndroidViewModel(application) {
 

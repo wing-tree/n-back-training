@@ -10,6 +10,13 @@ sealed class Menu {
         @DrawableRes val icon: Int,
         val title: String,
         val subtext: String = BLANK,
-        val onClick: (() -> Unit)? = null
+        val onClick: (() -> Unit)
+    ) : Menu()
+
+    data class Switch(
+        val checked: Boolean,
+        val textOff: String,
+        val textOn: String,
+        val onCheckedChanged: ((Boolean) -> Unit)
     ) : Menu()
 }

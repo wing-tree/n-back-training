@@ -11,5 +11,9 @@ internal object Speed {
     const val DEFAULT = 3
 }
 
+internal object SpeedMode {
+    const val DEFAULT = false
+}
+
 internal val Int.long: Long
     get() = toLong()

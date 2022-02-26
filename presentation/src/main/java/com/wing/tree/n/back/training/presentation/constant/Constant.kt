@@ -5,12 +5,10 @@ internal const val ONE_HUNDRED = 100
 internal const val ONE_SECOND = 1000L
 internal const val PACKAGE_NAME = "com.wing.tree.n.back.training.presentation"
 
-internal object Back {
+internal object N {
     const val DEFAULT = 2
-    const val STEPS = 5
 
-    val ValueRange = 2.0F..9.0F
-    val IntRange = kotlin.ranges.IntRange(2, 9)
+    val IntRange = IntRange(2, 9)
 }
 
 internal object Rounds {
@@ -22,16 +20,13 @@ internal object Rounds {
 
 internal object Speed {
     const val DEFAULT = 3
-
     const val STEPS = 3
 
     val ValueRange = 1F..5F
 }
 
-internal object Default {
-    const val N = 1
-    const val ROUNDS = 2
-    const val SPEED = 3
+internal object SpeedMode {
+    const val DEFAULT = false
 }
 
 internal object From {

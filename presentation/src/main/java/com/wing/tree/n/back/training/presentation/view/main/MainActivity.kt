@@ -19,7 +19,6 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -71,7 +70,8 @@ class MainActivity : ComponentActivity() {
                     Menu.Item(R.drawable.ic_round_share_24, getString(R.string.share_the_app)) {
                         shareApplication(this)
                     },
-                    Menu.Item(R.drawable.ic_round_info_24, getString(R.string.version), versionName)
+                    Menu.Item(R.drawable.ic_round_info_24, getString(R.string.version), versionName) {
+                    }
                 )
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
@@ -90,6 +90,7 @@ class MainActivity : ComponentActivity() {
                     ) {
                         Header(
                             title = getString(R.string.app_name),
+                            modifier = Modifier,
                             navigationIcon = {
                                 Icon(imageVector = Icons.Rounded.Menu, contentDescription = BLANK)
                             },
@@ -104,6 +105,13 @@ class MainActivity : ComponentActivity() {
                                     }
                                 }
                             },
+                            Menu.Switch(
+                                true,
+                                getString(R.string.speed_mode),
+                                getString(R.string.speed_mode)
+                            ) {
+                                option.speedMode = it
+                            }
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -139,8 +147,6 @@ class MainActivity : ComponentActivity() {
 
                             Spacer(modifier = Modifier.height(12.dp))
 
-                            GameModePicker(modifier.fillMaxWidth())
-
                             Option(
                                 modifier = modifier,
                                 title = getString(R.string.speed),
@@ -175,6 +181,8 @@ private fun Drawer(menuList: List<Menu>) {
         when(it) {
             is Menu.Divider -> Divider()
             is Menu.Item -> Menu(item = it)
+            else -> {
+            }
         }
     }
 }
@@ -191,7 +199,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
         modifier = modifier
             .height(height)
             .fillMaxWidth()
-            .clickable(item.onClick.notNull) { item.onClick?.invoke() },
+            .clickable(item.onClick.notNull) { item.onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(16.dp))
@@ -239,10 +247,9 @@ private fun HorizontalButtonGroup(modifier: Modifier = Modifier, vararg pairs: P
             ) {
                 Text(
                     text = pair.first,
+                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
                     fontWeight = FontWeight.Bold,
-                    style = TextStyle(
-                        fontFamily = sebangFamily
-                    )
+                    style = TextStyle(fontFamily = sebangFamily)
                 )
             }
             
@@ -275,6 +282,7 @@ private fun Option(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = title,
+                    modifier = Modifier.weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
@@ -286,6 +294,7 @@ private fun Option(
 
                 Text(
                     text = "${valueFinished.int}",
+                    modifier = Modifier.weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
@@ -309,32 +318,32 @@ private fun Option(
 }
 
 @Composable
-private fun GameModePicker(modifier: Modifier = Modifier) {
-    Row(modifier = modifier) {
-
-    }
-}
-
-@Composable
 private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
     val scrollState = rememberScrollState()
 
     Column(modifier = modifier
         .verticalScroll(scrollState)
         .padding(24.dp, 0.dp)) {
-        Back.IntRange.forEach {
+        N.IntRange.forEach {
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = { onClick(it) },
                 modifier = Modifier
-                    .height(48.dp)
+                    .height(40.dp)
                     .fillMaxWidth(),
                 shape = CircleShape
             ) {
-                Text(text = "$it-Back")
+                Text(
+                    text = "$it-Back",
+                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(fontFamily = sebangFamily)
+                )
             }
         }
+
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }
 

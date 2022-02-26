@@ -67,8 +67,8 @@ class RecordActivity : ComponentActivity() {
                 Scaffold {
                     Column {
                         Header(
-                            modifier = Modifier,
                             title = getString(R.string.records),
+                            modifier = Modifier,
                             navigationIcon = {
                                 Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK)
                             },
