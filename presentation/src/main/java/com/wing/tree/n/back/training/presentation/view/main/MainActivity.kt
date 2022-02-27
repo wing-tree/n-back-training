@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,10 +19,6 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -303,7 +298,8 @@ private fun Option(
                     modifier = Modifier.weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontFamily = sebangFamily,
+                        fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -314,8 +310,9 @@ private fun Option(
                     text = "${valueFinished.int}",
                     modifier = Modifier.weight(1.0F),
                     style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium,
+                        fontSize = 18.sp,
+                        fontFamily = sebangFamily,
+                        fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
                 )

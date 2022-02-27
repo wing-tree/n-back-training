@@ -19,4 +19,8 @@ sealed class Menu {
         val textOn: String,
         val onCheckedChanged: ((Boolean) -> Unit)
     ) : Menu()
+
+    data class Text(
+        val text: String
+    ) : Menu()
 }

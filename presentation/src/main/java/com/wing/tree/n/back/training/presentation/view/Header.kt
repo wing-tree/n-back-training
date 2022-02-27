@@ -1,10 +1,7 @@
 package com.wing.tree.n.back.training.presentation.view
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Switch
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
+import com.wing.tree.n.back.training.presentation.util.notNull
 
 @Composable
 internal fun Header(
@@ -28,17 +26,20 @@ internal fun Header(
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row(modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)) {
+            .height(48.dp)) {
             IconButton(
                 onClick = navigationOnClick,
                 content = navigationIcon
             )
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.End) {
                 menu.forEach {
                     when(it) {
                         is Menu.Item -> {
-                            IconButton(onClick = { it.onClick() }) {
+                            IconButton(
+                                modifier = Modifier.fillMaxHeight(),
+                                onClick = it.onClick
+                            ) {
                                 Icon(painterResource(id = it.icon), it.title)
                             }
                         }
@@ -54,7 +55,10 @@ internal fun Header(
                                 )
                             }
 
-                            Row(verticalAlignment = Alignment.CenterVertically) {
+                            Row(
+                                modifier = Modifier.fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
                                 Text(
                                     text = text,
                                     modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
@@ -79,8 +83,28 @@ internal fun Header(
                                         }
                                     }
                                 )
+
+                                Spacer(modifier = Modifier.width(4.dp))
                             }
 
+                        }
+                        is Menu.Text -> {
+                            Row(
+                                modifier = Modifier.fillMaxHeight(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = it.text,
+                                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
+                                    fontWeight = FontWeight.Bold,
+                                    style = TextStyle(
+                                        fontFamily = sebangFamily,
+                                        textAlign = TextAlign.Center
+                                    )
+                                )
+                                
+                                Spacer(modifier = Modifier.width(12.dp))
+                            }
                         }
                         else -> {
                         }
@@ -89,7 +113,7 @@ internal fun Header(
             }
         }
         
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
         Text(
             text = title,

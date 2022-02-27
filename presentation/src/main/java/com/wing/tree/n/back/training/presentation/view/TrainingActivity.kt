@@ -47,6 +47,7 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
+import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
@@ -102,6 +103,7 @@ class TrainingActivity : ComponentActivity() {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Header(
                             title = title,
+                            modifier = Modifier,
                             navigationIcon = { Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK) },
                             navigationOnClick = {
                                 if (state is State.Result) {
@@ -109,7 +111,14 @@ class TrainingActivity : ComponentActivity() {
                                 } else {
                                     finish()
                                 }
-                            }
+                            },
+                            Menu.Text(
+                                text = if (viewModel.speedMode) {
+                                    getString(R.string.speed_mode)
+                                } else {
+                                    getString(R.string.normal_mode)
+                                }
+                            )
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -240,8 +249,6 @@ private fun Ready(countDown: Int?) {
 
 @Composable
 private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingParameter?) {
-    val context = LocalContext.current
-
     val enabled by rememberUpdatedState(trainingParameter?.enabled ?: true)
     val visible by rememberUpdatedState(trainingParameter?.visible ?: true)
 
@@ -269,53 +276,20 @@ private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingPa
         }
     }
 
+    Spacer(modifier = Modifier.height(12.dp))
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        val unit = if (viewModel.speed.`is`(1)) {
-            context.getString(R.string.second)
-        } else {
-            context.getString(R.string.seconds)
-        }
-
-        Text(
-            text = if (viewModel.speedMode) {
-                context.getString(R.string.speed_mode)
-            } else {
-                context.getString(R.string.normal_mode)
-            },
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = sebangFamily,
-                textAlign = TextAlign.Center
-            )
-        )
-
-        Spacer(modifier = Modifier.height(12.dp))
-
-        Text(
-            text = "${context.getString(R.string.speed)} ${viewModel.speed}$unit",
-            style = TextStyle(
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = sebangFamily,
-                textAlign = TextAlign.Center
-            )
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
         Text(
             text = "${round.inc()}/$rounds",
-            modifier = Modifier.height(48.dp),
             style = TextStyle(
-                fontSize = 32.sp,
+                fontSize = 34.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = sebangFamily,
                 textAlign = TextAlign.Center
             )
         )
-
-        Spacer(modifier = Modifier.height(48.dp))
+        
+        Spacer(modifier = Modifier.height(24.dp))
 
         Column {
             Box(modifier = Modifier
@@ -333,15 +307,19 @@ private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingPa
                 Text(
                     text = text,
                     modifier = Modifier.align(Alignment.Center),
-                    fontSize = 57.sp,
-                    textAlign = TextAlign.Center
+                    style = TextStyle(
+                        fontSize = 72.sp,
+                        fontWeight = FontWeight.Normal,
+                        fontFamily = sebangFamily,
+                        textAlign = TextAlign.Center
+                    )
                 )
             }
 
             Row(
                 Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(24.dp, 48.dp)
+                    .padding(24.dp, 36.dp)
             ) {
                 Button(
                     onClick = {
