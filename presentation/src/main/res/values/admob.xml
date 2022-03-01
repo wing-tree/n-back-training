@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-2961864212669192/1093326916</string>
-    <string name="sample_banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
-
-    <string name="interstitial_ad_unit_id" translatable="false">ca-app-pub-2961864212669192/2995040871</string>
-    <string name="sample_interstitial_ad_unit_id" translatable="false">	ca-app-pub-3940256099942544/1033173712</string>
-</resources>
