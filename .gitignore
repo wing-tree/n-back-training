@@ -13,3 +13,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/presentation/src/main/res/values/admob.xml

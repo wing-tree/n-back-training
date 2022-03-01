@@ -554,7 +554,7 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
                         shape = CircleShape
                     ) {
                         Text(
-                            text = context.getString(R.string.confirm).uppercase(),
+                            text = context.getString(R.string.confirm),
                             style = Typography.button
                         )
                     }
@@ -576,14 +576,33 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
                     .padding(0.dp, 72.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                LazyColumn {
+                LazyColumn(modifier = Modifier.padding(0.dp, 12.dp)) {
                     items(items) {
-                        Row(modifier = Modifier
-                            .height(40.dp)
-                            .fillMaxWidth()
-                            .clickable { onClick(it) }
+                        Row(
+                            modifier = Modifier
+                                .height(40.dp)
+                                .fillMaxWidth()
+                                .clickable { onClick(it) },
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(it.displayCountry)
+                            Row(
+                                modifier = Modifier.padding(24.dp, 0.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(text = it.flagEmoji)
+
+                                Spacer(modifier = Modifier.width(12.dp))
+
+                                Text(
+                                    text = it.displayCountry,
+                                    modifier = Modifier.textPadding(),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = sebangFamily,
+                                        textAlign = TextAlign.Center
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -693,14 +712,11 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
                             .padding(24.dp, 0.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = locale.flagEmoji)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = locale.flagEmoji)
 
-                        Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
 
-                        Box(
-                            modifier = Modifier.textPadding(),
-                            contentAlignment = Alignment.Center
-                        ) {
                             Text(
                                 text = locale.displayCountry,
                                 modifier = Modifier.textPadding(),
