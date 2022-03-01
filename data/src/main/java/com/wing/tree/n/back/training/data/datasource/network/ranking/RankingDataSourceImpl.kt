@@ -18,7 +18,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
     override suspend fun checkRanking(
         rankCheckParameter: RankCheckParameter,
         @MainThread
-        onSuccess: (Boolean) -> Unit,
+        onSuccess: (Boolean, Int) -> Unit,
         @MainThread
         onFailure: (Exception) -> Unit
     ) {
@@ -31,14 +31,26 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     task.result?.let { querySnapshot ->
-                        if (querySnapshot.count() < LOWEST_RANK) {
-                            with(querySnapshot.last()) {
-                                val ranking = this.toObject<Ranking>()
+                        val count = querySnapshot.count()
 
-                                onSuccess(ranking.rankCheckParameter.isHigher(rankCheckParameter))
+                        run {
+                            querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
+                                with(queryDocumentSnapshot.toObject<Ranking>()) {
+                                    println("check idx:$index ranking:$this, rankcheckparam:${rankCheckParameter}")
+                                    if (isHigher(rankCheckParameter)) {
+                                        println("check idx:$index ranking:$this, 노진입??? 아니면 나의 실수.")
+                                        onSuccess(true, index)
+
+                                        return@run
+                                    }
+                                }
                             }
-                        } else {
-                            onSuccess(true)
+
+                            if (count < LOWEST_RANK) {
+                                onSuccess(true, count.inc())
+                            } else {
+                                onSuccess(false, 0)
+                            }
                         }
                     } ?: onFailure(NullPointerException("task.result :${task.result}"))
                 } else {
@@ -106,11 +118,11 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
     override suspend fun registerForRanking(
         ranking: Ranking,
         @MainThread
-        onSuccess: (Int) -> Unit,
+        onSuccess: () -> Unit,
         @MainThread
         onFailure: (Exception) -> Unit
     ) {
-        collectionReference.limit(50)
+        collectionReference.limit(LOWEST_RANK.long)
             .orderBy(Field.N, Query.Direction.DESCENDING)
             .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
             .orderBy(Field.ELAPSED_TIME)
@@ -118,35 +130,12 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             .addOnSuccessListener { querySnapshot ->
                 val documents = querySnapshot.documents
 
-                if (querySnapshot.size() < 1) {
-                    updateRanking(
-                        documents,
-                        ranking, {
-                            onSuccess(0)
-                        },
-                        onFailure
-                    )
-
-                    return@addOnSuccessListener
-                }
-
-                run {
-                    querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
-                        with(queryDocumentSnapshot.toObject<Ranking>()) {
-                            if (isHigher(ranking)) {
-                                updateRanking(
-                                    documents,
-                                    ranking, {
-                                        onSuccess(index)
-                                    },
-                                    onFailure
-                                )
-
-                                return@run
-                            }
-                        }
-                    }
-                }
+                updateRanking(
+                    documents,
+                    ranking,
+                    onSuccess,
+                    onFailure
+                )
             }
             .addOnFailureListener {
                 onFailure.invoke(it)

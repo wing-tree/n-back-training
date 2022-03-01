@@ -17,6 +17,8 @@
     <string name="press_back_again_to_exit">\'뒤로\' 버튼을 다시 누르시면 종료됩니다</string>
     <string name="ranking">랭킹</string>
     <string name="ranking_registration">랭킹 등록</string>
+    <string name="ranking_registration_failed">랭킹 등록에 실패했습니다.</string>
+    <string name="ranking_registered">랭킹이 등록되었습니다.</string>
     <string name="record">기록</string>
     <string name="records">기록</string>
     <string name="result">결과</string>

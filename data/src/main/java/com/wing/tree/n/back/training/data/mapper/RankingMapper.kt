@@ -6,22 +6,24 @@ import com.wing.tree.n.back.training.domain.model.Ranking as DomainModel
 
 object RankingMapper {
     fun DomainModel.toDataModel() = DataModel(
+        country = country,
         elapsedTime = elapsedTime,
         id = id,
         n = n,
-        nation = nation,
-        nickname = nickname,
+        name = name,
         rounds = rounds,
+        speed = speed,
         timestamp = Timestamp(timestamp)
     )
 
     fun DataModel.toDomainModel() = DomainModel(
+        country = country,
         elapsedTime = elapsedTime,
         id = id,
         n = n,
-        nation = nation,
-        nickname = nickname,
+        name = name,
         rounds = rounds,
+        speed = speed,
         timestamp = timestamp.toDate()
     )
 }

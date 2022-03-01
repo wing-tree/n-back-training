@@ -26,7 +26,7 @@ class CheckRankingUseCase @Inject constructor(
     data class Parameter(
         val rankCheckParameter: RankCheckParameter,
         @MainThread
-        val onSuccess: (Boolean) -> Unit,
+        val onSuccess: (Boolean, Int) -> Unit,
         @MainThread
         val onFailure: (Exception) -> Unit
     )

@@ -11,7 +11,7 @@ import javax.inject.Inject
 class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingDataSource) : RankingRepository {
     override suspend fun checkRanking(
         rankCheckParameter: RankCheckParameter,
-        onSuccess: (Boolean) -> Unit,
+        onSuccess: (Boolean, Int) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         dataSource.checkRanking(rankCheckParameter, onSuccess, onFailure)
@@ -35,7 +35,7 @@ class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingD
 
     override suspend fun registerRanking(
         ranking: Ranking,
-        onSuccess: (Int) -> Unit,
+        onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         dataSource.registerForRanking(ranking.toDataModel(), onSuccess, onFailure)

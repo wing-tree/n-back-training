@@ -46,8 +46,8 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
-import com.wing.tree.n.back.training.presentation.composable.ButtonText
-import com.wing.tree.n.back.training.presentation.composable.CancelAlertDialog
+import com.wing.tree.n.back.training.presentation.view.composable.ButtonText
+import com.wing.tree.n.back.training.presentation.view.composable.CancelAlertDialog
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
@@ -103,11 +103,11 @@ class TrainingActivity : ComponentActivity() {
                 Scaffold {
                     val countDown by viewModel.countDown.observeAsState()
                     val trainingParameter by viewModel.trainingParameter.observeAsState()
-                    var title by remember { mutableStateOf("${viewModel.n}-Back") }
+                    val title by viewModel.title.observeAsState()
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Header(
-                            title = title,
+                            title = title ?: "${viewModel.n}-Back",
                             modifier = Modifier,
                             navigationIcon = { Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK) },
                             navigationOnClick = {
@@ -142,7 +142,7 @@ class TrainingActivity : ComponentActivity() {
                             }
                         }
 
-                        NavHost(navController = navController, startDestination = Route.RANKING_REGISTRATION) {
+                        NavHost(navController = navController, startDestination = Route.READY) {
                             composable(Route.READY) { Ready(countDown) }
                             composable(Route.TRAINING) { Training(viewModel, trainingParameter) }
                             composable(Route.RESULT) {
@@ -151,11 +151,28 @@ class TrainingActivity : ComponentActivity() {
                                 }
                             }
                             composable(Route.RANKING_REGISTRATION) {
-                                title = getString(R.string.ranking_registration)
+                                RankingRegistration(
+                                    viewModel = viewModel,
+                                    onCancelButtonClick = { showCancelAlertDialog = true },
+                                    onSuccess = {
+                                        Toast.makeText(
+                                            this@TrainingActivity,
+                                            getString(R.string.ranking_registered),
+                                            Toast.LENGTH_LONG
+                                        ).show()
 
-                                RankingRegistration(viewModel = viewModel) {
-                                    showCancelAlertDialog = true
-                                }
+                                        finish()
+                                    },
+                                    onFailure = {
+                                        Toast.makeText(
+                                            this@TrainingActivity,
+                                            getString(R.string.ranking_registration_failed),
+                                            Toast.LENGTH_LONG
+                                        ).show()
+
+                                        finish()
+                                    }
+                                )
                             }
                         }
 
@@ -497,11 +514,16 @@ private fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mod
 
 @ExperimentalFoundationApi
 @Composable
-private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClick: () -> Unit) {
+private fun RankingRegistration(
+    viewModel: TrainingViewModel,
+    onCancelButtonClick: () -> Unit,
+    onSuccess: () -> Unit,
+    onFailure: (Exception) -> Unit
+) {
     val context = LocalContext.current
 
     @Composable
-    fun Option(title: String, value: Any, modifier: Modifier = Modifier) {
+    fun Option(title: String, value: Any?, modifier: Modifier = Modifier) {
         Card(
             modifier = modifier,
             shape = RoundedCornerShape(12.dp)
@@ -518,16 +540,18 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
                     )
                 )
 
-                Text(
-                    text = "$value",
-                    modifier = Modifier.weight(1.0F),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = sebangFamily,
-                        textAlign = TextAlign.Center
+                if (value.notNull) {
+                    Text(
+                        text = "$value",
+                        modifier = Modifier.weight(1.0F),
+                        style = TextStyle(
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = sebangFamily,
+                            textAlign = TextAlign.Center
+                        )
                     )
-                )
+                }
             }
         }
     }
@@ -548,7 +572,7 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
                     Button(
                         onClick = onButtonClick,
                         modifier = Modifier
-                            .padding(16.dp)
+                            .padding(24.dp, 12.dp)
                             .height(40.dp)
                             .fillMaxWidth(),
                         shape = CircleShape
@@ -652,15 +676,16 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
         ) {
             item {
                 Option(
-                    title = context.getString(R.string.n_back),
-                    value = viewModel.n
+                    title = "${viewModel.n}-Back",
+                    value = null,
+                    modifier = Modifier.padding(48.dp, 0.dp)
                 )
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
                 Option(
                     title = context.getString(R.string.elapsed_time),
-                    value = viewModel.elapsedTime
+                    value = "${viewModel.elapsedTime / 1000.0}s"
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -756,7 +781,13 @@ private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClic
                 Button(
                     onClick = {
                         if (name.isNotBlank()) {
-                            viewModel.registerForRanking(name, locale.displayCountry)
+                            viewModel.registerForRanking(
+                                name,
+                                locale.country,
+                                onSuccess = onSuccess
+                            ) {
+                                onFailure(it)
+                            }
                         } else {
                             isError = true
                         }

@@ -1,4 +1,4 @@
-package com.wing.tree.n.back.training.presentation.composable
+package com.wing.tree.n.back.training.presentation.view.composable
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

@@ -10,6 +10,7 @@ import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
+import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Option
 import com.wing.tree.n.back.training.presentation.util.quarter
@@ -44,6 +45,9 @@ class TrainingViewModel @Inject constructor(
     val rounds = option.rounds
     val speed = option.speed
     val speedMode = option.speedMode
+
+    private val _title = MutableLiveData("$n-Back")
+    val title: LiveData<String> get() = _title
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -116,7 +120,7 @@ class TrainingViewModel @Inject constructor(
 
     val trainingParameter: LiveData<TrainingParameter> get() = _trainingParameter
 
-    private val _state = MutableLiveData<State>(State.RankingRegistration) // todo modify..
+    private val _state = MutableLiveData<State>(State.Ready)
     val state: LiveData<State> get() = _state
 
     fun ready() {
@@ -146,7 +150,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun progress() {
-        startTime = System.nanoTime()
+        startTime = System.currentTimeMillis()
 //        if (inProgress.compareAndSet(false, true)) {
 //            viewModelScope.launch {
 //                repeat(rounds) {
@@ -168,7 +172,7 @@ class TrainingViewModel @Inject constructor(
     }
 
     fun complete() {
-        endTime = System.nanoTime()
+        endTime = System.currentTimeMillis()
 
         val viewModel = this
 
@@ -188,11 +192,21 @@ class TrainingViewModel @Inject constructor(
             rounds = rounds
         )
 
-        if (record.isPerfect) {
+        if (true /*record.isPerfect*/) {
             checkRanking(
-                rankCheckParameter, {
-                    if (it) {
+                rankCheckParameter, { isSuccessful, rank ->
+                    if (isSuccessful) {
+                        val suffix = when(rank) {
+                            0 -> "st"
+                            1 -> "nd"
+                            2 -> "rd"
+                            else -> "th"
+                        }
+
+                        val title = String.format(getApplication<Application>().getString(R.string.ranked), rank.inc(), suffix)
+
                         _state.value = State.RankingRegistration
+                        _title.value = title
                     } else {
                         _state.value = State.Result
                     }
@@ -213,7 +227,7 @@ class TrainingViewModel @Inject constructor(
 
     private fun checkRanking(
         rankCheckParameter: RankCheckParameter,
-        onSuccess: (Boolean) -> Unit,
+        onSuccess: (Boolean, Int) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -227,25 +241,27 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    fun registerForRanking(name: String, nation: String) {
+    fun registerForRanking(
+        name: String,
+        country: String,
+        onSuccess: () -> Unit,
+        onFailure: (Exception) -> Unit
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val ranking = Ranking(
+                country = country,
                 elapsedTime = elapsedTime,
                 n = n,
-                nation = nation,
-                nickname = name,
+                name = name,
                 rounds = rounds,
+                speed = speed,
                 timestamp = Date(),
             )
 
             val parameter = RegisterForRankingUseCase.Parameter(
                 ranking = ranking,
-                onSuccess = {
-
-                },
-                onFailure = {
-
-                }
+                onSuccess = onSuccess,
+                onFailure = { onFailure(it) }
             )
 
             registerForRankingUseCase.invoke(parameter)

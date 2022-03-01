@@ -5,26 +5,21 @@ import com.wing.tree.n.back.training.data.constant.BLANK
 import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 
 data class Ranking(
+    val country: String = BLANK,
     val elapsedTime: Long = 0L,
-    val n: Int = 2,
-    val nation: String = BLANK,
-    val nickname: String = BLANK,
-    val rounds: Int = 30,
+    val n: Int = 0,
+    val name: String = BLANK,
+    val rounds: Int = 0,
+    val speed: Int = 0,
     val timestamp: Timestamp = Timestamp.now(),
     var id: String = BLANK,
 ) {
-    val rankCheckParameter: RankCheckParameter
+    private val rankCheckParameter: RankCheckParameter
         get() = RankCheckParameter(
             elapsedTime = elapsedTime,
             n = n,
             rounds = rounds
         )
 
-    fun isHigher(other: Ranking): Boolean {
-        if (other.n > n) return true
-        if (other.rounds > rounds) return true
-        if (other.elapsedTime < other.elapsedTime) return true
-
-        return false
-    }
+    fun isHigher(other: RankCheckParameter): Boolean = rankCheckParameter.isHigher(other)
 }

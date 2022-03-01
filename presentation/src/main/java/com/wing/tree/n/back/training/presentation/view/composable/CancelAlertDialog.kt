@@ -1,9 +1,7 @@
-package com.wing.tree.n.back.training.presentation.composable
+package com.wing.tree.n.back.training.presentation.view.composable
 
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable

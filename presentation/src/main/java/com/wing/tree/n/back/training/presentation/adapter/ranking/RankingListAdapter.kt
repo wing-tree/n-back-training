@@ -26,7 +26,7 @@ class RankingListAdapter : ListAdapter<RankingListAdapter.AdapterItem, RankingLi
                 is AdapterItem.Ranking -> {
                     with(viewBinding) {
                         textViewRank.text = "${item.rank}"
-                        textViewNickname.text = item.nickname
+                        textViewNickname.text = item.name
                         textViewElapsedTime.text = "${item.elapsedTime}"
                         textViewN.text = "${item.n}"
                         textViewRounds.text = "${item.rounds}"
@@ -51,24 +51,26 @@ class RankingListAdapter : ListAdapter<RankingListAdapter.AdapterItem, RankingLi
 
         data class Ranking(
             override val id: String,
+            val country: String,
             val elapsedTime: Long,
             val n: Int,
-            val nation: String,
-            val nickname: String,
+            val name: String,
             val rank: Int,
             val rounds: Int,
+            val speed: Int,
             val timestamp: Date,
         ) : AdapterItem() {
             companion object {
                 fun from(rank: Int, domainModel: DomainModel) = with(domainModel) {
                     Ranking(
+                        country = country,
                         id = id,
                         elapsedTime = elapsedTime,
                         n = n,
-                        nation = nation,
-                        nickname = nickname,
+                        name = name,
                         rank = rank,
                         rounds = rounds,
+                        speed = speed,
                         timestamp = timestamp
                     )
                 }

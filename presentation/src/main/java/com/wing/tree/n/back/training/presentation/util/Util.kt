@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 internal fun Any?.`is`(other: Any?) = this == other
@@ -21,6 +22,8 @@ internal val Int.quarter get() = this / 4
 internal val Long.half get() = this / 2L
 internal val Long.quarter get() = this / 4L
 internal val Long.twice get() = this * 2L
+
+internal val Long.seconds get() = TimeUnit.MILLISECONDS.toSeconds(this)
 
 internal fun <T> nullOrThen(condition: Boolean, then: T): T? {
     return if (condition) {

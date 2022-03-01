@@ -8,7 +8,7 @@ interface RankingRepository {
     suspend fun checkRanking(
         rankCheckParameter: RankCheckParameter,
         @MainThread
-        onSuccess: (Boolean) -> Unit,
+        onSuccess: (Boolean, Int) -> Unit,
         @MainThread
         onFailure: (Exception) -> Unit
     )
@@ -25,7 +25,7 @@ interface RankingRepository {
     suspend fun registerRanking(
         ranking: Ranking,
         @MainThread
-        onSuccess: (Int) -> Unit,
+        onSuccess: () -> Unit,
         @MainThread
         onFailure: (Exception) -> Unit
     )
