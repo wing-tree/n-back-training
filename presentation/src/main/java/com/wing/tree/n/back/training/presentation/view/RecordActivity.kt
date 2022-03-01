@@ -61,7 +61,7 @@ class RecordActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            var showSortDialog by remember { mutableStateOf(false) }
+            var showDialog by remember { mutableStateOf(false) }
             var sortBy by remember { mutableStateOf(viewModel.sortBy) }
 
             ApplicationTheme {
@@ -80,17 +80,17 @@ class RecordActivity : ComponentActivity() {
                                 icon = R.drawable.ic_round_sort_24,
                                 title = getString(R.string.sort),
                                 onClick = {
-                                    showSortDialog = true
+                                    showDialog = true
                                 }
                             )
                         )
 
-                        if (showSortDialog) {
+                        if (showDialog) {
                             SortDialog(sortBy) {
                                 viewModel.putSortBy(it.value)
 
                                 sortBy = it
-                                showSortDialog = false
+                                showDialog = false
                             }
                         }
 

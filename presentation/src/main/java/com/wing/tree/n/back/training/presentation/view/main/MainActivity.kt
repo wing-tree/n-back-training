@@ -41,6 +41,7 @@ import com.wing.tree.n.back.training.presentation.view.Header
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
+import com.wing.tree.n.back.training.presentation.view.textPadding
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -114,12 +115,12 @@ class MainActivity : ComponentActivity() {
                             }
                         )
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(48.dp))
 
                         HorizontalButtonGroup(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(24.dp, 12.dp),
+                                .padding(24.dp, 0.dp),
                             getString(R.string.how_to_play) to {
 
                             },
@@ -260,7 +261,7 @@ private fun HorizontalButtonGroup(modifier: Modifier = Modifier, vararg pairs: P
             ) {
                 Text(
                     text = pair.first,
-                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
+                    modifier = Modifier.textPadding(),
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(fontFamily = sebangFamily)
                 )
@@ -310,7 +311,7 @@ private fun Option(
                     text = "${valueFinished.int}",
                     modifier = Modifier.weight(1.0F),
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontFamily = sebangFamily,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
@@ -334,24 +335,21 @@ private fun Option(
 
 @Composable
 private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
-    Column(
-        modifier = modifier
-            .padding(24.dp, 0.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         N.IntRange.forEach {
             Spacer(modifier = Modifier.height(12.dp))
 
             Button(
                 onClick = { onClick(it) },
                 modifier = Modifier
+                    .padding(24.dp, 0.dp)
                     .height(40.dp)
                     .fillMaxWidth(),
                 shape = CircleShape
             ) {
                 Text(
                     text = "$it-Back",
-                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
+                    modifier = Modifier.textPadding(),
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(fontFamily = sebangFamily)
                 )

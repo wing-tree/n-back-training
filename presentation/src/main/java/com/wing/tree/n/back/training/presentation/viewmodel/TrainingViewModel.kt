@@ -21,7 +21,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
-import kotlin.properties.Delegates
 import kotlin.random.Random
 
 @HiltViewModel
@@ -35,8 +34,8 @@ class TrainingViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     private val option = savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default
 
-    private var endTime by Delegates.notNull<Long>()
-    private var startTime by Delegates.notNull<Long>()
+    private var endTime = 0L
+    private var startTime = 0L
 
     val elapsedTime: Long
         get() = endTime - startTime
@@ -117,7 +116,7 @@ class TrainingViewModel @Inject constructor(
 
     val trainingParameter: LiveData<TrainingParameter> get() = _trainingParameter
 
-    private val _state = MutableLiveData<State>(State.Ready)
+    private val _state = MutableLiveData<State>(State.RankingRegistration) // todo modify..
     val state: LiveData<State> get() = _state
 
     fun ready() {
@@ -228,13 +227,13 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    private fun registerForRanking(nickname: String) {
+    fun registerForRanking(name: String, nation: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val ranking = Ranking(
                 elapsedTime = elapsedTime,
                 n = n,
-                nation = "",
-                nickname = nickname,
+                nation = nation,
+                nickname = name,
                 rounds = rounds,
                 timestamp = Date(),
             )

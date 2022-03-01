@@ -113,7 +113,7 @@ internal fun Header(
             }
         }
         
-        Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = title,

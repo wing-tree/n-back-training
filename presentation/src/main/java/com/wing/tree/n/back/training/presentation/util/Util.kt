@@ -3,6 +3,7 @@ package com.wing.tree.n.back.training.presentation.util
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
+import java.util.*
 import kotlin.math.roundToInt
 
 internal fun Any?.`is`(other: Any?) = this == other
@@ -31,3 +32,11 @@ internal fun <T> nullOrThen(condition: Boolean, then: T): T? {
 
 @Composable
 internal fun Dp.toSp() = with(LocalDensity.current) { this@toSp.toSp() }
+
+val Locale.flagEmoji: String
+    get() {
+        val first = Character.codePointAt(country, 0) - 0x41 + 0x1F1E6
+        val second = Character.codePointAt(country, 1) - 0x41 + 0x1F1E6
+
+        return String(Character.toChars(first)) + String(Character.toChars(second))
+    }

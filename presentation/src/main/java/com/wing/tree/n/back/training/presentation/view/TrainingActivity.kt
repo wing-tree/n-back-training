@@ -1,5 +1,6 @@
 package com.wing.tree.n.back.training.presentation.view
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.widget.Toast
@@ -7,11 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -33,6 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -44,18 +46,18 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
+import com.wing.tree.n.back.training.presentation.composable.ButtonText
+import com.wing.tree.n.back.training.presentation.composable.CancelAlertDialog
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
-import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.ui.theme.Green500
-import com.wing.tree.n.back.training.presentation.ui.theme.Red500
-import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
+import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import java.util.*
 
 @AndroidEntryPoint
 class TrainingActivity : ComponentActivity() {
@@ -73,17 +75,21 @@ class TrainingActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             val state by viewModel.state.observeAsState()
+            var showCancelAlertDialog by remember { mutableStateOf(false) }
 
             BackHandler(true) {
                 if (state is State.Result) {
                     interstitialAd?.show(this) ?: finish()
+                    return@BackHandler
+                }
 
+                if (state is State.RankingRegistration) {
+                    showCancelAlertDialog = true
                     return@BackHandler
                 }
 
                 if (onBackPressed) {
                     finish()
-
                     return@BackHandler
                 }
 
@@ -97,8 +103,7 @@ class TrainingActivity : ComponentActivity() {
                 Scaffold {
                     val countDown by viewModel.countDown.observeAsState()
                     val trainingParameter by viewModel.trainingParameter.observeAsState()
-
-                    val title = "${viewModel.n}-Back"
+                    var title by remember { mutableStateOf("${viewModel.n}-Back") }
 
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Header(
@@ -106,10 +111,14 @@ class TrainingActivity : ComponentActivity() {
                             modifier = Modifier,
                             navigationIcon = { Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK) },
                             navigationOnClick = {
-                                if (state is State.Result) {
-                                    interstitialAd?.show(this@TrainingActivity) ?: finish()
-                                } else {
-                                    finish()
+                                when(state) {
+                                    is State.Result -> {
+                                        interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                    }
+                                    is State.RankingRegistration -> {
+                                        showCancelAlertDialog = true
+                                    }
+                                    else -> finish()
                                 }
                             },
                             Menu.Text(
@@ -121,9 +130,19 @@ class TrainingActivity : ComponentActivity() {
                             )
                         )
 
-                        Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(36.dp))
 
-                        NavHost(navController = navController, startDestination = Route.READY) {
+                        if (showCancelAlertDialog) {
+                            CancelAlertDialog(
+                                onDismissRequest = { showCancelAlertDialog = false },
+                                title = getString(R.string.cancel_ranking_registration_title),
+                                text = getString(R.string.cancel_ranking_registration_text),
+                                onConfirmButtonClick = { finish() }) {
+                                showCancelAlertDialog = false
+                            }
+                        }
+
+                        NavHost(navController = navController, startDestination = Route.RANKING_REGISTRATION) {
                             composable(Route.READY) { Ready(countDown) }
                             composable(Route.TRAINING) { Training(viewModel, trainingParameter) }
                             composable(Route.RESULT) {
@@ -132,8 +151,10 @@ class TrainingActivity : ComponentActivity() {
                                 }
                             }
                             composable(Route.RANKING_REGISTRATION) {
-                                RankingRegistration(viewModel = viewModel) {
+                                title = getString(R.string.ranking_registration)
 
+                                RankingRegistration(viewModel = viewModel) {
+                                    showCancelAlertDialog = true
                                 }
                             }
                         }
@@ -149,6 +170,10 @@ class TrainingActivity : ComponentActivity() {
                                 popUpTo(Route.READY) { inclusive = true }
                             }
                             is State.Result -> navController.navigate(Route.RESULT) {
+                                launchSingleTop = true
+                                popUpTo(Route.TRAINING) { inclusive = true }
+                            }
+                            is State.RankingRegistration -> navController.navigate(Route.RANKING_REGISTRATION) {
                                 launchSingleTop = true
                                 popUpTo(Route.TRAINING) { inclusive = true }
                             }
@@ -394,10 +419,33 @@ data class TrainingParameter(
 @Composable
 private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
     val context = LocalContext.current
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        ResultContent(viewModel = viewModel)
+
+        Button(
+            onClick = { onButtonClick() },
+            modifier = Modifier
+                .padding(16.dp)
+                .height(40.dp)
+                .fillMaxWidth(),
+            shape = CircleShape
+        ) {
+            Text(
+                text = context.getString(R.string.confirm).uppercase(),
+                style = Typography.button
+            )
+        }
+    }
+}
+
+@ExperimentalFoundationApi
+@Composable
+private fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Modifier) {
     val correctAnswerCount = viewModel.problems.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problems.filter { it.solution.notNull }.count()
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             modifier = Modifier.padding(16.dp),
             text = "$correctAnswerCount/$solutionNotNullCount",
@@ -444,56 +492,267 @@ private fun Result(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
                 }
             }
         }
-
-        Button(
-            onClick = { onButtonClick() },
-            modifier = Modifier
-                .padding(16.dp)
-                .height(40.dp)
-                .fillMaxWidth(),
-            shape = CircleShape
-        ) {
-            Text(
-                text = context.getString(R.string.confirm).uppercase(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Companion.Medium,
-                textAlign = TextAlign.Center
-            )
-        }
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
-private fun RankingRegistration(viewModel: TrainingViewModel, onButtonClick: () -> Unit) {
+private fun RankingRegistration(viewModel: TrainingViewModel, onCancelButtonClick: () -> Unit) {
     val context = LocalContext.current
 
-    Column {
-        Text(text = viewModel.elapsedTime.toString())
-        Text(text = viewModel.n.toString())
-        Text(text = viewModel.rounds.toString())
-
-        var text by remember { mutableStateOf(BLANK) }
-
-        TextField(
-            value = text,
-            onValueChange = { text = it },
-            label = { Text(context.getString(R.string.nickname)) }
-        )
-
-        Button(
-            onClick = { onButtonClick() },
-            modifier = Modifier
-                .padding(16.dp)
-                .height(40.dp)
-                .fillMaxWidth(),
-            shape = CircleShape
+    @Composable
+    fun Option(title: String, value: Any, modifier: Modifier = Modifier) {
+        Card(
+            modifier = modifier,
+            shape = RoundedCornerShape(12.dp)
         ) {
-            Text(
-                text = context.getString(R.string.confirm).uppercase(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Companion.Medium,
-                textAlign = TextAlign.Center
+            Row(modifier = Modifier.padding(0.dp, 12.dp)) {
+                Text(
+                    text = title,
+                    modifier = Modifier.weight(1.0F),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = sebangFamily,
+                        textAlign = TextAlign.Center
+                    )
+                )
+
+                Text(
+                    text = "$value",
+                    modifier = Modifier.weight(1.0F),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = sebangFamily,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+        }
+    }
+
+    @ExperimentalFoundationApi
+    @Composable
+    fun ResultDialog(onDismissRequest: () -> Unit, onButtonClick: () -> Unit) {
+        Dialog(onDismissRequest = onDismissRequest) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 72.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column {
+                    ResultContent(viewModel = viewModel, Modifier.weight(1.0F))
+
+                    Button(
+                        onClick = onButtonClick,
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .height(40.dp)
+                            .fillMaxWidth(),
+                        shape = CircleShape
+                    ) {
+                        Text(
+                            text = context.getString(R.string.confirm).uppercase(),
+                            style = Typography.button
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    fun CountrySelectionDialog(onDismissRequest: () -> Unit, onClick: (Locale) -> Unit) {
+        val items = Locale.getAvailableLocales().filter {
+            it.displayCountry.trim().isNotBlank()
+        }
+
+        Dialog(onDismissRequest = onDismissRequest) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 72.dp),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                LazyColumn {
+                    items(items) {
+                        Row(modifier = Modifier
+                            .height(40.dp)
+                            .fillMaxWidth()
+                            .clickable { onClick(it) }
+                        ) {
+                            Text(it.displayCountry)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp, 0.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        var locale by remember {
+            mutableStateOf(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    context.resources.configuration.locales[0]
+                } else {
+                    @Suppress("DEPRECATION")
+                    context.resources.configuration.locale
+                }
             )
+        }
+
+        var name by remember { mutableStateOf(BLANK) }
+        var isError by remember { mutableStateOf(false) }
+
+        var showCountrySelectionDialog by remember { mutableStateOf(false) }
+        var showResultDialog by remember { mutableStateOf(false) }
+
+        if (showCountrySelectionDialog) {
+            CountrySelectionDialog(onDismissRequest = { showCountrySelectionDialog = false }) {
+                showCountrySelectionDialog = false
+                locale = it
+            }
+        }
+
+        if (showResultDialog) {
+            ResultDialog(onDismissRequest = { showResultDialog = false }) {
+                showResultDialog = false
+            }
+        }
+
+        LazyColumn(
+            modifier = Modifier.weight(1.0F),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            item {
+                Option(
+                    title = context.getString(R.string.n_back),
+                    value = viewModel.n
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Option(
+                    title = context.getString(R.string.elapsed_time),
+                    value = viewModel.elapsedTime
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Option(
+                    title = context.getString(R.string.rounds),
+                    value = viewModel.rounds
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = { showResultDialog = true },
+                    modifier = Modifier
+                        .height(40.dp)
+                        .wrapContentWidth(),
+                    shape = CircleShape
+                ) {
+                    Row(modifier = Modifier.padding(24.dp, 0.dp)) {
+                        ButtonText(text = context.getString(R.string.result))
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                OutlinedTextField(
+                    value = name,
+                    onValueChange = { name = it },
+                    label = { Text(context.getString(R.string.name)) },
+                    shape = RoundedCornerShape(12.dp),
+                    isError = isError
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Card(
+                    modifier = Modifier
+                        .height(48.dp)
+                        .fillMaxWidth()
+                        .padding(24.dp, 0.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .clickable {
+                                showCountrySelectionDialog = true
+                            }
+                            .padding(24.dp, 0.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = locale.flagEmoji)
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Box(
+                            modifier = Modifier.textPadding(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = locale.displayCountry,
+                                modifier = Modifier.textPadding(),
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = sebangFamily,
+                                    textAlign = TextAlign.Center
+                                )
+                            )
+                        }
+
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                            Image(Icons.Rounded.ArrowDropDown, BLANK)
+                        }
+                    }
+                }
+            }
+        }
+
+        Column(verticalArrangement = Arrangement.Bottom) {
+            Row(
+                modifier = Modifier.padding(0.dp, 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = onCancelButtonClick,
+                    modifier = Modifier
+                        .height(40.dp)
+                        .weight(1.0F),
+                    shape = CircleShape
+                ) {
+                    ButtonText(text = context.getString(R.string.cancel))
+                }
+                
+                Spacer(modifier = Modifier.width(24.dp))
+
+                Button(
+                    onClick = {
+                        if (name.isNotBlank()) {
+                            viewModel.registerForRanking(name, locale.displayCountry)
+                        } else {
+                            isError = true
+                        }
+                    },
+                    modifier = Modifier
+                        .height(40.dp)
+                        .weight(1.0F),
+                    shape = CircleShape
+                ) {
+                    ButtonText(text = context.getString(R.string.register))
+                }
+            }
         }
     }
 }
