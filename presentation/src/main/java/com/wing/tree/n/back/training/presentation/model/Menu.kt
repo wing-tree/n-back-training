@@ -6,6 +6,10 @@ import com.wing.tree.n.back.training.presentation.constant.BLANK
 sealed class Menu {
     object Divider : Menu()
 
+    data class Header(
+        val title: String
+    ) : Menu()
+
     data class Item(
         @DrawableRes val icon: Int,
         val title: String,

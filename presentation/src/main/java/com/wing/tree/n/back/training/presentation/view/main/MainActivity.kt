@@ -129,6 +129,8 @@ class MainActivity : ComponentActivity() {
                             }
                         )
 
+                        Spacer(modifier = Modifier.height(12.dp))
+
                         Column(modifier = Modifier
                             .fillMaxWidth()
                             .padding(24.dp, 12.dp)
@@ -291,12 +293,12 @@ private fun Option(
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp, 0.dp)) {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = title,
-                    modifier = Modifier.weight(1.0F),
+                    modifier = Modifier.textPadding().weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = sebangFamily,
@@ -309,7 +311,7 @@ private fun Option(
 
                 Text(
                     text = "${valueFinished.int}",
-                    modifier = Modifier.weight(1.0F),
+                    modifier = Modifier.textPadding().weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = sebangFamily,

@@ -589,9 +589,21 @@ private fun RankingRegistration(
 
     @Composable
     fun CountrySelectionDialog(onDismissRequest: () -> Unit, onClick: (Locale) -> Unit) {
-        val items = Locale.getAvailableLocales().filter {
-            it.displayCountry.trim().isNotBlank()
+        val items = mutableListOf<Locale>()
+        val availableLocales = Locale.getAvailableLocales().filter { it.country.trim().isNotBlank() }
+        val displayCountries = mutableListOf<String>()
+        val isoCountries = Locale.getISOCountries()
+
+        availableLocales.forEach {
+            if (isoCountries.contains(it.country)) {
+                if (displayCountries.contains(it.displayCountry).not()) {
+                    displayCountries.add(it.displayCountry)
+                    items.add(it)
+                }
+            }
         }
+
+        items.sortBy { it.displayCountry }
 
         Dialog(onDismissRequest = onDismissRequest) {
             Surface(
@@ -685,7 +697,7 @@ private fun RankingRegistration(
 
                 Option(
                     title = context.getString(R.string.elapsed_time),
-                    value = "${viewModel.elapsedTime / 1000.0}s"
+                    value = "${viewModel.elapsedTime / 1000.0}"
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
