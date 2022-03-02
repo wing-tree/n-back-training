@@ -21,11 +21,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".presentation.view.ranking.RankingActivity" />
-
         <activity android:name=".presentation.view.RecordActivity" />
 
         <activity android:name=".presentation.view.TrainingActivity" />
+
+        <activity android:name=".presentation.view.onboarding.OnBoardingActivity" />
+
+        <activity android:name=".presentation.view.ranking.RankingActivity" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"

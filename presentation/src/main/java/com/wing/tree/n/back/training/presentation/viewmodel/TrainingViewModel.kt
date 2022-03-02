@@ -120,7 +120,7 @@ class TrainingViewModel @Inject constructor(
 
     val trainingParameter: LiveData<TrainingParameter> get() = _trainingParameter
 
-    private val _state = MutableLiveData<State>(State.Ready)
+    private val _state = MutableLiveData<State>(State.RankingRegistration)
     val state: LiveData<State> get() = _state
 
     fun ready() {
@@ -151,24 +151,6 @@ class TrainingViewModel @Inject constructor(
 
     fun progress() {
         startTime = System.currentTimeMillis()
-//        if (inProgress.compareAndSet(false, true)) {
-//            viewModelScope.launch {
-//                repeat(rounds) {
-//                    _round.value = it
-//                    _isVisible.value = true
-//
-//                    _enabled.value = n <= it
-//
-//                    delay(ONE_SECOND.times(speed))
-//
-//                    _isVisible.value = false
-//
-//                    delay(ONE_SECOND.quarter)
-//                }
-//
-//                _state.value = State.Finish
-//            }
-//        }
     }
 
     fun complete() {

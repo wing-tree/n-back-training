@@ -19,8 +19,10 @@ import com.wing.tree.n.back.training.presentation.util.notNull
 internal fun Header(
     title: String,
     modifier: Modifier = Modifier,
-    navigationIcon: @Composable () -> Unit,
-    navigationOnClick: () -> Unit,
+    navigationIcon: @Composable () -> Unit = {
+    },
+    navigationOnClick: () -> Unit = {
+    },
     vararg menu: Menu
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {

@@ -40,6 +40,7 @@ import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.Header
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
+import com.wing.tree.n.back.training.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.view.textPadding
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
@@ -122,10 +123,10 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .padding(24.dp, 0.dp),
                             getString(R.string.how_to_play) to {
-
+                                startActivity(Intent(this@MainActivity, OnBoardingActivity::class.java))
                             },
                             getString(R.string.ranking) to {
-                                startActivity(Intent(applicationContext, RankingActivity::class.java))
+                                startActivity(Intent(this@MainActivity, RankingActivity::class.java))
                             }
                         )
 

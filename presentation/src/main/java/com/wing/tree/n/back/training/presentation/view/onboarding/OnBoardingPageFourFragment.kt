@@ -11,7 +11,7 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.view.Header
 
-class OnBoardingPageOneFragment : Fragment() {
+class OnBoardingPageFourFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -21,7 +21,7 @@ class OnBoardingPageOneFragment : Fragment() {
             setContent {
                 ApplicationTheme {
                     Scaffold {
-                        Header(title = getString(R.string.how_to_play))
+                        Header(title = getString(R.string.ranking))
                     }
                 }
             }

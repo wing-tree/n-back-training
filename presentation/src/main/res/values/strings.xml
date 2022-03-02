@@ -12,9 +12,12 @@
     <string name="name">Name</string>
     <string name="n_back">N-Back</string>
     <string name="newest">Newest</string>
+    <string name="next">Next</string>
     <string name="normal_mode">Normal Mode</string>
     <string name="oldest">Oldest</string>
+    <string name="play_screen">Play screen</string>
     <string name="press_back_again_to_exit">Press \'Back\' again to exit</string>
+    <string name="previous">Previous</string>
     <string name="ranking">Ranking</string>
     <string name="ranking_registration_failed">Ranking registration failed</string>
     <string name="ranking_registration">Ranking Registration</string>
@@ -23,6 +26,7 @@
     <string name="records">Records</string>
     <string name="register">Register</string>
     <string name="result">Result</string>
+    <string name="result_screen">Result screen</string>
     <string name="rounds">Rounds</string>
     <string name="second">second</string>
     <string name="seconds">seconds</string>
