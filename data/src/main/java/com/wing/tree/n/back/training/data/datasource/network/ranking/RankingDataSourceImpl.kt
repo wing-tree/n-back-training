@@ -59,7 +59,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             }
     }
 
-    override suspend fun getRankingList(
+    override suspend fun getRankings(
         page: Int,
         pageSize: Long,
         @MainThread

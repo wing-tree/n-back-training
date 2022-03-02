@@ -44,7 +44,7 @@ class RankingFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        page?.let { getRankingList(it) }
+        page?.let { viewModel.getRankings(it) }
     }
 
     private fun bind() {
@@ -57,17 +57,13 @@ class RankingFragment : Fragment() {
     }
 
     private fun initData() {
-        viewModel.rankingList.observe(viewLifecycleOwner) { list ->
+        viewModel.rankings.observe(viewLifecycleOwner) { list ->
             rankingListAdapter.submitList(
                 list.mapIndexed { rank, ranking ->
                     RankingListAdapter.AdapterItem.Ranking.from(rank, ranking)
                 }
             )
         }
-    }
-
-    private fun getRankingList(page: Int) {
-        viewModel.getRankingList(page)
     }
 
     companion object {

@@ -23,7 +23,7 @@ class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingD
         onSuccess: (List<Ranking>) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        dataSource.getRankingList(
+        dataSource.getRankings(
             page,
             pageSize,
             onSuccess = { list ->

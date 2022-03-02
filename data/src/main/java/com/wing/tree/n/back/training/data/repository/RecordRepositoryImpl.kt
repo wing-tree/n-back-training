@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class RecordRepositoryImpl @Inject constructor(private val dataSource: RecordDataSource) : RecordRepository {
     override fun getRecords(): Flow<List<Record>> {
-        return dataSource.getRecordList()
+        return dataSource.getRecords()
     }
 
     override suspend fun insert(record: Record) {

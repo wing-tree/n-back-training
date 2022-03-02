@@ -13,7 +13,7 @@ interface RankingDataSource {
         onFailure: (Exception) -> Unit
     )
 
-    suspend fun getRankingList(
+    suspend fun getRankings(
         page: Int,
         pageSize: Long,
         @MainThread

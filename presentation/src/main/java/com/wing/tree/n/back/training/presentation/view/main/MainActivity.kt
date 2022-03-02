@@ -192,8 +192,8 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Drawer(menuList: List<Menu>) {
-    menuList.forEach {
+private fun Drawer(menu: List<Menu>) {
+    menu.forEach {
         when(it) {
             is Menu.Divider -> Divider()
             is Menu.Item -> Menu(item = it)

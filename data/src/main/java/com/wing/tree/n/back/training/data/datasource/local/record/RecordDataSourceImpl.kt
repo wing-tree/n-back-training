@@ -8,8 +8,8 @@ import javax.inject.Inject
 class RecordDataSourceImpl @Inject constructor(database: Database) : RecordDataSource {
     private val dao = database.recordDao()
 
-    override fun getRecordList(): Flow<List<Record>> {
-        return dao.getRecordList()
+    override fun getRecords(): Flow<List<Record>> {
+        return dao.getRecords()
     }
 
     override suspend fun insertRecord(record: Record) {

@@ -13,5 +13,5 @@ interface RecordDao {
     suspend fun insert(record: Record)
 
     @Query("SELECT * FROM record ORDER BY timestamp DESC")
-    fun getRecordList(): Flow<List<Record>>
+    fun getRecords(): Flow<List<Record>>
 }

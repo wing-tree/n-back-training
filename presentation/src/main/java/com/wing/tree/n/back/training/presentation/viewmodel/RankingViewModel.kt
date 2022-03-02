@@ -17,18 +17,18 @@ class RankingViewModel @Inject constructor(
     private val getRankingsUseCase: GetRankingsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
-    private var _rankingList = MutableLiveData<List<Ranking>>()
-    val rankingList: LiveData<List<Ranking>>
-        get() = _rankingList
+    private var _rankings = MutableLiveData<List<Ranking>>()
+    val rankings: LiveData<List<Ranking>>
+        get() = _rankings
 
-    fun getRankingList(page: Int) {
+    fun getRankings(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             getRankingsUseCase.invoke(
                 GetRankingsUseCase.Parameter(
                     page = page,
                     pageSize = PAGE_SIZE,
                     onSuccess = {
-                        _rankingList.value = it
+                        _rankings.value = it
                     },
                     onFailure = {
 
