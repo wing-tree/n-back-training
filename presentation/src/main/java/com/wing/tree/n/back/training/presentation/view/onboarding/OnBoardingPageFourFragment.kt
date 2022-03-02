@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.view.Header
+import com.wing.tree.n.back.training.presentation.view.composable.Header
 
 class OnBoardingPageFourFragment : Fragment() {
     override fun onCreateView(

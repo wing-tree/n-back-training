@@ -1,4 +1,4 @@
-package com.wing.tree.n.back.training.presentation.view
+package com.wing.tree.n.back.training.presentation.view.composable
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
-import com.wing.tree.n.back.training.presentation.util.notNull
+import com.wing.tree.n.back.training.presentation.ui.theme.textPadding
 
 @Composable
 internal fun Header(
@@ -63,9 +63,12 @@ internal fun Header(
                             ) {
                                 Text(
                                     text = text,
-                                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
-                                    fontWeight = FontWeight.Bold,
-                                    style = TextStyle(fontFamily = sebangFamily)
+                                    modifier = Modifier.textPadding(),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontFamily = sebangFamily,
+                                        textAlign = TextAlign.Center
+                                    )
                                 )
 
                                 Spacer(modifier = Modifier.width(12.dp))
@@ -97,9 +100,9 @@ internal fun Header(
                             ) {
                                 Text(
                                     text = it.text,
-                                    modifier = Modifier.padding(0.dp, 1.dp, 0.dp, 0.dp),
-                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.textPadding(),
                                     style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
                                         fontFamily = sebangFamily,
                                         textAlign = TextAlign.Center
                                     )

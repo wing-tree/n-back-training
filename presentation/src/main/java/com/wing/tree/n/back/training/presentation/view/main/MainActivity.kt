@@ -19,6 +19,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -37,12 +38,13 @@ import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.util.*
-import com.wing.tree.n.back.training.presentation.view.Header
+import com.wing.tree.n.back.training.presentation.view.composable.Header
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
-import com.wing.tree.n.back.training.presentation.view.textPadding
+import com.wing.tree.n.back.training.presentation.ui.theme.textPadding
+import com.wing.tree.n.back.training.presentation.view.composable.ButtonText
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -50,6 +52,23 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<MainViewModel>()
+
+    private val menu by lazy {
+        listOf(
+            Menu.Item(R.drawable.ic_round_history_24, getString(R.string.record)) {
+                startActivity(Intent(this, RecordActivity::class.java))
+            },
+            Menu.Divider,
+            Menu.Item(R.drawable.ic_round_rate_review_24, getString(R.string.write_review)) {
+                Review.launchReviewFlow(this)
+            },
+            Menu.Item(R.drawable.ic_round_share_24, getString(R.string.share_the_app)) {
+                shareApplication(this)
+            },
+            Menu.Item(R.drawable.ic_round_info_24, getString(R.string.version), versionName) {
+            }
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +79,6 @@ class MainActivity : ComponentActivity() {
                 val scaffoldState = rememberScaffoldState()
 
                 val option = viewModel.option
-
-                val menu = listOf(
-                    Menu.Item(R.drawable.ic_round_history_24, getString(R.string.record)) {
-                        startActivity(Intent(this, RecordActivity::class.java))
-                    },
-                    Menu.Divider,
-                    Menu.Item(R.drawable.ic_round_review_24, getString(R.string.write_review)) {
-                        Review.launchReviewFlow(this)
-                    },
-                    Menu.Item(R.drawable.ic_round_share_24, getString(R.string.share_the_app)) {
-                        shareApplication(this)
-                    },
-                    Menu.Item(R.drawable.ic_round_info_24, getString(R.string.version), versionName) {
-                    }
-                )
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
                     coroutineScope.launch {
@@ -194,11 +198,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun Drawer(menu: List<Menu>) {
-    menu.forEach {
-        when(it) {
-            is Menu.Divider -> Divider()
-            is Menu.Item -> Menu(item = it)
-            else -> {
+    Column(modifier = Modifier.padding(12.dp, 0.dp)) {
+        menu.forEach {
+            when(it) {
+                is Menu.Divider -> Divider(modifier = Modifier.padding(16.dp, 0.dp))
+                is Menu.Item -> Menu(item = it)
+                else -> {
+                }
             }
         }
     }
@@ -206,44 +212,54 @@ private fun Drawer(menu: List<Menu>) {
 
 @Composable
 private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
-    val height = if (item.subtext.isBlank()) {
-        56.dp
-    } else {
-        72.dp
-    }
-
-    Row(
-        modifier = modifier
-            .height(height)
-            .fillMaxWidth()
-            .clickable(item.onClick.notNull) { item.onClick() },
-        verticalAlignment = Alignment.CenterVertically
+    Box(
+        modifier = Modifier
+            .height(56.dp)
+            .clip(CircleShape)
+            .clickable(item.onClick.notNull) { item.onClick() }
     ) {
-        Spacer(modifier = Modifier.width(16.dp))
+        Row(
+            modifier = modifier
+                .height(56.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Spacer(modifier = Modifier.width(16.dp))
 
-        Image(painter = painterResource(item.icon), contentDescription = null)
+            Image(painter = painterResource(item.icon), contentDescription = null)
 
-        Spacer(modifier = Modifier.width(32.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
-        Column {
-            Text(
-                text = item.title,
-                style = TextStyle(
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
-            )
-
-            if (item.subtext.isNotBlank()) {
+            Row {
                 Text(
-                    text = item.subtext,
+                    text = item.title,
                     style = TextStyle(
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = sebangFamily,
                         textAlign = TextAlign.Center
                     )
                 )
+
+                if (item.subtext.isNotBlank()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = item.subtext,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = sebangFamily,
+                                textAlign = TextAlign.Center
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.width(24.dp))
+                    }
+                }
             }
         }
     }
@@ -262,12 +278,7 @@ private fun HorizontalButtonGroup(modifier: Modifier = Modifier, vararg pairs: P
                     .weight(1.0F),
                 shape = CircleShape
             ) {
-                Text(
-                    text = pair.first,
-                    modifier = Modifier.textPadding(),
-                    fontWeight = FontWeight.Bold,
-                    style = TextStyle(fontFamily = sebangFamily)
-                )
+                ButtonText(text = pair.first)
             }
             
             if (index.not(count.dec())) {
@@ -299,7 +310,9 @@ private fun Option(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = title,
-                    modifier = Modifier.textPadding().weight(1.0F),
+                    modifier = Modifier
+                        .textPadding()
+                        .weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = sebangFamily,
@@ -312,7 +325,9 @@ private fun Option(
 
                 Text(
                     text = "${valueFinished.int}",
-                    modifier = Modifier.textPadding().weight(1.0F),
+                    modifier = Modifier
+                        .textPadding()
+                        .weight(1.0F),
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = sebangFamily,
@@ -350,12 +365,7 @@ private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Un
                     .fillMaxWidth(),
                 shape = CircleShape
             ) {
-                Text(
-                    text = "$it-Back",
-                    modifier = Modifier.textPadding(),
-                    fontWeight = FontWeight.Bold,
-                    style = TextStyle(fontFamily = sebangFamily)
-                )
+                ButtonText(text = "$it-Back")
             }
         }
 

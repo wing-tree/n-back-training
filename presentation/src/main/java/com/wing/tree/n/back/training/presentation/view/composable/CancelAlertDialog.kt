@@ -11,7 +11,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
-import com.wing.tree.n.back.training.presentation.view.textPadding
+import com.wing.tree.n.back.training.presentation.ui.theme.textPadding
 
 @Composable
 internal fun CancelAlertDialog(

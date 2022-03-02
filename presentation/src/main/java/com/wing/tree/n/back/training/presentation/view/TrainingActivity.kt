@@ -58,6 +58,7 @@ import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.util.*
+import com.wing.tree.n.back.training.presentation.view.composable.Header
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -276,7 +277,9 @@ private fun Ready(readyParameter: ReadyParameter?) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(
             text = readyParameter?.text ?: BLANK,
-            modifier = Modifier.align(Alignment.Center).paddingBottom(160.dp),
+            modifier = Modifier
+                .align(Alignment.Center)
+                .paddingBottom(160.dp),
             style = TextStyle(
                 fontSize = 57.sp,
                 fontWeight = FontWeight.Bold,
@@ -465,11 +468,16 @@ private fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mod
     val solutionNotNullCount = viewModel.problems.filter { it.solution.notNull }.count()
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(4.dp))
+        
         Text(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(24.dp),
             text = "$correctAnswerCount/$solutionNotNullCount",
-            fontSize = 45.sp,
-            textAlign = TextAlign.Center
+            style = TextStyle(
+                fontSize = 45.sp,
+                fontFamily = sebangFamily,
+                textAlign = TextAlign.Center
+            )
         )
 
         LazyVerticalGrid(
@@ -489,10 +497,13 @@ private fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mod
 
                     Text(
                         text = "${item.number}",
-                        fontSize = 24.sp,
                         color = color,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
+                        style = TextStyle(
+                            fontSize = 24.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = sebangFamily,
+                            textAlign = TextAlign.Center
+                        )
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -571,18 +582,20 @@ private fun RankingRegistration(
                 Column {
                     ResultContent(viewModel = viewModel, Modifier.weight(1.0F))
 
-                    Button(
-                        onClick = onButtonClick,
-                        modifier = Modifier
-                            .padding(24.dp, 12.dp)
-                            .height(40.dp)
-                            .fillMaxWidth(),
-                        shape = CircleShape
-                    ) {
-                        Text(
-                            text = context.getString(R.string.confirm),
-                            style = Typography.button
-                        )
+                    Surface(elevation = 8.dp) {
+                        Button(
+                            onClick = onButtonClick,
+                            modifier = Modifier
+                                .padding(24.dp, 12.dp)
+                                .height(40.dp)
+                                .fillMaxWidth(),
+                            shape = CircleShape
+                        ) {
+                            Text(
+                                text = context.getString(R.string.confirm),
+                                style = Typography.button
+                            )
+                        }
                     }
                 }
             }
@@ -828,10 +841,12 @@ private fun RankingRegistration(
             val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.congratulation))
             val progress by animateLottieCompositionAsState(composition)
 
-            LottieAnimation(
-                composition,
-                progress
-            )
+            if (progress < 1.0F) {
+                LottieAnimation(
+                    composition,
+                    progress
+                )
+            }
         }
     }
 }

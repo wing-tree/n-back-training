@@ -46,6 +46,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
+import com.wing.tree.n.back.training.presentation.view.composable.Header
 import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
