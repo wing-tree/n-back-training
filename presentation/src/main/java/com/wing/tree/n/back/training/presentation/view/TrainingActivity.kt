@@ -105,7 +105,7 @@ class TrainingActivity : ComponentActivity() {
 
             ApplicationTheme {
                 Scaffold {
-                    val countDown by viewModel.countDown.observeAsState()
+                    val readyParameter by viewModel.readyParameter.observeAsState()
                     val trainingParameter by viewModel.trainingParameter.observeAsState()
                     val title by viewModel.title.observeAsState()
 
@@ -147,7 +147,7 @@ class TrainingActivity : ComponentActivity() {
                         }
 
                         NavHost(navController = navController, startDestination = Route.READY) {
-                            composable(Route.READY) { Ready(countDown) }
+                            composable(Route.READY) { Ready(readyParameter) }
                             composable(Route.TRAINING) { Training(viewModel, trainingParameter) }
                             composable(Route.RESULT) {
                                Result(viewModel) {
@@ -272,24 +272,18 @@ class TrainingActivity : ComponentActivity() {
 }
 
 @Composable
-private fun Ready(countDown: Int?) {
-    val context = LocalContext.current
-
+private fun Ready(readyParameter: ReadyParameter?) {
     Box(modifier = Modifier.fillMaxSize()) {
-        countDown?.let {
-            val text = if (it < 1) {
-                "${context.getString(R.string.start).uppercase()}!"
-            } else {
-                "$it"
-            }
-
-            Text(
-                text = text,
-                modifier = Modifier.align(Alignment.Center),
+        Text(
+            text = readyParameter?.text ?: BLANK,
+            modifier = Modifier.align(Alignment.Center).paddingBottom(160.dp),
+            style = TextStyle(
                 fontSize = 57.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = sebangFamily,
                 textAlign = TextAlign.Center
             )
-        }
+        )
     }
 }
 
@@ -430,6 +424,10 @@ private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingPa
         }
     }
 }
+
+data class ReadyParameter(
+    val text: String
+)
 
 data class TrainingParameter(
     val enabled: Boolean,

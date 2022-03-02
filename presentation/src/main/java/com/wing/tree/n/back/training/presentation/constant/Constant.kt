@@ -30,19 +30,12 @@ internal object SpeedMode {
 }
 
 internal object From {
-    const val COUNT_DOWN = 1
     const val RANDOM = 0
 }
 
 internal object Offset {
     const val N = 1
     const val RANDOM = 4
-}
-
-internal object Step {
-    const val N = 1
-    const val ROUNDS = 10
-    const val SPEED = 1
 }
 
 internal object Until {

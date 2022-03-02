@@ -14,6 +14,7 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Option
 import com.wing.tree.n.back.training.presentation.util.quarter
+import com.wing.tree.n.back.training.presentation.view.ReadyParameter
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity.State
 import com.wing.tree.n.back.training.presentation.view.TrainingParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -108,8 +109,13 @@ class TrainingViewModel @Inject constructor(
         }
     }
 
-    private val _countDown = MutableLiveData(From.COUNT_DOWN)
-    val countDown: LiveData<Int?> get() = _countDown
+    private val _readyParameter = MutableLiveData(
+        ReadyParameter(
+            text = getApplication<Application>().getString(R.string.ready)
+        )
+    )
+
+    val readyParameter: LiveData<ReadyParameter> get() = _readyParameter
 
     private val _trainingParameter = MutableLiveData(
         TrainingParameter(
@@ -120,16 +126,14 @@ class TrainingViewModel @Inject constructor(
 
     val trainingParameter: LiveData<TrainingParameter> get() = _trainingParameter
 
-    private val _state = MutableLiveData<State>(State.RankingRegistration)
+    private val _state = MutableLiveData<State>(State.Ready)
     val state: LiveData<State> get() = _state
 
     fun ready() {
         viewModelScope.launch {
-            repeat(From.COUNT_DOWN) {
-                delay(ONE_SECOND)
+            delay(ONE_SECOND)
 
-                _countDown.value = _countDown.value?.dec()
-            }
+            _readyParameter.value = ReadyParameter(text = getApplication<Application>().getString(R.string.start))
 
             delay(ONE_SECOND)
 
@@ -174,7 +178,7 @@ class TrainingViewModel @Inject constructor(
             rounds = rounds
         )
 
-        if (true /*record.isPerfect*/) {
+        if (speedMode && true /*record.isPerfect*/) {
             checkRanking(
                 rankCheckParameter, { isSuccessful, rank ->
                     if (isSuccessful) {

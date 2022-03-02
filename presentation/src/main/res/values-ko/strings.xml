@@ -8,7 +8,7 @@
     <string name="dismiss">닫기</string>
     <string name="elapsed_time">경과 시간</string>
     <string name="filter">필터</string>
-    <string name="how_to_play">게임 방법</string>
+    <string name="how_to_play">플레이 방법</string>
     <string name="n_back">N-Back</string>
     <string name="name">이름</string>
     <string name="newest">최신순</string>
@@ -24,6 +24,7 @@
     <string name="ranking_registered">랭킹이 등록되었습니다.</string>
     <string name="record">기록</string>
     <string name="records">기록</string>
+    <string name="ready">준비</string>
     <string name="result">결과</string>
     <string name="result_screen">결과 화면</string>
     <string name="register">등록</string>
