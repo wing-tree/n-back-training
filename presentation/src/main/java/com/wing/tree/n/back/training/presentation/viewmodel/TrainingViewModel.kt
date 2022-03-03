@@ -163,6 +163,7 @@ class TrainingViewModel @Inject constructor(
         val viewModel = this
 
         val record = object : Record() {
+            override val elapsedTime: Long = viewModel.elapsedTime
             override val n: Int = viewModel.n
             override val problems: List<Problem> = viewModel.problems
             override val rounds: Int = viewModel.rounds

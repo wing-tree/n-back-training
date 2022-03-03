@@ -7,6 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 class Record(
     override val n: Int,
+    override val elapsedTime: Long,
     override val rounds: Int,
     override val speed: Int,
     override val timestamp: Long,
@@ -16,6 +17,7 @@ class Record(
         fun from(model: DomainModel) = with(model) {
             Record(
                 n = n,
+                elapsedTime = elapsedTime,
                 rounds = rounds,
                 speed = speed,
                 timestamp = timestamp,

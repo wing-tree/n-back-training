@@ -669,213 +669,222 @@ private fun RankingRegistration(
         }
     }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        var locale by remember {
-            mutableStateOf(
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    context.resources.configuration.locales[0]
-                } else {
-                    @Suppress("DEPRECATION")
-                    context.resources.configuration.locale
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            var locale by remember {
+                mutableStateOf(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        context.resources.configuration.locales[0]
+                    } else {
+                        @Suppress("DEPRECATION")
+                        context.resources.configuration.locale
+                    }
+                )
+            }
+
+            var name by remember { mutableStateOf(BLANK) }
+            var isError by remember { mutableStateOf(false) }
+
+            var showCountrySelectionDialog by remember { mutableStateOf(false) }
+            var showResultDialog by remember { mutableStateOf(false) }
+
+            if (showCountrySelectionDialog) {
+                CountrySelectionDialog(onDismissRequest = { showCountrySelectionDialog = false }) {
+                    showCountrySelectionDialog = false
+                    locale = it
                 }
-            )
-        }
-
-        var name by remember { mutableStateOf(BLANK) }
-        var isError by remember { mutableStateOf(false) }
-
-        var showCountrySelectionDialog by remember { mutableStateOf(false) }
-        var showResultDialog by remember { mutableStateOf(false) }
-
-        if (showCountrySelectionDialog) {
-            CountrySelectionDialog(onDismissRequest = { showCountrySelectionDialog = false }) {
-                showCountrySelectionDialog = false
-                locale = it
             }
-        }
 
-        if (showResultDialog) {
-            ResultDialog(onDismissRequest = { showResultDialog = false }) {
-                showResultDialog = false
+            if (showResultDialog) {
+                ResultDialog(onDismissRequest = { showResultDialog = false }) {
+                    showResultDialog = false
+                }
             }
-        }
 
-        LazyColumn(modifier = Modifier.weight(1.0F)) {
-            item {
-                Column(
-                    modifier = Modifier.padding(24.dp, 0.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Option(
-                        title = "${viewModel.n}-Back",
-                        value = null,
-                        modifier = Modifier.padding(48.dp, 0.dp)
-                    )
+            LazyColumn(modifier = Modifier.weight(1.0F)) {
+                item {
+                    Column(
+                        modifier = Modifier.padding(24.dp, 0.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Option(
+                            title = "${viewModel.n}-Back",
+                            value = null,
+                            modifier = Modifier.padding(48.dp, 0.dp)
+                        )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                    Option(
-                        title = context.getString(R.string.elapsed_time),
-                        value = "${viewModel.elapsedTime / 1000.0}"
-                    )
+                        Option(
+                            title = context.getString(R.string.elapsed_time),
+                            value = "${viewModel.elapsedTime / 1000.0}"
+                        )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                    Option(
-                        title = context.getString(R.string.rounds),
-                        value = viewModel.rounds
-                    )
+                        Option(
+                            title = context.getString(R.string.rounds),
+                            value = viewModel.rounds
+                        )
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                    Option(
-                        title = context.getString(R.string.speed),
-                        value = viewModel.speed
-                    )
+                        Option(
+                            title = context.getString(R.string.speed),
+                            value = viewModel.speed
+                        )
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                    Row(modifier = Modifier.padding(24.dp, 0.dp)) {
+                        Row(modifier = Modifier.padding(24.dp, 0.dp)) {
+                            Button(
+                                onClick = {
+                                    context.startActivity(
+                                        Intent(
+                                            context,
+                                            RankingActivity::class.java
+                                        )
+                                    )
+                                },
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .weight(1.0F),
+                                shape = CircleShape
+                            ) {
+                                ButtonText(text = context.getString(R.string.ranking))
+                            }
+
+                            Spacer(modifier = Modifier.width(24.dp))
+
+                            Button(
+                                onClick = { showResultDialog = true },
+                                modifier = Modifier
+                                    .height(40.dp)
+                                    .weight(1.0F),
+                                shape = CircleShape
+                            ) {
+                                ButtonText(text = context.getString(R.string.result))
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        OutlinedTextField(
+                            value = name,
+                            onValueChange = { name = it },
+                            label = { Text(context.getString(R.string.name)) },
+                            shape = RoundedCornerShape(12.dp),
+                            isError = isError
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        Card(
+                            modifier = Modifier
+                                .height(48.dp)
+                                .fillMaxWidth()
+                                .padding(24.dp, 0.dp),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .clickable {
+                                        showCountrySelectionDialog = true
+                                    }
+                                    .padding(24.dp, 0.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(text = locale.flagEmoji)
+
+                                    Spacer(modifier = Modifier.width(12.dp))
+
+                                    Text(
+                                        text = locale.displayCountry,
+                                        modifier = Modifier.textPadding(),
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                            fontFamily = sebangFamily,
+                                            textAlign = TextAlign.Center
+                                        )
+                                    )
+                                }
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.End
+                                ) {
+                                    Image(Icons.Rounded.ArrowDropDown, BLANK)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Column(verticalArrangement = Arrangement.Bottom) {
+                Surface(elevation = 4.dp) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp, 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Button(
-                            onClick = { context.startActivity(Intent(context, RankingActivity::class.java)) },
+                            onClick = onCancelButtonClick,
                             modifier = Modifier
                                 .height(40.dp)
                                 .weight(1.0F),
                             shape = CircleShape
                         ) {
-                            ButtonText(text = context.getString(R.string.ranking))
+                            ButtonText(text = context.getString(R.string.cancel))
                         }
 
                         Spacer(modifier = Modifier.width(24.dp))
 
                         Button(
-                            onClick = { showResultDialog = true },
+                            onClick = {
+                                if (name.isNotBlank()) {
+                                    viewModel.registerForRanking(
+                                        name,
+                                        locale.country,
+                                        onSuccess = onSuccess
+                                    ) {
+                                        onFailure(it)
+                                    }
+                                } else {
+                                    isError = true
+                                }
+                            },
                             modifier = Modifier
                                 .height(40.dp)
                                 .weight(1.0F),
                             shape = CircleShape
                         ) {
-                            ButtonText(text = context.getString(R.string.result))
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text(context.getString(R.string.name)) },
-                        shape = RoundedCornerShape(12.dp),
-                        isError = isError
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    Card(
-                        modifier = Modifier
-                            .height(48.dp)
-                            .fillMaxWidth()
-                            .padding(24.dp, 0.dp),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .clickable {
-                                    showCountrySelectionDialog = true
-                                }
-                                .padding(24.dp, 0.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text(text = locale.flagEmoji)
-
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                Text(
-                                    text = locale.displayCountry,
-                                    modifier = Modifier.textPadding(),
-                                    style = TextStyle(
-                                        fontWeight = FontWeight.Bold,
-                                        fontFamily = sebangFamily,
-                                        textAlign = TextAlign.Center
-                                    )
-                                )
-                            }
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End
-                            ) {
-                                Image(Icons.Rounded.ArrowDropDown, BLANK)
-                            }
+                            ButtonText(text = context.getString(R.string.register))
                         }
                     }
                 }
             }
         }
 
-        Column(verticalArrangement = Arrangement.Bottom) {
-            Surface(elevation = 4.dp) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp, 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(
-                        onClick = onCancelButtonClick,
-                        modifier = Modifier
-                            .height(40.dp)
-                            .weight(1.0F),
-                        shape = CircleShape
-                    ) {
-                        ButtonText(text = context.getString(R.string.cancel))
-                    }
+        Box(
+            modifier = Modifier.wrapContentSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.congratulations))
+            val progress by animateLottieCompositionAsState(composition)
 
-                    Spacer(modifier = Modifier.width(24.dp))
-
-                    Button(
-                        onClick = {
-                            if (name.isNotBlank()) {
-                                viewModel.registerForRanking(
-                                    name,
-                                    locale.country,
-                                    onSuccess = onSuccess
-                                ) {
-                                    onFailure(it)
-                                }
-                            } else {
-                                isError = true
-                            }
-                        },
-                        modifier = Modifier
-                            .height(40.dp)
-                            .weight(1.0F),
-                        shape = CircleShape
-                    ) {
-                        ButtonText(text = context.getString(R.string.register))
-                    }
-                }
+            if (progress < 1.0F) {
+                LottieAnimation(
+                    composition,
+                    progress
+                )
             }
-        }
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.congratulation))
-        val progress by animateLottieCompositionAsState(composition)
-
-        if (progress < 1.0F) {
-            LottieAnimation(
-                composition,
-                progress
-            )
         }
     }
 }

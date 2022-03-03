@@ -30,7 +30,9 @@ class RecordViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     val records = getRecordsUseCase.invoke(Unit).map {
         when(it) {
-            is Result.Error -> emptyList()
+            is Result.Error -> {
+                emptyList()
+            }
             is Result.Loading -> emptyList()
             is Result.Success -> it.data
         }
