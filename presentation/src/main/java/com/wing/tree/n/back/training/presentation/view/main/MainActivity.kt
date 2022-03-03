@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -136,55 +137,61 @@ class MainActivity : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        Column(modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp, 12.dp)
-                        ) {
-                            val modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentHeight()
-
-                            Option(
-                                modifier = modifier,
-                                title = getString(R.string.rounds),
-                                initialValue = option.rounds.float,
-                                valueRange = Rounds.ValueRange,
-                                steps = Rounds.STEPS
-                            ) {
-                                if (it < Rounds.ValueRange.start) {
-                                    option.rounds = Rounds.DEFAULT
-                                } else {
-                                    option.rounds = it.int
-                                }
-                            }
-
-                            Spacer(modifier = Modifier.height(12.dp))
-
-                            Option(
-                                modifier = modifier,
-                                title = getString(R.string.speed),
-                                initialValue = option.speed.float,
-                                valueRange = Speed.ValueRange,
-                                steps = Speed.STEPS
-                            ) {
-                                if (it < Speed.ValueRange.start) {
-                                    option.speed = Speed.DEFAULT
-                                } else {
-                                    option.speed = it.int
-                                }
-                            }
-                        }
-
-                        NBackButtonGroup(
+                        LazyColumn(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1.0F)
                         ) {
-                            with(Intent(applicationContext, TrainingActivity::class.java)) {
-                                putExtra(Extra.BACK, it)
-                                putExtra(Extra.OPTION, option)
+                            item {
+                                Column(modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(24.dp, 12.dp)
+                                ) {
+                                    val modifier = Modifier
+                                        .fillMaxWidth()
+                                        .wrapContentHeight()
 
-                                startActivity(this)
+                                    Option(
+                                        modifier = modifier,
+                                        title = getString(R.string.rounds),
+                                        initialValue = option.rounds.float,
+                                        valueRange = Rounds.ValueRange,
+                                        steps = Rounds.STEPS
+                                    ) {
+                                        if (it < Rounds.ValueRange.start) {
+                                            option.rounds = Rounds.DEFAULT
+                                        } else {
+                                            option.rounds = it.int
+                                        }
+                                    }
+
+                                    Spacer(modifier = Modifier.height(12.dp))
+
+                                    Option(
+                                        modifier = modifier,
+                                        title = getString(R.string.speed),
+                                        initialValue = option.speed.float,
+                                        valueRange = Speed.ValueRange,
+                                        steps = Speed.STEPS
+                                    ) {
+                                        if (it < Speed.ValueRange.start) {
+                                            option.speed = Speed.DEFAULT
+                                        } else {
+                                            option.speed = it.int
+                                        }
+                                    }
+                                }
+                            }
+
+                            item {
+                                NBackButtonGroup(modifier = Modifier.fillMaxWidth()) {
+                                    with(Intent(applicationContext, TrainingActivity::class.java)) {
+                                        putExtra(Extra.BACK, it)
+                                        putExtra(Extra.OPTION, option)
+
+                                        startActivity(this)
+                                    }
+                                }
                             }
                         }
 
@@ -340,6 +347,7 @@ private fun Option(
             Slider(
                 value = value,
                 onValueChange = { value = it },
+                modifier = Modifier.padding(4.dp, 0.dp),
                 valueRange = valueRange,
                 steps = steps,
                 onValueChangeFinished = {
@@ -347,13 +355,15 @@ private fun Option(
                     onValueChangeFinished.invoke(valueFinished)
                 }
             )
+
+            Spacer(modifier = Modifier.height(4.dp))
         }
     }
 }
 
 @Composable
 private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
+    Column(modifier = modifier) {
         N.IntRange.forEach {
             Spacer(modifier = Modifier.height(12.dp))
 
