@@ -469,7 +469,7 @@ private fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mod
 
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(4.dp))
-        
+
         Text(
             modifier = Modifier.padding(24.dp),
             text = "$correctAnswerCount/$solutionNotNullCount",

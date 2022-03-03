@@ -4,12 +4,12 @@ import androidx.annotation.MainThread
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.toObject
 import com.wing.tree.n.back.training.data.constant.long
 import com.wing.tree.n.back.training.data.model.Ranking
 import com.wing.tree.n.back.training.domain.model.RankCheckParameter
 import javax.inject.Inject
-import kotlin.NullPointerException
 
 class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: FirebaseFirestore) : RankingDataSource {
     private val collectionReference = firebaseFirestore.collection(COLLECTION_PATH)
@@ -27,7 +27,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
             .orderBy(Field.ELAPSED_TIME)
             .limit(LOWEST_RANK.long)
-            .get()
+            .get(Source.SERVER)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     task.result?.let { querySnapshot ->
@@ -36,9 +36,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                         run {
                             querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
                                 with(queryDocumentSnapshot.toObject<Ranking>()) {
-                                    println("check idx:$index ranking:$this, rankcheckparam:${rankCheckParameter}")
                                     if (isHigher(rankCheckParameter)) {
-                                        println("check idx:$index ranking:$this, 노진입??? 아니면 나의 실수.")
                                         onSuccess(true, index)
 
                                         return@run
@@ -47,7 +45,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                             }
 
                             if (count < LOWEST_RANK) {
-                                onSuccess(true, count.inc())
+                                onSuccess(true, count)
                             } else {
                                 onSuccess(false, 0)
                             }
@@ -73,7 +71,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                 .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
                 .orderBy(Field.ELAPSED_TIME)
                 .limit(pageSize)
-                .get()
+                .get(Source.SERVER)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         task.result?.let { querySnapshot ->
@@ -96,7 +94,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                 .orderBy(Field.ELAPSED_TIME)
                 .startAfter(queryCursor)
                 .limit(pageSize)
-                .get()
+                .get(Source.SERVER)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         task.result?.let { querySnapshot ->
@@ -126,7 +124,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             .orderBy(Field.N, Query.Direction.DESCENDING)
             .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
             .orderBy(Field.ELAPSED_TIME)
-            .get()
+            .get(Source.SERVER)
             .addOnSuccessListener { querySnapshot ->
                 val documents = querySnapshot.documents
 
