@@ -94,6 +94,8 @@ class RecordActivity : ComponentActivity() {
                                 showDialog = false
                             }
                         }
+                        
+                        Spacer(modifier = Modifier.height(36.dp))
 
                         NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
                             composable(route = Route.RECORD_LIST) {

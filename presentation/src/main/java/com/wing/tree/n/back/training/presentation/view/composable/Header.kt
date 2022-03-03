@@ -123,7 +123,7 @@ internal fun Header(
         Text(
             text = title,
             style = TextStyle(
-                fontSize = 32.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = sebangFamily,
                 textAlign = TextAlign.Center

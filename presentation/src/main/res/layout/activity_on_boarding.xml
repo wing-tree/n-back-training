@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:elevation="8dp">
+        android:elevation="4dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/material_button_previous"

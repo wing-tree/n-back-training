@@ -1,5 +1,6 @@
 package com.wing.tree.n.back.training.presentation.view
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -25,6 +26,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -59,6 +61,7 @@ import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.composable.Header
+import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -332,14 +335,16 @@ private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingPa
             )
         )
         
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(36.dp))
 
         Column {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .weight(1.0F)
-                .padding(24.dp, 0.dp)
-                .background(Color.Gray, RoundedCornerShape(12.dp))
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1.0F)
+                    .padding(24.dp, 0.dp),
+                shape = RoundedCornerShape(12.dp),
+                elevation = 4.dp
             ) {
                 val text = if (visible) {
                     "${viewModel.problems[round].number}"
@@ -347,17 +352,21 @@ private fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingPa
                     BLANK
                 }
 
-                Text(
-                    text = text,
-                    modifier = Modifier.align(Alignment.Center),
-                    style = TextStyle(
-                        fontSize = 72.sp,
-                        fontWeight = FontWeight.Normal,
-                        fontFamily = sebangFamily,
-                        textAlign = TextAlign.Center
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Text(
+                        text = text,
+                        modifier = Modifier.align(Alignment.Center),
+                        style = TextStyle(
+                            fontSize = 64.sp,
+                            fontWeight = FontWeight.Normal,
+                            fontFamily = sebangFamily,
+                            textAlign = TextAlign.Center
+                        )
                     )
-                )
+                }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 Modifier
@@ -582,7 +591,7 @@ private fun RankingRegistration(
                 Column {
                     ResultContent(viewModel = viewModel, Modifier.weight(1.0F))
 
-                    Surface(elevation = 8.dp) {
+                    Surface(elevation = 4.dp) {
                         Button(
                             onClick = onButtonClick,
                             modifier = Modifier
@@ -661,48 +670,46 @@ private fun RankingRegistration(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp, 0.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            var locale by remember {
-                mutableStateOf(
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        context.resources.configuration.locales[0]
-                    } else {
-                        @Suppress("DEPRECATION")
-                        context.resources.configuration.locale
-                    }
-                )
-            }
-
-            var name by remember { mutableStateOf(BLANK) }
-            var isError by remember { mutableStateOf(false) }
-
-            var showCountrySelectionDialog by remember { mutableStateOf(false) }
-            var showResultDialog by remember { mutableStateOf(false) }
-
-            if (showCountrySelectionDialog) {
-                CountrySelectionDialog(onDismissRequest = { showCountrySelectionDialog = false }) {
-                    showCountrySelectionDialog = false
-                    locale = it
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        var locale by remember {
+            mutableStateOf(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    context.resources.configuration.locales[0]
+                } else {
+                    @Suppress("DEPRECATION")
+                    context.resources.configuration.locale
                 }
-            }
+            )
+        }
 
-            if (showResultDialog) {
-                ResultDialog(onDismissRequest = { showResultDialog = false }) {
-                    showResultDialog = false
-                }
-            }
+        var name by remember { mutableStateOf(BLANK) }
+        var isError by remember { mutableStateOf(false) }
 
-            LazyColumn(
-                modifier = Modifier.weight(1.0F),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                item {
+        var showCountrySelectionDialog by remember { mutableStateOf(false) }
+        var showResultDialog by remember { mutableStateOf(false) }
+
+        if (showCountrySelectionDialog) {
+            CountrySelectionDialog(onDismissRequest = { showCountrySelectionDialog = false }) {
+                showCountrySelectionDialog = false
+                locale = it
+            }
+        }
+
+        if (showResultDialog) {
+            ResultDialog(onDismissRequest = { showResultDialog = false }) {
+                showResultDialog = false
+            }
+        }
+
+        LazyColumn(modifier = Modifier.weight(1.0F)) {
+            item {
+                Column(
+                    modifier = Modifier.padding(24.dp, 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Option(
                         title = "${viewModel.n}-Back",
                         value = null,
@@ -723,16 +730,35 @@ private fun RankingRegistration(
                         value = viewModel.rounds
                     )
 
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Option(
+                        title = context.getString(R.string.speed),
+                        value = viewModel.speed
+                    )
+
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Button(
-                        onClick = { showResultDialog = true },
-                        modifier = Modifier
-                            .height(40.dp)
-                            .wrapContentWidth(),
-                        shape = CircleShape
-                    ) {
-                        Row(modifier = Modifier.padding(24.dp, 0.dp)) {
+                    Row(modifier = Modifier.padding(24.dp, 0.dp)) {
+                        Button(
+                            onClick = { context.startActivity(Intent(context, RankingActivity::class.java)) },
+                            modifier = Modifier
+                                .height(40.dp)
+                                .weight(1.0F),
+                            shape = CircleShape
+                        ) {
+                            ButtonText(text = context.getString(R.string.ranking))
+                        }
+
+                        Spacer(modifier = Modifier.width(24.dp))
+
+                        Button(
+                            onClick = { showResultDialog = true },
+                            modifier = Modifier
+                                .height(40.dp)
+                                .weight(1.0F),
+                            shape = CircleShape
+                        ) {
                             ButtonText(text = context.getString(R.string.result))
                         }
                     }
@@ -791,10 +817,14 @@ private fun RankingRegistration(
                     }
                 }
             }
+        }
 
-            Column(verticalArrangement = Arrangement.Bottom) {
+        Column(verticalArrangement = Arrangement.Bottom) {
+            Surface(elevation = 4.dp) {
                 Row(
-                    modifier = Modifier.padding(0.dp, 12.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp, 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
@@ -833,20 +863,20 @@ private fun RankingRegistration(
                 }
             }
         }
+    }
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.congratulation))
-            val progress by animateLottieCompositionAsState(composition)
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.congratulation))
+        val progress by animateLottieCompositionAsState(composition)
 
-            if (progress < 1.0F) {
-                LottieAnimation(
-                    composition,
-                    progress
-                )
-            }
+        if (progress < 1.0F) {
+            LottieAnimation(
+                composition,
+                progress
+            )
         }
     }
 }
