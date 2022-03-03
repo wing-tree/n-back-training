@@ -9,7 +9,7 @@ import com.wing.tree.n.back.training.domain.model.Ranking as DomainModel
 import com.wing.tree.n.back.training.presentation.databinding.RankingItemBinding
 import java.util.*
 
-class RankingListAdapter : ListAdapter<RankingListAdapter.AdapterItem, RankingListAdapter.ViewHolder>(DiffCallback()) {
+class RankingListAdapter(private val page: Int, private val pageSize: Int) : ListAdapter<RankingListAdapter.AdapterItem, RankingListAdapter.ViewHolder>(DiffCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
 
@@ -25,10 +25,13 @@ class RankingListAdapter : ListAdapter<RankingListAdapter.AdapterItem, RankingLi
             when(item) {
                 is AdapterItem.Ranking -> {
                     with(viewBinding) {
-                        textViewRank.text = "${item.rank}"
-                        textViewNickname.text = item.name
+                        val rank = "${item.rank.inc() + page.times(pageSize)}"
+                        val nBack = "${item.n}-Back"
+
+                        textViewRank.text = rank
+                        textViewName.text = item.name
                         textViewElapsedTime.text = "${item.elapsedTime}"
-                        textViewN.text = "${item.n}"
+                        textViewNBack.text = nBack
                         textViewRounds.text = "${item.rounds}"
                     }
                 }

@@ -234,9 +234,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
             .clickable(item.onClick.notNull) { item.onClick() }
     ) {
         Row(
-            modifier = modifier
-                .height(56.dp)
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.width(16.dp))

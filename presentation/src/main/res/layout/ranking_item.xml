@@ -1,57 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="12dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_view_rank"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="1"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/text_view_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_rank"
-        app:layout_constraintStart_toEndOf="@+id/text_view_rank"
-        app:layout_constraintTop_toTopOf="@+id/text_view_rank"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="Nickname" />
+            <TextView
+                android:id="@+id/text_view_rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/sebang_gothic_font_family"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="1" />
 
-    <TextView
-        android:id="@+id/text_view_elapsed_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_nickname"
-        app:layout_constraintStart_toEndOf="@+id/text_view_nickname"
-        app:layout_constraintTop_toTopOf="@+id/text_view_nickname"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="20" />
+            <TextView
+                android:id="@+id/text_view_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/sebang_gothic_font_family"
+                app:layout_constraintStart_toEndOf="@+id/text_view_rank"
+                app:layout_constraintTop_toTopOf="@+id/text_view_rank"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="Nickname" />
 
-    <TextView
-        android:id="@+id/text_view_n"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_rank"
-        tools:text="8" />
+            <TextView
+                android:id="@+id/text_view_elapsed_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:fontFamily="@font/sebang_gothic_font_family"
+                app:layout_constraintStart_toStartOf="@+id/text_view_name"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_name"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="20" />
 
-    <TextView
-        android:id="@+id/text_view_rounds"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        app:layout_constraintStart_toEndOf="@+id/text_view_n"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_rank"
-        tools:text="30" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/text_view_n_back"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/sebang_gothic_font_family"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/text_view_rounds"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
+            tools:text="8-Back" />
+
+        <TextView
+            android:id="@+id/text_view_rounds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:fontFamily="@font/sebang_gothic_font_family"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_n_back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/text_view_n_back"
+            app:layout_constraintTop_toTopOf="@+id/text_view_n_back"
+            tools:text="30" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

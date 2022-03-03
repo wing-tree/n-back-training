@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.n.back.training.presentation.adapter.ranking.RankingListAdapter
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.databinding.FragmentRankingBinding
+import com.wing.tree.n.back.training.presentation.util.int
 import com.wing.tree.n.back.training.presentation.viewmodel.RankingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,8 +22,8 @@ class RankingFragment : Fragment() {
 
     private val viewModel by viewModels<RankingViewModel>()
 
-    private val page by lazy { arguments?.getInt(Key.PAGE) }
-    private val rankingListAdapter = RankingListAdapter()
+    private val page by lazy { arguments?.getInt(Key.PAGE) ?: 0 }
+    private val rankingListAdapter by lazy { RankingListAdapter(page, RankingViewModel.PAGE_SIZE.int) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

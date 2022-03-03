@@ -39,6 +39,6 @@ class RankingViewModel @Inject constructor(
     }
 
     companion object {
-        private const val PAGE_SIZE = 10L
+        const val PAGE_SIZE = 10L
     }
 }

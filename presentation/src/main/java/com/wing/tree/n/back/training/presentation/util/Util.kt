@@ -19,6 +19,7 @@ internal val Float.roundedInt get() = roundToInt()
 internal val Int.float get() = toFloat()
 internal val Int.quarter get() = this / 4
 
+internal val Long.int get() = this.toInt()
 internal val Long.half get() = this / 2L
 internal val Long.quarter get() = this / 4L
 internal val Long.twice get() = this * 2L

@@ -153,12 +153,12 @@ class TrainingViewModel @Inject constructor(
         _trainingParameter.value = TrainingParameter(value.enabled, visible)
     }
 
-    fun progress() {
-        startTime = System.currentTimeMillis()
+    fun train() {
+        startTime = System.nanoTime()
     }
 
     fun complete() {
-        endTime = System.currentTimeMillis()
+        endTime = System.nanoTime()
 
         val viewModel = this
 
