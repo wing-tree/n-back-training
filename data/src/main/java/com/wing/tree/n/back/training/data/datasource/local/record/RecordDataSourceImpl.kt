@@ -12,7 +12,11 @@ class RecordDataSourceImpl @Inject constructor(database: Database) : RecordDataS
         return dao.getRecords()
     }
 
-    override suspend fun insertRecord(record: Record) {
+    override suspend fun delete(record: Record) {
+        dao.delete(record)
+    }
+
+    override suspend fun insert(record: Record) {
         dao.insert(record)
     }
 }

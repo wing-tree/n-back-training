@@ -4,14 +4,12 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.wing.tree.n.back.training.domain.model.SortBy
 import com.wing.tree.n.back.training.domain.usecase.Result
-import com.wing.tree.n.back.training.domain.usecase.map
 import com.wing.tree.n.back.training.domain.usecase.preferences.GetSortByUseCase
 import com.wing.tree.n.back.training.domain.usecase.preferences.PutSortByUseCase
+import com.wing.tree.n.back.training.domain.usecase.record.DeleteRecordUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.GetRecordsUseCase
-import com.wing.tree.n.back.training.presentation.model.Option
 import com.wing.tree.n.back.training.presentation.model.Record
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RecordViewModel @Inject constructor(
     getRecordsUseCase: GetRecordsUseCase,
+    private val deleteRecordUseCase: DeleteRecordUseCase,
     private val getSortByUseCase: GetSortByUseCase,
     private val putSortByUseCase: PutSortByUseCase,
     application: Application
@@ -56,6 +55,12 @@ class RecordViewModel @Inject constructor(
     fun putSortBy(sortBy: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             putSortByUseCase.invoke(PutSortByUseCase.Parameter(sortBy))
+        }
+    }
+
+    fun delete(record: Record) {
+        viewModelScope.launch(Dispatchers.IO) {
+            deleteRecordUseCase.invoke(DeleteRecordUseCase.Parameter(record))
         }
     }
 }

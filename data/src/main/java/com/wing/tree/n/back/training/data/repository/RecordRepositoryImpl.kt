@@ -12,7 +12,11 @@ class RecordRepositoryImpl @Inject constructor(private val dataSource: RecordDat
         return dataSource.getRecords()
     }
 
+    override suspend fun delete(record: Record) {
+        dataSource.delete(record.toEntity(record.id))
+    }
+
     override suspend fun insert(record: Record) {
-        dataSource.insertRecord(record.toEntity())
+        dataSource.insert(record.toEntity())
     }
 }

@@ -208,7 +208,7 @@ class TrainingViewModel @Inject constructor(
 
     private fun insertRecord(record: Record) {
         viewModelScope.launch(Dispatchers.IO) {
-            insertRecordUseCase.invoke(record)
+            insertRecordUseCase.invoke(InsertRecordUseCase.Parameter(record))
         }
     }
 

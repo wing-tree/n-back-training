@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -47,6 +49,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.presentation.view.composable.Header
+import com.wing.tree.n.back.training.presentation.view.composable.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -138,42 +141,93 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
 
     LazyColumn {
         items(items) { record ->
-            RecordItem(Modifier.padding(24.dp, 12.dp), record) {
-                navController.navigate(route = RecordActivity.Route.DETAIL, Bundle().apply {
-                    putParcelable(RecordActivity.Key.RECORD, it)
-                })
-            }
+            RecordItem(
+                Modifier.padding(24.dp, 12.dp),
+                record,
+                onClick = {
+                    navController.navigate(route = RecordActivity.Route.DETAIL, Bundle().apply {
+                        putParcelable(RecordActivity.Key.RECORD, it)
+                    })
+                },
+                onDeleteIconClick = {
+                    viewModel.delete(it)
+                }
+            )
         }
     }
 }
 
 @Composable
-fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit) {
+fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, onDeleteIconClick: (Record) -> Unit) {
     val context = LocalContext.current
 
+    println("zzzz:${record.id}")
+
+    fun getString(@StringRes resId: Int) = context.getString(resId)
+
+    @Composable
+    fun Option(labelText: String, value: Any?, modifier: Modifier = Modifier) {
+        Row(modifier = modifier) {
+            SebangText(text = labelText, modifier = Modifier.weight(1.0F))
+
+            value?.let {
+                SebangText(text = "$it", modifier = Modifier.weight(1.0F))
+            }
+        }
+    }
+
     Card(
-        modifier
-            .fillMaxWidth()
-            .clickable { onClick(record) }
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .clickable { onClick(record) }
         ) {
             Column {
-                val rounds = "${context.getString(R.string.rounds)} ${record.rounds}"
-                val speed = "${context.getString(R.string.speed)} ${record.speed}"
-                val time = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(record.timestamp)
+                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .weight(1.0F),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Spacer(modifier = Modifier.width(24.dp))
 
-                Text(text = rounds)
-                Text(text = speed)
-                Text(text = time)
+                        Text(text = "${record.n}-Back")
+
+                        Spacer(modifier = Modifier.width(12.dp))
+
+                        Text(text = record.result)
+                    }
+
+                    IconButton(onClick = { onDeleteIconClick.invoke(record) }) {
+                        Icon(imageVector = Icons.Rounded.Delete, contentDescription = BLANK)
+                    }
+                }
+
+                Column(modifier = Modifier.padding(24.dp, 0.dp)) {
+                    val timestamp = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(record.timestamp)
+
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Option(labelText = getString(R.string.elapsed_time), value = record.elapsedTime)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Option(labelText = getString(R.string.rounds), value = record.rounds)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Option(labelText = getString(R.string.speed), value = record.speed)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    SebangText(text = timestamp)
+
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
             }
-
-            val correctAnswerCount = record.problems.map { it.isCorrect }.count()
-            val solutionNotNullCount = record.problems.map { it.solution.notNull }.count()
-
-            Text(text = "$correctAnswerCount/$solutionNotNullCount")
         }
     }
 }
