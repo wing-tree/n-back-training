@@ -44,8 +44,7 @@ class RankingFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-
-        page?.let { viewModel.getRankings(it) }
+        viewModel.getRankings(page)
     }
 
     private fun bind() {

@@ -9,7 +9,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.view.composable.Header
+import com.wing.tree.n.back.training.presentation.view.composable.TopAppbar
 
 class OnBoardingPageOneFragment : Fragment() {
     override fun onCreateView(
@@ -21,7 +21,7 @@ class OnBoardingPageOneFragment : Fragment() {
             setContent {
                 ApplicationTheme {
                     Scaffold {
-                        Header(title = getString(R.string.how_to_play))
+                        TopAppbar(title = getString(R.string.how_to_play))
                     }
                 }
             }

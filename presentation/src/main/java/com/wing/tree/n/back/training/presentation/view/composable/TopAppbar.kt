@@ -1,6 +1,7 @@
 package com.wing.tree.n.back.training.presentation.view.composable
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -9,6 +10,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wing.tree.n.back.training.presentation.model.Menu
@@ -16,19 +18,23 @@ import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.ui.theme.textPadding
 
 @Composable
-internal fun Header(
+internal fun TopAppbar(
     title: String,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {
     },
     navigationOnClick: () -> Unit = {
     },
+    footer: @Composable () -> Unit = {
+    },
     vararg menu: Menu
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(48.dp)) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+        ) {
             IconButton(
                 onClick = navigationOnClick,
                 content = navigationIcon
@@ -36,7 +42,7 @@ internal fun Header(
 
             Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.End) {
                 menu.forEach {
-                    when(it) {
+                    when (it) {
                         is Menu.Item -> {
                             IconButton(
                                 modifier = Modifier.fillMaxHeight(),
@@ -107,7 +113,7 @@ internal fun Header(
                                         textAlign = TextAlign.Center
                                     )
                                 )
-                                
+
                                 Spacer(modifier = Modifier.width(12.dp))
                             }
                         }
@@ -117,17 +123,21 @@ internal fun Header(
                 }
             }
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = title,
             style = TextStyle(
-                fontSize = 28.sp,
+                fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = sebangFamily,
                 textAlign = TextAlign.Center
             )
         )
+
+        Spacer(modifier = Modifier.height(36.dp))
+
+        footer.invoke()
     }
 }

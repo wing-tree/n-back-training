@@ -48,7 +48,8 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
-import com.wing.tree.n.back.training.presentation.view.composable.Header
+import com.wing.tree.n.back.training.presentation.view.composable.ConfirmAlertDialog
+import com.wing.tree.n.back.training.presentation.view.composable.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.composable.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,23 +72,30 @@ class RecordActivity : ComponentActivity() {
             ApplicationTheme {
                 Scaffold {
                     Column {
-                        Header(
-                            title = getString(R.string.records),
-                            modifier = Modifier,
-                            navigationIcon = {
-                                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK)
-                            },
-                            navigationOnClick = {
-                                onBackPressed()
-                            },
-                            Menu.Item(
-                                icon = R.drawable.ic_round_sort_24,
-                                title = getString(R.string.sort),
-                                onClick = {
-                                    showDialog = true
-                                }
+                        Surface(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp)
+                        ) {
+                            TopAppbar(
+                                title = getString(R.string.records),
+                                modifier = Modifier,
+                                navigationIcon = {
+                                    Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK)
+                                },
+                                navigationOnClick = {
+                                    onBackPressed()
+                                },
+                                footer = {
+                                },
+                                Menu.Item(
+                                    icon = R.drawable.ic_round_sort_24,
+                                    title = getString(R.string.sort),
+                                    onClick = {
+                                        showDialog = true
+                                    }
+                                )
                             )
-                        )
+                        }
 
                         if (showDialog) {
                             SortDialog(sortBy) {
@@ -97,8 +105,6 @@ class RecordActivity : ComponentActivity() {
                                 showDialog = false
                             }
                         }
-                        
-                        Spacer(modifier = Modifier.height(36.dp))
 
                         NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
                             composable(route = Route.RECORD_LIST) {
@@ -130,19 +136,40 @@ class RecordActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalFoundationApi
 @Composable
 fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy: SortBy) {
     val records: List<Record>? by viewModel.records.observeAsState()
+    var selectedRecord by remember { mutableStateOf<Record?>(null) }
+    var showDialog by remember { mutableStateOf(false) }
 
     val items = when(sortBy) {
         SortBy.Newest -> records?.sortedByDescending { it.timestamp }
         SortBy.Oldest -> records?.sortedBy { it.timestamp }
     } ?: return
 
+    if (showDialog) {
+        selectedRecord?.let {
+            ConfirmAlertDialog(
+                onDismissRequest = { showDialog = false },
+                title = selectedRecord?.result.toString(),
+                text = selectedRecord?.elapsedTime.toString(),
+                onConfirmButtonClick = {
+                    viewModel.delete(it)
+                    showDialog = false
+                }
+            ) {
+                showDialog = false
+            }
+        }
+    }
+
     LazyColumn {
         items(items) { record ->
             RecordItem(
-                Modifier.padding(24.dp, 12.dp),
+                Modifier
+                    .padding(24.dp, 12.dp)
+                    .animateItemPlacement(),
                 record,
                 onClick = {
                     navController.navigate(route = RecordActivity.Route.DETAIL, Bundle().apply {
@@ -150,7 +177,8 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
                     })
                 },
                 onDeleteIconClick = {
-                    viewModel.delete(it)
+                    selectedRecord = it
+                    showDialog = true
                 }
             )
         }

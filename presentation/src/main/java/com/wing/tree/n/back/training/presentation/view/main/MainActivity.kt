@@ -10,10 +10,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
@@ -39,7 +37,7 @@ import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.util.*
-import com.wing.tree.n.back.training.presentation.view.composable.Header
+import com.wing.tree.n.back.training.presentation.view.composable.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.TrainingActivity
 import com.wing.tree.n.back.training.presentation.view.onboarding.OnBoardingActivity
@@ -89,7 +87,7 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     scaffoldState = scaffoldState,
-                    drawerContent = { Drawer(menu) }
+                    drawerContent = { Drawer(menu) },
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -101,7 +99,7 @@ class MainActivity : ComponentActivity() {
                             shape = RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp)
                         ) {
                             Column {
-                                Header(
+                                TopAppbar(
                                     title = getString(R.string.app_name),
                                     modifier = Modifier,
                                     navigationIcon = {
@@ -118,6 +116,23 @@ class MainActivity : ComponentActivity() {
                                             }
                                         }
                                     },
+                                    footer = {
+                                        Column {
+                                            HorizontalButtonGroup(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(24.dp, 0.dp),
+                                                getString(R.string.how_to_play) to {
+                                                    startActivity(Intent(this@MainActivity, OnBoardingActivity::class.java))
+                                                },
+                                                getString(R.string.ranking) to {
+                                                    startActivity(Intent(this@MainActivity, RankingActivity::class.java))
+                                                }
+                                            )
+
+                                            Spacer(modifier = Modifier.height(24.dp))
+                                        }
+                                    },
                                     Menu.Switch(
                                         option.speedMode,
                                         getString(R.string.speed_mode),
@@ -126,22 +141,6 @@ class MainActivity : ComponentActivity() {
                                         option.speedMode = it
                                     }
                                 )
-
-                                Spacer(modifier = Modifier.height(36.dp))
-
-                                HorizontalButtonGroup(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(24.dp, 0.dp),
-                                    getString(R.string.how_to_play) to {
-                                        startActivity(Intent(this@MainActivity, OnBoardingActivity::class.java))
-                                    },
-                                    getString(R.string.ranking) to {
-                                        startActivity(Intent(this@MainActivity, RankingActivity::class.java))
-                                    }
-                                )
-
-                                Spacer(modifier = Modifier.height(24.dp))
                             }
                         }
 

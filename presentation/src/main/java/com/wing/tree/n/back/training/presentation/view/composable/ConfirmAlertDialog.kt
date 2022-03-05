@@ -14,7 +14,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.ui.theme.textPadding
 
 @Composable
-internal fun CancelAlertDialog(
+internal fun ConfirmAlertDialog(
     onDismissRequest: () -> Unit,
     title: String,
     text: String,
@@ -25,20 +25,8 @@ internal fun CancelAlertDialog(
 
     AlertDialog(
         onDismissRequest = onDismissRequest,
-        title = {
-            Text(
-                text = title,
-                modifier = Modifier.textPadding(),
-                style = TextStyle(fontFamily = sebangFamily)
-            )
-        },
-        text = {
-            Text(
-                text = text,
-                modifier = Modifier.textPadding(),
-                style = TextStyle(fontFamily = sebangFamily)
-            )
-        },
+        title = { SebangText(text = title) },
+        text = { SebangText(text = text) },
         confirmButton = {
             TextButton(onClick = onConfirmButtonClick) {
                 Text(context.getString(R.string.confirm))

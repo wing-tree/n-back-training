@@ -52,14 +52,14 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.view.composable.ButtonText
-import com.wing.tree.n.back.training.presentation.view.composable.CancelAlertDialog
+import com.wing.tree.n.back.training.presentation.view.composable.ConfirmAlertDialog
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.util.*
-import com.wing.tree.n.back.training.presentation.view.composable.Header
+import com.wing.tree.n.back.training.presentation.view.composable.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -113,7 +113,7 @@ class TrainingActivity : ComponentActivity() {
                     val title by viewModel.title.observeAsState()
 
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Header(
+                        TopAppbar(
                             title = title ?: "${viewModel.n}-Back",
                             modifier = Modifier,
                             navigationIcon = { Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK) },
@@ -128,6 +128,8 @@ class TrainingActivity : ComponentActivity() {
                                     else -> finish()
                                 }
                             },
+                            footer = {
+                            },
                             Menu.Text(
                                 text = if (viewModel.speedMode) {
                                     getString(R.string.speed_mode)
@@ -137,10 +139,8 @@ class TrainingActivity : ComponentActivity() {
                             )
                         )
 
-                        Spacer(modifier = Modifier.height(36.dp))
-
                         if (showCancelAlertDialog) {
-                            CancelAlertDialog(
+                            ConfirmAlertDialog(
                                 onDismissRequest = { showCancelAlertDialog = false },
                                 title = getString(R.string.cancel_ranking_registration_title),
                                 text = getString(R.string.cancel_ranking_registration_text),
