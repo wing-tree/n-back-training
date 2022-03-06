@@ -6,13 +6,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingFragment
 
 class RankingFragmentStateAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
-    override fun getItemCount(): Int = ITEM_COUNT
+    override fun getItemCount(): Int = PAGE_COUNT
 
     override fun createFragment(position: Int): Fragment {
         return RankingFragment.newInstance(position)
     }
 
     companion object {
-        private const val ITEM_COUNT = 5
+        const val PAGE_COUNT = 5
     }
 }

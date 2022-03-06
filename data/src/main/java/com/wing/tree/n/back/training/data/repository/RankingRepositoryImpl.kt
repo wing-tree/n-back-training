@@ -26,9 +26,7 @@ class RankingRepositoryImpl @Inject constructor(private val dataSource: RankingD
         dataSource.getRankings(
             page,
             pageSize,
-            onSuccess = { list ->
-                onSuccess(list.map{ it.toDomainModel() })
-            },
+            onSuccess = { list -> onSuccess(list.map{ it.toDomainModel() }) },
             onFailure = onFailure
         )
     }

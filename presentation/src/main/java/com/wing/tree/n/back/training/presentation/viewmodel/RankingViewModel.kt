@@ -21,18 +21,14 @@ class RankingViewModel @Inject constructor(
     val rankings: LiveData<List<Ranking>>
         get() = _rankings
 
-    fun getRankings(page: Int) {
+    fun getRankings(page: Int, onFailure: (Exception) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             getRankingsUseCase.invoke(
                 GetRankingsUseCase.Parameter(
                     page = page,
                     pageSize = PAGE_SIZE,
-                    onSuccess = {
-                        _rankings.value = it
-                    },
-                    onFailure = {
-
-                    }
+                    onSuccess = { _rankings.postValue(it) },
+                    onFailure = onFailure
                 )
             )
         }

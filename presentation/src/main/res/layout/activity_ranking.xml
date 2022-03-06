@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <include
-        android:id="@+id/include"
-        layout="@layout/ranking_header"
+        android:id="@+id/top_app_bar"
+        layout="@layout/ranking_top_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,11 +18,10 @@
         android:id="@+id/view_pager2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="36dp"
         app:layout_constraintBottom_toTopOf="@+id/constraint_layout_page_indicator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include" />
+        app:layout_constraintTop_toBottomOf="@+id/top_app_bar" />
 
     <LinearLayout
         android:id="@+id/constraint_layout_page_indicator"

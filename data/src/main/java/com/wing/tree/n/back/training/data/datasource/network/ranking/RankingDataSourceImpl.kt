@@ -13,7 +13,10 @@ import javax.inject.Inject
 
 class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: FirebaseFirestore) : RankingDataSource {
     private val collectionReference = firebaseFirestore.collection(COLLECTION_PATH)
-    private val queryCursorArray = arrayOfNulls<DocumentSnapshot>(5)
+    private val queryCursorArray = arrayOfNulls<DocumentSnapshot>(PAGE_COUNT)
+
+    private var count = 0
+    private var last: DocumentSnapshot? = null
 
     override suspend fun checkRanking(
         rankCheckParameter: RankCheckParameter,
@@ -22,6 +25,9 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         @MainThread
         onFailure: (Exception) -> Unit
     ) {
+        count = 0
+        last = null
+
         collectionReference
             .orderBy(Field.N, Query.Direction.DESCENDING)
             .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
@@ -31,7 +37,10 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     task.result?.let { querySnapshot ->
-                        val count = querySnapshot.count()
+                        if (querySnapshot.isEmpty.not()) {
+                            count = querySnapshot.count()
+                            last = querySnapshot.last()
+                        }
 
                         run {
                             querySnapshot.forEachIndexed { index, queryDocumentSnapshot ->
@@ -86,7 +95,10 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                     }
                 }
         } else {
-            val queryCursor = queryCursorArray[page] ?: return
+            val queryCursor = queryCursorArray[page] ?: run {
+                onSuccess(emptyList())
+                return
+            }
 
             collectionReference
                 .orderBy(Field.N, Query.Direction.DESCENDING)
@@ -99,7 +111,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                     if (task.isSuccessful) {
                         task.result?.let { querySnapshot ->
                             if (querySnapshot.count() >= pageSize) {
-                                if (page < 4) {
+                                if (page < PAGE_COUNT.dec()) {
                                     queryCursorArray[page.inc()] = querySnapshot.last()
                                 }
                             }
@@ -120,33 +132,14 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
         @MainThread
         onFailure: (Exception) -> Unit
     ) {
-        collectionReference.limit(LOWEST_RANK.long)
-            .orderBy(Field.N, Query.Direction.DESCENDING)
-            .orderBy(Field.ROUNDS, Query.Direction.DESCENDING)
-            .orderBy(Field.ELAPSED_TIME)
-            .get(Source.SERVER)
-            .addOnSuccessListener { querySnapshot ->
-                val documents = querySnapshot.documents
-
-                updateRanking(
-                    documents,
-                    ranking,
-                    onSuccess,
-                    onFailure
-                )
-            }
-            .addOnFailureListener {
-                onFailure.invoke(it)
-            }
+        updateRanking(ranking, onSuccess, onFailure)
     }
 
     private fun updateRanking(
-        documents: List<DocumentSnapshot?>,
         ranking: Ranking,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
-        val count = documents.count()
         val documentReference = collectionReference.document()
         val id = documentReference.id
 
@@ -154,11 +147,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
 
         firebaseFirestore.runTransaction { transaction ->
             if (count >= LOWEST_RANK) {
-                if (documents.isNotEmpty()) {
-                    documents.last()?.reference?.let {
-                        transaction.delete(it)
-                    }
-                }
+                last?.let { transaction.delete(it.reference) }
             }
 
             transaction.set(documentReference, ranking)
@@ -178,5 +167,6 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
     companion object {
         private const val COLLECTION_PATH = "ranking"
         private const val LOWEST_RANK = 50
+        private const val PAGE_COUNT = 5
     }
 }

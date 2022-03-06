@@ -13,6 +13,7 @@
     <string name="n_back">N-Back</string>
     <string name="newest">Newest</string>
     <string name="next">Next</string>
+    <string name="no_rankings_found">No rankings found</string>
     <string name="normal_mode">Normal Mode</string>
     <string name="oldest">Oldest</string>
     <string name="play_screen">Play screen</string>
@@ -39,4 +40,8 @@
     <string name="thank_you_for_your_valuable_review">Thank you for your valuable review</string>
     <string name="version">Version</string>
     <string name="write_review">Write review</string>
+
+    <string name="how_to_play1">If the currently displayed number is the same as the number displayed before N rounds, press the O button, otherwise press the X button.</string>
+    <string name="how_to_play2">You can set the mode, round and speed on the main screen.</string>
+    <string name="how_to_play3">In speed mode, it moves to the next round as soon as you press the button, and in normal mode, it waits for the speed set on the main screen before moving to the next round.</string>
 </resources>

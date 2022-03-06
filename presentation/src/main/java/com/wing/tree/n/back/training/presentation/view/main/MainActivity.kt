@@ -21,29 +21,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.*
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.util.*
-import com.wing.tree.n.back.training.presentation.view.composable.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
-import com.wing.tree.n.back.training.presentation.view.TrainingActivity
+import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity
+import com.wing.tree.n.back.training.presentation.view.core.SebangText
+import com.wing.tree.n.back.training.presentation.view.core.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
-import com.wing.tree.n.back.training.presentation.ui.theme.textPadding
-import com.wing.tree.n.back.training.presentation.view.composable.ButtonText
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -243,15 +237,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
             Spacer(modifier = Modifier.width(12.dp))
 
             Row {
-                Text(
-                    text = item.title,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = sebangFamily,
-                        textAlign = TextAlign.Center
-                    )
-                )
+                SebangText(text = item.title, fontWeight = FontWeight.Bold)
 
                 if (item.subtext.isNotBlank()) {
                     Row(
@@ -259,15 +245,7 @@ private fun Menu(modifier: Modifier = Modifier, item: Menu.Item) {
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = item.subtext,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = sebangFamily,
-                                textAlign = TextAlign.Center
-                            )
-                        )
+                        SebangText(text = item.subtext, fontWeight = FontWeight.Bold)
 
                         Spacer(modifier = Modifier.width(24.dp))
                     }
@@ -290,7 +268,7 @@ private fun HorizontalButtonGroup(modifier: Modifier = Modifier, vararg pairs: P
                     .weight(1.0F),
                 shape = CircleShape
             ) {
-                ButtonText(text = pair.first)
+                SebangText(text = pair.first, fontWeight = FontWeight.Bold)
             }
             
             if (index.not(count.dec())) {
@@ -314,38 +292,27 @@ private fun Option(
 
     Card(
         modifier = modifier,
+        elevation = 4.dp,
         shape = RoundedCornerShape(12.dp)
     ) {
         Column(modifier = Modifier.padding(12.dp, 0.dp)) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
+                SebangText(
                     text = title,
-                    modifier = Modifier
-                        .textPadding()
-                        .weight(1.0F),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = sebangFamily,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
+                    modifier = Modifier.weight(1.0F),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
-                Text(
+                SebangText(
                     text = "${valueFinished.int}",
-                    modifier = Modifier
-                        .textPadding()
-                        .weight(1.0F),
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = sebangFamily,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center
-                    )
+                    modifier = Modifier.weight(1.0F),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
                 )
             }
 
@@ -380,7 +347,7 @@ private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Un
                     .fillMaxWidth(),
                 shape = CircleShape
             ) {
-                ButtonText(text = "$it-Back")
+                SebangText(text = "$it-Back", fontWeight = FontWeight.Bold)
             }
         }
 
@@ -390,27 +357,40 @@ private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Un
 
 @Composable
 private fun AdView(modifier: Modifier = Modifier) {
-    Box(modifier = Modifier
-        .height(50.dp)
-        .fillMaxWidth()) {
-        if (LocalInspectionMode.current.not()) {
-            AndroidView(
-                modifier = modifier.fillMaxWidth(),
-                factory = { context ->
-                    AdView(context).apply {
-                        adSize = AdSize.BANNER
-                        adUnitId = context.getString(
-                            if (BuildConfig.DEBUG) {
-                                R.string.sample_banner_ad_unit_id
-                            } else {
-                                R.string.banner_ad_unit_id
-                            }
-                        )
+    var visible by remember { mutableStateOf(true) }
 
-                        loadAd(AdRequest.Builder().build())
+    if (LocalInspectionMode.current.not()) {
+        if (visible) {
+            Box(
+                modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth()
+            ) {
+                AndroidView(
+                    modifier = modifier.fillMaxWidth(),
+                    factory = { context ->
+                        AdView(context).apply {
+                            adSize = AdSize.BANNER
+                            adUnitId = context.getString(
+                                if (BuildConfig.DEBUG) {
+                                    R.string.sample_banner_ad_unit_id
+                                } else {
+                                    R.string.banner_ad_unit_id
+                                }
+                            )
+
+                            loadAd(AdRequest.Builder().build())
+
+                            adListener = object : AdListener() {
+                                override fun onAdFailedToLoad(adError: LoadAdError) {
+                                    super.onAdFailedToLoad(adError)
+                                    visible = false
+                                }
+                            }
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

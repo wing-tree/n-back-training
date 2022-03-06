@@ -16,7 +16,7 @@ class RankingActivity : AppCompatActivity() {
         override fun onPageSelected(position: Int) {
             super.onPageSelected(position)
 
-            val text = "${position.inc()}/5"
+            val text = "${position.inc()}/${RankingFragmentStateAdapter.PAGE_COUNT}"
 
             viewBinding.textViewPageIndicator.text = text
         }
@@ -35,22 +35,32 @@ class RankingActivity : AppCompatActivity() {
 
     private fun bind() {
         with(viewBinding) {
+            with(topAppBar) {
+                toolbar.setNavigationOnClickListener {
+                    finish()
+                }
+            }
+
+            val pageCount = RankingFragmentStateAdapter.PAGE_COUNT
+
             viewPager2.apply {
                 registerOnPageChangeCallback(onPageChangeCallback)
                 adapter = rankingFragmentStateAdapter
                 isUserInputEnabled = false
-                offscreenPageLimit = 4
+                offscreenPageLimit = pageCount.dec()
             }
 
             imageViewNext.setOnClickListener {
                 val currentItem = viewPager2.currentItem
 
-                if (currentItem < 4) {
+                if (currentItem < pageCount.dec()) {
                     viewPager2.setCurrentItem(currentItem.inc(), true)
                 }
             }
 
-            viewBinding.textViewPageIndicator.text = "1/5"
+            val text = "1/$pageCount"
+
+            viewBinding.textViewPageIndicator.text = text
 
             imageViewPrevious.setOnClickListener {
                 val currentItem = viewPager2.currentItem

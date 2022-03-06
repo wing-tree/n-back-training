@@ -13,6 +13,7 @@
     <string name="name">이름</string>
     <string name="newest">최신순</string>
     <string name="next">다음</string>
+    <string name="no_rankings_found">랭킹을 찾을 수 없습니다</string>
     <string name="normal_mode">일반 모드</string>
     <string name="oldest">오래된순</string>
     <string name="play_screen">플레이 화면</string>
@@ -39,4 +40,8 @@
     <string name="thank_you_for_your_valuable_review">소중한 리뷰 감사합니다</string>
     <string name="version">버전</string>
     <string name="write_review">리뷰 쓰기</string>
+
+    <string name="how_to_play1">현재 표시되는 숫자와 N 라운드 전에 표시된 숫자가 같으면 O 버튼을, 다르면 X 버튼을 누릅니다.</string>
+    <string name="how_to_play2">메인 화면에서 모드, 라운드 및 속도를 설정할 수 있습니다.</string>
+    <string name="how_to_play3">스피드 모드의 경우 버튼을 누르는 즉시 다음 라운드로 이동하며, 일반 모드의 경우 메인 화면에서 설정한 속도만큼 기다린 후 다음 라운드로 이동합니다.</string>
 </resources>

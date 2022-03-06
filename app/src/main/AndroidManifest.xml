@@ -23,7 +23,7 @@
 
         <activity android:name=".presentation.view.RecordActivity" />
 
-        <activity android:name=".presentation.view.TrainingActivity" />
+        <activity android:name=".presentation.view.training.TrainingActivity" />
 
         <activity android:name=".presentation.view.onboarding.OnBoardingActivity" />
 

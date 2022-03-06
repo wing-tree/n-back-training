@@ -14,9 +14,9 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Option
 import com.wing.tree.n.back.training.presentation.util.quarter
-import com.wing.tree.n.back.training.presentation.view.ReadyParameter
-import com.wing.tree.n.back.training.presentation.view.TrainingActivity.State
-import com.wing.tree.n.back.training.presentation.view.TrainingParameter
+import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity.State
+import com.wing.tree.n.back.training.presentation.view.training.ReadyParameter
+import com.wing.tree.n.back.training.presentation.view.training.TrainingParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -129,18 +129,6 @@ class TrainingViewModel @Inject constructor(
 
     val trainingParameter: LiveData<TrainingParameter> get() = _trainingParameter
 
-    fun ready() {
-        viewModelScope.launch {
-            delay(ONE_SECOND)
-
-            _readyParameter.value = ReadyParameter(text = getApplication<Application>().getString(R.string.start))
-
-            delay(ONE_SECOND)
-
-            _state.value = State.Training
-        }
-    }
-
     fun setEnabled(enabled: Boolean) {
         val value = _trainingParameter.value ?: return
 
@@ -153,21 +141,31 @@ class TrainingViewModel @Inject constructor(
         _trainingParameter.value = TrainingParameter(value.enabled, visible)
     }
 
-    fun train() {
+    fun ready() {
+        viewModelScope.launch {
+            delay(ONE_SECOND)
+
+            _readyParameter.value = ReadyParameter(text = getApplication<Application>().getString(R.string.start))
+
+            delay(ONE_SECOND)
+
+            _state.value = State.Training
+        }
+    }
+
+    fun start() {
         startTime = System.nanoTime()
     }
 
-    fun complete() {
+    fun end() {
         endTime = System.nanoTime()
 
-        val viewModel = this
-
         val record = object : Record() {
-            override val elapsedTime: Long = viewModel.elapsedTime
-            override val n: Int = viewModel.n
-            override val problems: List<Problem> = viewModel.problems
-            override val rounds: Int = viewModel.rounds
-            override val speed: Int = viewModel.speed
+            override val elapsedTime: Long = this@TrainingViewModel.elapsedTime
+            override val n: Int = this@TrainingViewModel.n
+            override val problems: List<Problem> = this@TrainingViewModel.problems
+            override val rounds: Int = this@TrainingViewModel.rounds
+            override val speed: Int = this@TrainingViewModel.speed
             override val timestamp: Long = System.currentTimeMillis()
         }
 
@@ -192,7 +190,7 @@ class TrainingViewModel @Inject constructor(
 
                         val title = String.format(getApplication<Application>().getString(R.string.ranked), rank.inc(), suffix)
 
-                        _state.value = State.RankingRegistration
+                        _state.value = State.Ranking
                         _title.value = title
                     } else {
                         _state.value = State.Result
