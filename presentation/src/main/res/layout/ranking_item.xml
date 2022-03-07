@@ -38,14 +38,22 @@
                 tools:text="1" />
 
             <TextView
-                android:id="@+id/text_view_name"
+                android:id="@+id/text_view_country"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="@font/sebang_gothic_font_family"
                 app:layout_constraintStart_toEndOf="@+id/text_view_rank"
+                app:layout_constraintTop_toTopOf="@+id/text_view_rank" />
+
+            <TextView
+                android:id="@+id/text_view_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:fontFamily="@font/sebang_gothic_font_family"
+                app:layout_constraintStart_toEndOf="@+id/text_view_country"
                 app:layout_constraintTop_toTopOf="@+id/text_view_rank"
-                app:layout_constraintVertical_bias="0.0"
                 tools:text="Nickname" />
 
             <TextView

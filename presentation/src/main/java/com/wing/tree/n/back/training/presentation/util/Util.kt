@@ -44,3 +44,11 @@ val Locale.flagEmoji: String
 
         return String(Character.toChars(first)) + String(Character.toChars(second))
     }
+
+val String.flagEmoji: String
+    get() {
+        val first = Character.codePointAt(this, 0) - 0x41 + 0x1F1E6
+        val second = Character.codePointAt(this, 1) - 0x41 + 0x1F1E6
+
+        return String(Character.toChars(first)) + String(Character.toChars(second))
+    }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.n.back.training.domain.model.Ranking as DomainModel
 import com.wing.tree.n.back.training.presentation.databinding.RankingItemBinding
+import com.wing.tree.n.back.training.presentation.util.flagEmoji
 import java.util.*
 
 class RankingListAdapter(private val page: Int, private val pageSize: Int) : ListAdapter<RankingListAdapter.AdapterItem, RankingListAdapter.ViewHolder>(DiffCallback()) {
@@ -29,6 +30,7 @@ class RankingListAdapter(private val page: Int, private val pageSize: Int) : Lis
                         val nBack = "${item.n}-Back"
 
                         textViewRank.text = rank
+                        textViewCountry.text = item.country.flagEmoji
                         textViewName.text = item.name
                         textViewElapsedTime.text = "${item.elapsedTime}"
                         textViewNBack.text = nBack
