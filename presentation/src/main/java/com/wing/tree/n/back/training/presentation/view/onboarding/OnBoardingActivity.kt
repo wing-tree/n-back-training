@@ -2,6 +2,7 @@ package com.wing.tree.n.back.training.presentation.view.onboarding
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.ExperimentalFoundationApi
 import com.wing.tree.n.back.training.presentation.adapter.OnBoardingFragmentStateAdapter
 import com.wing.tree.n.back.training.presentation.databinding.ActivityOnBoardingBinding
 

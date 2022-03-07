@@ -44,4 +44,11 @@
     <string name="how_to_play1">현재 표시되는 숫자와 N 라운드 전에 표시된 숫자가 같으면 O 버튼을, 다르면 X 버튼을 누릅니다.</string>
     <string name="how_to_play2">메인 화면에서 모드, 라운드 및 속도를 설정할 수 있습니다.</string>
     <string name="how_to_play3">스피드 모드의 경우 버튼을 누르는 즉시 다음 라운드로 이동하며, 일반 모드의 경우 메인 화면에서 설정한 속도만큼 기다린 후 다음 라운드로 이동합니다.</string>
+
+    <string name="play_screen1">상단에 현재 라운드가 표시되며, 가운데에는 숫자가 표시됩니다.</string>
+    <string name="play_screen2">위 화면의 경우, 현재 표시된 숫자 5와 N 라운드 전에 표시된 숫자가 같으면(5이면), O 버튼을, 그렇지 않으면 X 버튼을 누릅니다.</string>
+
+    <string name="result_screen1">상단에 맞춘 개수가 표시됩니다.</string>
+    <string name="result_screen2">맨 앞 N개의 결과는 회색으로 표시되며, 맞은 결과는 초록색으로, 틀린 결과는 빨간색으로 표시됩니다.</string>
+    <string name="result_screen3">위는 3-Back, 20 라운드의 결과입니다.</string>
 </resources>

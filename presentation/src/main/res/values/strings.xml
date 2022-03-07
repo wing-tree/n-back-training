@@ -44,4 +44,11 @@
     <string name="how_to_play1">If the currently displayed number is the same as the number displayed before N rounds, press the O button, otherwise press the X button.</string>
     <string name="how_to_play2">You can set the mode, round and speed on the main screen.</string>
     <string name="how_to_play3">In speed mode, it moves to the next round as soon as you press the button, and in normal mode, it waits for the speed set on the main screen before moving to the next round.</string>
+
+    <string name="play_screen1">The current round is displayed at the top, with a number in the middle.</string>
+    <string name="play_screen2">For the screen above, if the currently displayed number 5 and the number displayed before N rounds are the same (if 5), press the O button, otherwise press the X button.</string>
+
+    <string name="result_screen1">The number matched at the top is displayed.</string>
+    <string name="result_screen2">The first N results are displayed in gray, correct results in green, and incorrect results in red.</string>
+    <string name="result_screen3">Above is the result of the 3-Back, 20 rounds.</string>
 </resources>
