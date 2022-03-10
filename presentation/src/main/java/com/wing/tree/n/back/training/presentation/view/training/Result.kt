@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,11 +25,10 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
-import com.wing.tree.n.back.training.presentation.ui.theme.Typography
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 
 @ExperimentalFoundationApi
@@ -63,10 +61,14 @@ internal fun ResultDialog(onDismissRequest: () -> Unit, viewModel: TrainingViewM
 
     Dialog(onDismissRequest = onDismissRequest) {
         Surface(
-            modifier = Modifier.fillMaxWidth().verticalPadding(72.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalPadding(72.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
             Column {
+                Spacer(modifier = Modifier.height(36.dp))
+
                 ResultContent(viewModel = viewModel, Modifier.weight(1.0F))
 
                 Surface(elevation = 4.dp) {
@@ -97,6 +99,8 @@ internal fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mo
             text = "$correctAnswerCount/$solutionNotNullCount",
             fontSize = 36.sp
         )
+        
+        SebangText(text = viewModel.elapsedTime.toString())
         
         Spacer(modifier = Modifier.height(24.dp))
 

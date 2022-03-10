@@ -1,4 +1,4 @@
-package com.wing.tree.n.back.training.presentation.view.core
+package com.wing.tree.n.back.training.presentation.view.shared
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*

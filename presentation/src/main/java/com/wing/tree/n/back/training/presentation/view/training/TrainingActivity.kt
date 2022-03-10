@@ -9,14 +9,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -34,8 +32,8 @@ import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.util.*
-import com.wing.tree.n.back.training.presentation.view.core.ConfirmAlertDialog
-import com.wing.tree.n.back.training.presentation.view.core.TopAppbar
+import com.wing.tree.n.back.training.presentation.view.shared.ConfirmAlertDialog
+import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*

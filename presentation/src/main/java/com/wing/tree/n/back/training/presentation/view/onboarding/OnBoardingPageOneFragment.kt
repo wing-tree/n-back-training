@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Scaffold
 import androidx.compose.ui.Modifier
@@ -18,9 +17,8 @@ import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
-import com.wing.tree.n.back.training.presentation.ui.theme.paddingBottom
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
-import com.wing.tree.n.back.training.presentation.view.core.TopAppbar
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
 class OnBoardingPageOneFragment : Fragment() {
     override fun onCreateView(

@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -35,8 +34,8 @@ import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
-import com.wing.tree.n.back.training.presentation.view.core.TopAppbar
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel

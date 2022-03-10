@@ -17,7 +17,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ComposeView
@@ -30,8 +29,8 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
-import com.wing.tree.n.back.training.presentation.view.core.TopAppbar
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
 class OnBoardingPageTwoFragment : Fragment() {
     override fun onCreateView(

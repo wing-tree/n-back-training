@@ -24,7 +24,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.util.`is`
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.quarter
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import kotlinx.coroutines.delay
 

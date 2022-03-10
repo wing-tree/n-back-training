@@ -30,7 +30,7 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.util.flagEmoji
 import com.wing.tree.n.back.training.presentation.util.notNull
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import java.util.*
@@ -175,7 +175,7 @@ internal fun Ranking(
 
                         Option(
                             title = context.getString(R.string.elapsed_time),
-                            value = "${viewModel.elapsedTime / 1_000_000_000.0}"
+                            value = String.format("%.3f", viewModel.elapsedTime / 1_000_000_000.0)
                         )
 
                         Spacer(modifier = Modifier.height(12.dp))

@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.ui.theme.paddingBottom
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 
 @Composable
 internal fun Ready(readyParameter: ReadyParameter?) {

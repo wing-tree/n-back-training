@@ -26,13 +26,11 @@ import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.model.Problem
-import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.ui.theme.Green500
-import com.wing.tree.n.back.training.presentation.ui.theme.Red500
+import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.util.isNull
-import com.wing.tree.n.back.training.presentation.view.core.SebangText
-import com.wing.tree.n.back.training.presentation.view.core.TopAppbar
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
 class OnBoardingPageThreeFragment : Fragment() {
 
@@ -244,11 +242,11 @@ private fun ResultSample(modifier: Modifier = Modifier) {
     Surface(
         modifier = Modifier
             .wrapContentSize()
-            .horizontalPadding(24.dp),
+            .horizontalPadding(12.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = 4.dp
     ) {
-        Column(modifier = modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = modifier.horizontalPadding(9.dp).verticalPadding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             SebangText(
                 text = "15/17",
                 fontSize = 27.sp
