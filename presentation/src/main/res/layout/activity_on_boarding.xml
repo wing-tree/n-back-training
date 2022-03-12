@@ -14,12 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@color/disabled"
         android:elevation="4dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/material_button_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/sebang_gothic_bold"
             android:text="@string/previous"
@@ -36,6 +38,7 @@
             android:id="@+id/material_button_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_gravity="center_vertical|end"
             android:fontFamily="@font/sebang_gothic_bold"
             android:text="@string/next"
@@ -48,8 +51,10 @@
         android:id="@+id/image_view_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="12dp"
         app:srcCompat="@drawable/ic_round_close_24"
+        app:tint="@color/black"
         tools:ignore="ContentDescription" />
 
 </FrameLayout>

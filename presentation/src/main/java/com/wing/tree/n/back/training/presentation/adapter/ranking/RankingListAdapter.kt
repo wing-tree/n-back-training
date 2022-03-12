@@ -32,7 +32,7 @@ class RankingListAdapter(private val page: Int, private val pageSize: Int) : Lis
                         textViewRank.text = rank
                         textViewCountry.text = item.country.flagEmoji
                         textViewName.text = item.name
-                        textViewElapsedTime.text = "${item.elapsedTime}"
+                        textViewElapsedTime.text = String.format("%.3f", item.elapsedTime / 1_000_000_000.0)
                         textViewNBack.text = nBack
                         textViewRounds.text = "${item.rounds}"
                     }

@@ -9,6 +9,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1175925925925926" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1175925925925926" />
         <entry key="presentation/src/main/res/drawable/bottom_rounded_corners.xml" value="0.175" />
+        <entry key="presentation/src/main/res/drawable/ic_empty_state_168_140.xml" value="0.2630208333333333" />
         <entry key="presentation/src/main/res/drawable/ic_false_32.xml" value="0.12777777777777777" />
         <entry key="presentation/src/main/res/drawable/ic_launcher_background.xml" value="0.12777777777777777" />
         <entry key="presentation/src/main/res/drawable/ic_o_24.xml" value="0.1175925925925926" />
@@ -17,7 +18,7 @@
         <entry key="presentation/src/main/res/drawable/ic_round_share_24.xml" value="0.12777777777777777" />
         <entry key="presentation/src/main/res/font-v26/sebang_gothic_font_family.xml" value="0.3712820512820513" />
         <entry key="presentation/src/main/res/font/sebang_gothic_font_family.xml" value="0.3712820512820513" />
-        <entry key="presentation/src/main/res/layout/activity_on_boarding.xml" value="0.1" />
+        <entry key="presentation/src/main/res/layout/activity_on_boarding.xml" value="0.23318027539201078" />
         <entry key="presentation/src/main/res/layout/activity_ranking.xml" value="0.1718457363867959" />
         <entry key="presentation/src/main/res/layout/fragment_blank.xml" value="0.1852355072463768" />
         <entry key="presentation/src/main/res/layout/fragment_ranking.xml" value="0.14871794871794872" />

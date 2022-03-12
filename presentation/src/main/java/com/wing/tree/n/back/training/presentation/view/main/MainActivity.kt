@@ -30,7 +30,8 @@ import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Menu
-import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
+import com.wing.tree.n.back.training.presentation.ui.theme.*
+import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
 import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity
@@ -144,9 +145,12 @@ class MainActivity : ComponentActivity() {
                                 .weight(1.0F)
                         ) {
                             item {
-                                Column(modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(24.dp, 12.dp)
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .horizontalPadding(24.dp)
+                                        .paddingBottom(8.dp)
+                                        .paddingTop(24.dp)
                                 ) {
                                     val modifier = Modifier
                                         .fillMaxWidth()
@@ -166,7 +170,7 @@ class MainActivity : ComponentActivity() {
                                         }
                                     }
 
-                                    Spacer(modifier = Modifier.height(12.dp))
+                                    Spacer(modifier = Modifier.height(24.dp))
 
                                     Option(
                                         modifier = modifier,
@@ -337,21 +341,25 @@ private fun Option(
 private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Unit) {
     Column(modifier = modifier) {
         N.IntRange.forEach {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = { onClick(it) },
                 modifier = Modifier
                     .padding(24.dp, 0.dp)
-                    .height(40.dp)
+                    .height(48.dp)
                     .fillMaxWidth(),
                 shape = CircleShape
             ) {
-                SebangText(text = "$it-Back", fontWeight = FontWeight.Bold)
+                SebangText(
+                    text = "$it-Back",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 

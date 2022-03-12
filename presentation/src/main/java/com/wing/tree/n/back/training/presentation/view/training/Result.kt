@@ -27,6 +27,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.isNull
+import com.wing.tree.n.back.training.presentation.util.not
 import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
@@ -99,10 +100,21 @@ internal fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mo
             text = "$correctAnswerCount/$solutionNotNullCount",
             fontSize = 36.sp
         )
-        
-        SebangText(text = viewModel.elapsedTime.toString())
-        
-        Spacer(modifier = Modifier.height(24.dp))
+
+        with(viewModel.elapsedTime) {
+            if (viewModel.speedMode && not(0L)) {
+                Spacer(modifier = Modifier.height(12.dp))
+
+                SebangText(
+                    text = String.format("%.3f", viewModel.elapsedTime / 1_000_000_000.0),
+                    fontSize = 16.sp
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+            } else {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+        }
 
         LazyVerticalGrid(
             modifier = Modifier.weight(1.0F),

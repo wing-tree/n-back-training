@@ -6,6 +6,7 @@
     <string name="cancel_ranking_registration_title">랭킹 등록 취소</string>
     <string name="confirm">확인</string>
     <string name="dismiss">닫기</string>
+    <string name="done">완료</string>
     <string name="elapsed_time">경과 시간</string>
     <string name="filter">필터</string>
     <string name="how_to_play">플레이 방법</string>
@@ -51,4 +52,8 @@
     <string name="result_screen1">상단에 맞춘 개수가 표시됩니다.</string>
     <string name="result_screen2">맨 앞 N개의 결과는 회색으로 표시되며, 맞은 결과는 초록색으로, 틀린 결과는 빨간색으로 표시됩니다.</string>
     <string name="result_screen3">위는 3-Back, 20 라운드의 결과입니다.</string>
+
+    <string name="ranking1">3-Back 이상, 20라운드 이상, 그리고 스피드 모드에서 모든 문제를 맞히면 랭킹 등록 조건이 충족되며, 랭킹 등록을 위해서는 상위 50위 안에 들어야 합니다.</string>
+    <string name="ranking2">N과 라운드가 클수록, 경과시간이 짧을수록 높게 랭크됩니다.</string>
+    <string name="ranking3">속도는 랭킹와 관련이 없습니다.</string>
 </resources>
