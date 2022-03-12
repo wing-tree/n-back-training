@@ -12,9 +12,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="toolbarNavigationButtonStyle">@style/Toolbar.Button.Navigation.Tint</item>
     </style>
-
-    <style name="Theme.NBackTraining.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="Theme.NBackTraining.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

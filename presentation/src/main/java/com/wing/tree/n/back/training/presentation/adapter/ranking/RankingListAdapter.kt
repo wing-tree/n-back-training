@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.n.back.training.domain.model.Ranking as DomainModel
 import com.wing.tree.n.back.training.presentation.databinding.RankingItemBinding
 import com.wing.tree.n.back.training.presentation.util.flagEmoji
+import java.text.SimpleDateFormat
 import java.util.*
 
 class RankingListAdapter(private val page: Int, private val pageSize: Int) : ListAdapter<RankingListAdapter.AdapterItem, RankingListAdapter.ViewHolder>(DiffCallback()) {
@@ -28,13 +29,15 @@ class RankingListAdapter(private val page: Int, private val pageSize: Int) : Lis
                     with(viewBinding) {
                         val rank = "${item.rank.inc() + page.times(pageSize)}"
                         val nBack = "${item.n}-Back"
+                        val timestamp = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(item.timestamp)
 
                         textViewRank.text = rank
                         textViewCountry.text = item.country.flagEmoji
                         textViewName.text = item.name
-                        textViewElapsedTime.text = String.format("%.3f", item.elapsedTime / 1_000_000_000.0)
+                        textViewElapsedTimeValue.text = String.format("%.3f", item.elapsedTime / 1_000_000_000.0)
                         textViewNBack.text = nBack
-                        textViewRounds.text = "${item.rounds}"
+                        textViewRoundsValue.text = "${item.rounds}"
+                        textViewTimestamp.text = timestamp
                     }
                 }
             }

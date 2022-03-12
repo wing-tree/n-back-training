@@ -13,90 +13,157 @@
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/text_view_rank"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="12dp"
-                android:fontFamily="@font/sebang_gothic_font_family"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="1" />
-
-            <TextView
-                android:id="@+id/text_view_country"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="@font/sebang_gothic_font_family"
-                app:layout_constraintStart_toEndOf="@+id/text_view_rank"
-                app:layout_constraintTop_toTopOf="@+id/text_view_rank" />
-
-            <TextView
-                android:id="@+id/text_view_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="@font/sebang_gothic_font_family"
-                app:layout_constraintStart_toEndOf="@+id/text_view_country"
-                app:layout_constraintTop_toTopOf="@+id/text_view_rank"
-                tools:text="Nickname" />
-
-            <TextView
-                android:id="@+id/text_view_elapsed_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:fontFamily="@font/sebang_gothic_font_family"
-                app:layout_constraintStart_toStartOf="@+id/text_view_name"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_name"
-                app:layout_constraintVertical_bias="0.0"
-                tools:text="20" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/text_view_n_back"
-            android:layout_width="0dp"
+            android:id="@+id/text_view_rank"
+            style="@style/TextView.Sebang"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:fontFamily="@font/sebang_gothic_font_family"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/text_view_rounds"
-            app:layout_constraintHorizontal_bias="0.5"
+            android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
-            tools:text="8-Back" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1" />
 
         <TextView
-            android:id="@+id/text_view_rounds"
+            android:id="@+id/text_view_country"
+            style="@style/TextView.Sebang"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/text_view_rank"
+            app:layout_constraintTop_toTopOf="@+id/text_view_rank" />
+
+        <TextView
+            android:id="@+id/text_view_name"
+            style="@style/TextView.Sebang"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:fontFamily="@font/sebang_gothic_font_family"
-            android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/text_view_n_back"
+            android:layout_marginEnd="12dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_country"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/text_view_n_back"
-            app:layout_constraintTop_toTopOf="@+id/text_view_n_back"
-            tools:text="30" />
+            app:layout_constraintStart_toEndOf="@+id/text_view_country"
+            app:layout_constraintTop_toTopOf="@+id/text_view_rank"
+            tools:text="Nickname Very Long Case" />
+
+        <TextView
+            android:id="@+id/text_view_n_back"
+            style="@style/TextView.Sebang"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/text_view_name"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_name"
+            tools:text="8-Back" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/material_card_view_elapsed_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_n_back">
+
+            <LinearLayout
+                android:id="@+id/linear_layout_elapsed_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp" >
+
+                <TextView
+                    android:id="@+id/text_view_elapsed_time_title"
+                    style="@style/TextView.Sebang"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/elapsed_time" />
+
+                <TextView
+                    android:id="@+id/text_view_elapsed_time_value"
+                    style="@style/TextView.Sebang"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="20.000" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/material_card_view_rounds"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="@+id/material_card_view_elapsed_time"
+            app:layout_constraintStart_toStartOf="@+id/material_card_view_elapsed_time"
+            app:layout_constraintTop_toBottomOf="@+id/material_card_view_elapsed_time">
+
+            <LinearLayout
+                android:id="@+id/linear_layout_rounds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/text_view_rounds_title"
+                    style="@style/TextView.Sebang"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/rounds" />
+
+                <TextView
+                    android:id="@+id/text_view_rounds_value"
+                    style="@style/TextView.Sebang"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    tools:text="30" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <TextView
+            android:id="@+id/text_view_timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="16dp"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/material_card_view_rounds"
+            style="@style/TextView.Sebang"
+            tools:text="2022/03/04 16:49:19"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

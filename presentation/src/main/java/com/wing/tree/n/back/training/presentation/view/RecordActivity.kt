@@ -189,8 +189,6 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
 fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, onDeleteIconClick: (Record) -> Unit) {
     val context = LocalContext.current
 
-    println("zzzz:${record.id}")
-
     fun getString(@StringRes resId: Int) = context.getString(resId)
 
     @Composable

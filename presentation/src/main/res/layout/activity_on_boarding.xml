@@ -25,6 +25,7 @@
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/sebang_gothic_bold"
             android:text="@string/previous"
+            android:textColor="@color/teal_200"
             android:textSize="14sp"
             style="@style/Widget.Material3.Button.TextButton" />
 
@@ -42,6 +43,7 @@
             android:layout_gravity="center_vertical|end"
             android:fontFamily="@font/sebang_gothic_bold"
             android:text="@string/next"
+            android:textColor="@color/teal_200"
             android:textSize="14sp"
             style="@style/Widget.Material3.Button.TextButton" />
 

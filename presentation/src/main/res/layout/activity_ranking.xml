@@ -41,6 +41,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_round_keyboard_arrow_left_24"
+            app:tint="@color/black"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -49,9 +50,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="1dp"
-            android:fontFamily="@font/sebang_gothic_font_family"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            style="@style/TextView.Sebang"
+            tools:text="2/5"/>
 
         <ImageView
             android:id="@+id/image_view_next"
@@ -59,6 +60,7 @@
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_round_keyboard_arrow_right_24"
+            app:tint="@color/black"
             tools:ignore="ContentDescription" />
 
     </LinearLayout>

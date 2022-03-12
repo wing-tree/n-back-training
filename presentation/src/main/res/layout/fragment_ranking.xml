@@ -35,11 +35,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="36dp"
             android:layout_marginTop="12dp"
-            android:fontFamily="@font/sebang_gothic_font_family"
             android:gravity="center"
             android:text="@string/no_rankings_found"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            style="@style/TextView.Sebang" />
 
     </LinearLayout>
 
