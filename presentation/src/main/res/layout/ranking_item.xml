@@ -80,7 +80,7 @@
             android:layout_marginTop="12dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
+            app:cardElevation="1dp"
             app:layout_constraintEnd_toEndOf="@+id/text_view_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_n_back">
@@ -119,7 +119,7 @@
             android:layout_marginTop="8dp"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
+            app:cardElevation="1dp"
             app:layout_constraintEnd_toEndOf="@+id/material_card_view_elapsed_time"
             app:layout_constraintStart_toStartOf="@+id/material_card_view_elapsed_time"
             app:layout_constraintTop_toBottomOf="@+id/material_card_view_elapsed_time">

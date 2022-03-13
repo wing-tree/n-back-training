@@ -15,6 +15,7 @@ import com.wing.tree.n.back.training.presentation.databinding.FragmentRankingBin
 import com.wing.tree.n.back.training.presentation.util.int
 import com.wing.tree.n.back.training.presentation.viewmodel.RankingViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
 @AndroidEntryPoint
 class RankingFragment : Fragment() {
@@ -55,6 +56,7 @@ class RankingFragment : Fragment() {
         with(viewBinding) {
             recyclerView.apply {
                 adapter = rankingListAdapter
+                itemAnimator = SlideInUpAnimator()
                 layoutManager = LinearLayoutManager(context)
             }
         }

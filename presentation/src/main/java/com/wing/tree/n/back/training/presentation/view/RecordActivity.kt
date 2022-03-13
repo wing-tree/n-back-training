@@ -162,11 +162,9 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
     }
 
     LazyColumn {
-        itemsIndexed(items) { index, record ->
-            if (index.`is`(0)) {
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
+        item { Spacer(modifier = Modifier.height(12.dp)) }
+        
+        items(items, key = { it }) { record ->
             RecordItem(
                 Modifier
                     .horizontalPadding(16.dp)
@@ -195,10 +193,7 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
 
     @Composable
     fun Option(labelText: String, value: Any?, modifier: Modifier = Modifier) {
-        Surface(
-            elevation = 4.dp,
-            shape = RoundedCornerShape(8.dp)
-        ) {
+        Card(shape = RoundedCornerShape(8.dp)) {
             Row(modifier = modifier.verticalPadding(8.dp)) {
                 SebangText(text = labelText, modifier = Modifier.weight(1.0F))
 
