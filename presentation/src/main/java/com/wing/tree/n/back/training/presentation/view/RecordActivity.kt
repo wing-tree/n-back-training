@@ -9,10 +9,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -43,9 +40,9 @@ import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.model.Record
-import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.ui.theme.Green500
-import com.wing.tree.n.back.training.presentation.ui.theme.Red500
+import com.wing.tree.n.back.training.presentation.ui.theme.*
+import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
+import com.wing.tree.n.back.training.presentation.util.`is`
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.presentation.view.shared.ConfirmAlertDialog
@@ -165,10 +162,15 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
     }
 
     LazyColumn {
-        items(items) { record ->
+        itemsIndexed(items) { index, record ->
+            if (index.`is`(0)) {
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
             RecordItem(
                 Modifier
-                    .padding(24.dp, 12.dp)
+                    .horizontalPadding(16.dp)
+                    .paddingBottom(12.dp)
                     .animateItemPlacement(),
                 record,
                 onClick = {
@@ -193,25 +195,36 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
 
     @Composable
     fun Option(labelText: String, value: Any?, modifier: Modifier = Modifier) {
-        Row(modifier = modifier) {
-            SebangText(text = labelText, modifier = Modifier.weight(1.0F))
+        Surface(
+            elevation = 4.dp,
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Row(modifier = modifier.verticalPadding(8.dp)) {
+                SebangText(text = labelText, modifier = Modifier.weight(1.0F))
 
-            value?.let {
-                SebangText(text = "$it", modifier = Modifier.weight(1.0F))
+                value?.let {
+                    SebangText(text = "$it", modifier = Modifier.weight(1.0F))
+                }
             }
         }
     }
 
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp)
+        shape = RoundedCornerShape(12.dp),
+        elevation = 4.dp
     ) {
         Row(modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick(record) }
         ) {
             Column {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .paddingTop(4.dp),
+                    verticalAlignment = Alignment.CenterVertically)
+                {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -220,11 +233,19 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
                     ) {
                         Spacer(modifier = Modifier.width(24.dp))
 
-                        Text(text = "${record.n}-Back")
+                        SebangText(
+                            text = "${record.n}-Back",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
 
-                        Spacer(modifier = Modifier.width(12.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
 
-                        Text(text = record.result)
+                        SebangText(
+                            text = record.result,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
 
                     IconButton(onClick = { onDeleteIconClick.invoke(record) }) {
@@ -232,24 +253,26 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
                     }
                 }
 
-                Column(modifier = Modifier.padding(24.dp, 0.dp)) {
+                Column(modifier = Modifier.horizontalPadding(16.dp)) {
                     val timestamp = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(record.timestamp)
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    Option(labelText = getString(R.string.elapsed_time), value = record.elapsedTime)
+                    Option(labelText = getString(R.string.elapsed_time), value = String.format("%.3f", record.elapsedTime / 1_000_000_000.0))
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Option(labelText = getString(R.string.rounds), value = record.rounds)
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     Option(labelText = getString(R.string.speed), value = record.speed)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    SebangText(text = timestamp)
+                    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                        SebangText(text = timestamp, fontSize = 12.sp)
+                    }
 
                     Spacer(modifier = Modifier.height(12.dp))
                 }
@@ -266,7 +289,7 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
     val solutionNotNullCount = record.problems.filter { it.solution.notNull }.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(
+        SebangText(
             modifier = Modifier.padding(16.dp),
             text = "$correctAnswerCount/$solutionNotNullCount",
             fontSize = 45.sp,
@@ -288,7 +311,7 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
                         else -> Red500
                     }
 
-                    Text(
+                    SebangText(
                         text = "${item.number}",
                         fontSize = 24.sp,
                         color = color,
@@ -313,20 +336,21 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
             }
         }
 
-        Button(
-            onClick = { onButtonClick() },
-            modifier = Modifier
-                .padding(16.dp)
-                .height(40.dp)
-                .fillMaxWidth(),
-            shape = CircleShape
+        Surface(
+            elevation = 4.dp
         ) {
-            Text(
-                text = context.getString(R.string.confirm).uppercase(),
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Medium,
-                textAlign = TextAlign.Center
-            )
+            Button(
+                onClick = { onButtonClick() },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(40.dp)
+                    .fillMaxWidth(),
+                shape = CircleShape
+            ) {
+                SebangText(
+                    text = context.getString(R.string.confirm)
+                )
+            }
         }
     }
 }
@@ -347,17 +371,17 @@ private fun SortDialog(value: SortBy, onDismissRequest: (SortBy) -> Unit) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            sortBy = SortBy.Newest
-                        },
+                        .clickable { sortBy = SortBy.Newest },
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    SebangText(
                         text = context.getString(R.string.newest),
                         modifier = Modifier
                             .weight(1.0F)
-                            .padding(12.dp, 0.dp)
+                            .horizontalPadding(12.dp),
+                        horizontalAlignment = Alignment.Start,
+                        textAlign = TextAlign.Start
                     )
 
                     RadioButton(
@@ -370,17 +394,17 @@ private fun SortDialog(value: SortBy, onDismissRequest: (SortBy) -> Unit) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable {
-                            sortBy = SortBy.Oldest
-                        },
+                        .clickable { sortBy = SortBy.Oldest },
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    SebangText(
                         text = context.getString(R.string.oldest),
                         modifier = Modifier
                             .weight(1.0F)
-                            .padding(12.dp, 0.dp)
+                            .horizontalPadding(12.dp),
+                        horizontalAlignment = Alignment.Start,
+                        textAlign = TextAlign.Start
                     )
 
                     RadioButton(

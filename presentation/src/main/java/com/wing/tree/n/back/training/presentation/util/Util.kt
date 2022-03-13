@@ -1,5 +1,8 @@
 package com.wing.tree.n.back.training.presentation.util
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -52,3 +55,7 @@ val String.flagEmoji: String
 
         return String(Character.toChars(first)) + String(Character.toChars(second))
     }
+
+inline fun <reified T: Activity> Context.startActivity() {
+    startActivity(Intent(this, T::class.java))
+}

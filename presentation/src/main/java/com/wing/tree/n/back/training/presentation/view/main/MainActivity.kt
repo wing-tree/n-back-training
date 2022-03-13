@@ -49,8 +49,14 @@ class MainActivity : ComponentActivity() {
 
     private val menu by lazy {
         listOf(
+            Menu.Item(R.drawable.ic_driving_guidelines_96px, getString(R.string.how_to_play)) {
+                startActivity<OnBoardingActivity>()
+            },
+            Menu.Item(R.drawable.ic_prize_96px, getString(R.string.ranking)) {
+                startActivity<RankingActivity>()
+            },
             Menu.Item(R.drawable.ic_round_history_24, getString(R.string.record)) {
-                startActivity(Intent(this, RecordActivity::class.java))
+                startActivity<RecordActivity>()
             },
             Menu.Divider,
             Menu.Item(R.drawable.ic_round_rate_review_24, getString(R.string.write_review)) {
@@ -117,12 +123,8 @@ class MainActivity : ComponentActivity() {
                                                 modifier = Modifier
                                                     .fillMaxWidth()
                                                     .padding(24.dp, 0.dp),
-                                                getString(R.string.how_to_play) to {
-                                                    startActivity(Intent(this@MainActivity, OnBoardingActivity::class.java))
-                                                },
-                                                getString(R.string.ranking) to {
-                                                    startActivity(Intent(this@MainActivity, RankingActivity::class.java))
-                                                }
+                                                getString(R.string.how_to_play) to { startActivity<OnBoardingActivity>() },
+                                                getString(R.string.ranking) to { startActivity<RankingActivity>() }
                                             )
 
                                             Spacer(modifier = Modifier.height(24.dp))

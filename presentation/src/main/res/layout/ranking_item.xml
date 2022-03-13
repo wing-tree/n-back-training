@@ -66,7 +66,7 @@
             style="@style/TextView.Sebang"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="@+id/text_view_name"
             app:layout_constraintTop_toBottomOf="@+id/text_view_name"

@@ -68,7 +68,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1.0F)
-                    .horizontalPadding(12.dp),
+                    .horizontalPadding(24.dp),
                 shape = RoundedCornerShape(12.dp),
                 elevation = 4.dp
             ) {
@@ -83,7 +83,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                 }
             }
 
-            Row(modifier = Modifier.align(Alignment.CenterHorizontally).padding(12.dp, 48.dp)) {
+            Row(modifier = Modifier.align(Alignment.CenterHorizontally).padding(24.dp, 48.dp)) {
                 Button(
                     onClick = {
                         val problem = viewModel.problems[round]

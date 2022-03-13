@@ -18,12 +18,18 @@ import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 internal fun SebangText(
     text: String,
     modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     color: Color = Color.Unspecified,
     fontSize: TextUnit = 14.sp,
     fontWeight: FontWeight = FontWeight.Normal,
     textAlign: TextAlign = TextAlign.Center
 ) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+    ) {
         Spacer(modifier = Modifier.height(1.dp))
 
         Text(
