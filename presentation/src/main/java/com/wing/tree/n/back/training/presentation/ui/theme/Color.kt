@@ -13,3 +13,7 @@ val Teal700 = Color(0xFF00796B)
 val Teal900 = Color(0xFF004D40)
 
 val Green500 = Color(0xFF4CAF50)
+
+val Primary = Teal700
+val PrimaryVariant = Teal900
+val Secondary = Teal200
