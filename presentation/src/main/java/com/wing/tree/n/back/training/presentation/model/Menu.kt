@@ -10,10 +10,6 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Teal900
 sealed class Menu {
     object Divider : Menu()
 
-    data class Header(
-        val title: String
-    ) : Menu()
-
     data class Item(
         @DrawableRes val icon: Int,
         val title: String,

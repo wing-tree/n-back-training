@@ -47,7 +47,7 @@ class TrainingViewModel @Inject constructor(
     val speed = option.speed
     val speedMode = option.speedMode
 
-    private val _state = MutableLiveData<State>(State.Ready)
+    private val _state = MutableLiveData<State>(State.Ranking)
     val state: LiveData<State> get() = _state
 
     private val _title = MutableLiveData("$n-Back")

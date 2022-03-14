@@ -8,6 +8,7 @@
     <string name="dismiss">닫기</string>
     <string name="done">완료</string>
     <string name="elapsed_time">경과 시간</string>
+    <string name="enter_your_name">이름을 입력하세요</string>
     <string name="filter">필터</string>
     <string name="how_to_play">플레이 방법</string>
     <string name="n_back">N-Back</string>

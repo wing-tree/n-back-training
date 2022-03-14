@@ -5,19 +5,23 @@ import android.os.Build
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,10 +32,15 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
+import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
+import com.wing.tree.n.back.training.presentation.ui.theme.paddingTop
+import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
+import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.flagEmoji
 import com.wing.tree.n.back.training.presentation.util.notNull
-import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
+import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.SebangTextFiled
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 import java.util.*
 
@@ -51,9 +60,10 @@ internal fun Ranking(
     fun Option(title: String, value: Any?, modifier: Modifier = Modifier) {
         Card(
             modifier = modifier,
-            shape = RoundedCornerShape(12.dp)
+            shape = RoundedCornerShape(12.dp),
+            elevation = 4.dp
         ) {
-            Row(modifier = Modifier.padding(0.dp, 12.dp)) {
+            Row(modifier = Modifier.verticalPadding(12.dp)) {
                 SebangText(
                     text = title,
                     modifier = Modifier.weight(1.0F),
@@ -95,10 +105,10 @@ internal fun Ranking(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(0.dp, 72.dp),
+                    .verticalPadding(72.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                LazyColumn(modifier = Modifier.padding(0.dp, 12.dp)) {
+                LazyColumn(modifier = Modifier.verticalPadding(12.dp)) {
                     items(items) {
                         Row(
                             modifier = Modifier
@@ -108,7 +118,7 @@ internal fun Ranking(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row(
-                                modifier = Modifier.padding(24.dp, 0.dp),
+                                modifier = Modifier.horizontalPadding(24.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(text = it.flagEmoji)
@@ -162,13 +172,13 @@ internal fun Ranking(
             LazyColumn(modifier = Modifier.weight(1.0F)) {
                 item {
                     Column(
-                        modifier = Modifier.padding(24.dp, 0.dp),
+                        modifier = Modifier.horizontalPadding(24.dp),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Option(
-                            title = "${viewModel.n}-Back",
-                            value = null,
-                            modifier = Modifier.padding(48.dp, 0.dp)
+                        SebangText(
+                            text = "${viewModel.n}-Back",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -194,7 +204,7 @@ internal fun Ranking(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
-                        Row(modifier = Modifier.padding(24.dp, 0.dp)) {
+                        Row(modifier = Modifier.horizontalPadding(24.dp)) {
                             Button(
                                 onClick = {
                                     context.startActivity(
@@ -225,14 +235,20 @@ internal fun Ranking(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(24.dp))
 
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            label = { SebangText(getString(R.string.name)) },
-                            shape = RoundedCornerShape(12.dp),
-                            isError = isError
+                        SebangTextFiled(
+                            onValueChange = {
+                                if (isError) {
+                                    isError = it.isBlank()
+                                }
+
+                                name = it
+                            },
+                            hint = getString(R.string.enter_your_name),
+                            error = getString(R.string.enter_your_name),
+                            isError = isError,
+                            fontSize = 16.sp
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
@@ -240,9 +256,9 @@ internal fun Ranking(
                         Card(
                             modifier = Modifier
                                 .height(48.dp)
-                                .fillMaxWidth()
-                                .padding(24.dp, 0.dp),
-                            shape = RoundedCornerShape(12.dp)
+                                .fillMaxWidth(),
+                            shape = CircleShape,
+                            elevation = 4.dp
                         ) {
                             Row(
                                 modifier = Modifier
@@ -250,22 +266,34 @@ internal fun Ranking(
                                     .clickable {
                                         showCountrySelectionDialog = true
                                     }
-                                    .padding(24.dp, 0.dp),
+                                    .horizontalPadding(24.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(text = locale.flagEmoji)
+                                    SebangText(
+                                        text = locale.flagEmoji,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
 
                                     Spacer(modifier = Modifier.width(12.dp))
 
-                                    SebangText(text = locale.displayCountry, fontWeight = FontWeight.Bold)
+                                    SebangText(
+                                        text = locale.displayCountry,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 }
 
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.End
                                 ) {
-                                    Image(Icons.Rounded.ArrowDropDown, BLANK)
+                                    Image(
+                                        imageVector = Icons.Rounded.ArrowDropDown,
+                                        contentDescription = BLANK,
+                                        modifier = Modifier.size(32.dp)
+                                    )
                                 }
                             }
                         }

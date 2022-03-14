@@ -59,3 +59,10 @@ val String.flagEmoji: String
 inline fun <reified T: Activity> Context.startActivity() {
     startActivity(Intent(this, T::class.java))
 }
+
+fun <T> Boolean.ifElse(`if`: T, `else`: T) =
+    if (this) {
+        `if`
+    } else {
+        `else`
+    }
