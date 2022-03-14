@@ -1,19 +1,23 @@
 package com.wing.tree.n.back.training.presentation.view.shared
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -78,6 +82,7 @@ internal fun SebangTextFiled(
                         },
                         modifier = Modifier
                             .fillMaxSize()
+                            .paddingEnd(24.dp)
                             .paddingTop(paddingTop)
                             .onFocusChanged { focusState ->
                                 hasFocus = focusState.hasFocus
@@ -91,6 +96,23 @@ internal fun SebangTextFiled(
                         singleLine = true,
                         cursorBrush = SolidColor(Primary)
                     )
+
+                    if (text.isNotBlank()) {
+                        Image(
+                            imageVector = Icons.Rounded.Clear,
+                            contentDescription = BLANK,
+                            modifier = Modifier
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = rememberRipple(bounded = false)
+                                ) {
+                                    text = BLANK
+                                    onValueChange(BLANK)
+                                }
+                                .align(Alignment.CenterEnd),
+                            colorFilter = ColorFilter.tint(Color.Gray)
+                        )
+                    }
                 }
             }
         }

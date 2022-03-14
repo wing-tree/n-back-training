@@ -32,9 +32,8 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
+import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
-import com.wing.tree.n.back.training.presentation.ui.theme.paddingTop
-import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.flagEmoji
 import com.wing.tree.n.back.training.presentation.util.notNull
@@ -78,57 +77,6 @@ internal fun Ranking(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold
                     )
-                }
-            }
-        }
-    }
-
-    @Composable
-    fun CountrySelectionDialog(onDismissRequest: () -> Unit, onClick: (Locale) -> Unit) {
-        val items = mutableListOf<Locale>()
-        val availableLocales = Locale.getAvailableLocales().filter { it.country.trim().isNotBlank() }
-        val displayCountries = mutableListOf<String>()
-        val isoCountries = Locale.getISOCountries()
-
-        availableLocales.forEach {
-            if (isoCountries.contains(it.country)) {
-                if (displayCountries.contains(it.displayCountry).not()) {
-                    displayCountries.add(it.displayCountry)
-                    items.add(it)
-                }
-            }
-        }
-
-        items.sortBy { it.displayCountry }
-
-        Dialog(onDismissRequest = onDismissRequest) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalPadding(72.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                LazyColumn(modifier = Modifier.verticalPadding(12.dp)) {
-                    items(items) {
-                        Row(
-                            modifier = Modifier
-                                .height(40.dp)
-                                .fillMaxWidth()
-                                .clickable { onClick(it) },
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                modifier = Modifier.horizontalPadding(24.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text(text = it.flagEmoji)
-
-                                Spacer(modifier = Modifier.width(12.dp))
-
-                                SebangText(text = it.displayCountry, fontWeight = FontWeight.Bold)
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -237,6 +185,8 @@ internal fun Ranking(
 
                         Spacer(modifier = Modifier.height(24.dp))
 
+                        Label(label = getString(R.string.name))
+
                         SebangTextFiled(
                             onValueChange = {
                                 if (isError) {
@@ -252,6 +202,8 @@ internal fun Ranking(
                         )
 
                         Spacer(modifier = Modifier.height(24.dp))
+
+                        Label(label = getString(R.string.country))
 
                         Card(
                             modifier = Modifier
@@ -298,6 +250,8 @@ internal fun Ranking(
                             }
                         }
                     }
+                    
+                    Spacer(modifier = Modifier.height(56.dp))
                 }
             }
 
@@ -361,5 +315,72 @@ internal fun Ranking(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun CountrySelectionDialog(onDismissRequest: () -> Unit, onClick: (Locale) -> Unit) {
+    val items = mutableListOf<Locale>()
+    val availableLocales = Locale.getAvailableLocales().filter { it.country.trim().isNotBlank() }
+    val displayCountries = mutableListOf<String>()
+    val isoCountries = Locale.getISOCountries()
+
+    availableLocales.forEach {
+        if (isoCountries.contains(it.country)) {
+            if (displayCountries.contains(it.displayCountry).not()) {
+                displayCountries.add(it.displayCountry)
+                items.add(it)
+            }
+        }
+    }
+
+    items.sortBy { it.displayCountry }
+
+    Dialog(onDismissRequest = onDismissRequest) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalPadding(72.dp),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            LazyColumn(modifier = Modifier.verticalPadding(12.dp)) {
+                items(items) {
+                    Row(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .fillMaxWidth()
+                            .clickable { onClick(it) },
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(
+                            modifier = Modifier.horizontalPadding(24.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = it.flagEmoji)
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            SebangText(text = it.displayCountry, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun Label(label: String, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .paddingBottom(8.dp)
+            .paddingStart(24.dp)
+    ) {
+        SebangText(
+            text = label,
+            color = Primary,
+            fontWeight = FontWeight.Bold
+        )
     }
 }

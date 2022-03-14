@@ -7,6 +7,7 @@
     <string name="cancel_ranking_registration_text">Cancel ranking registration.</string>
     <string name="cancel_ranking_registration_title">Cancel Ranking Registration</string>
     <string name="confirm">Confirm</string>
+    <string name="country">Country</string>
     <string name="dismiss">Dismiss</string>
     <string name="done">Done</string>
     <string name="elapsed_time">Elapsed Time</string>
