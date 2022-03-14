@@ -55,7 +55,7 @@ class OnBoardingPageTwoFragment : Fragment() {
                                 SebangText(
                                     text = "1. ${getString(R.string.play_screen1)}",
                                     modifier = Modifier.horizontalPadding(24.dp),
-                                    textAlign = TextAlign.Justify
+                                    textAlign = TextAlign.Start
                                 )
 
                                 Spacer(modifier = Modifier.height(12.dp))
@@ -63,7 +63,7 @@ class OnBoardingPageTwoFragment : Fragment() {
                                 SebangText(
                                     text = "2. ${getString(R.string.play_screen2)}",
                                     modifier = Modifier.horizontalPadding(24.dp),
-                                    textAlign = TextAlign.Justify
+                                    textAlign = TextAlign.Start
                                 )
                                 
                                 Spacer(modifier = Modifier.height(112.dp))

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">N-Back Training</string>
+
+    <string name="answer">Answer</string>
     <string name="cancel">Cancel</string>
     <string name="cancel_ranking_registration_text">Cancel ranking registration.</string>
     <string name="cancel_ranking_registration_title">Cancel Ranking Registration</string>
@@ -11,12 +13,13 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="filter">Filter</string>
     <string name="how_to_play">How to play</string>
-    <string name="name">Name</string>
     <string name="n_back">N-Back</string>
+    <string name="name">Name</string>
     <string name="newest">Newest</string>
     <string name="next">Next</string>
     <string name="no_rankings_found">No rankings found</string>
     <string name="normal_mode">Normal Mode</string>
+    <string name="number">Number</string>
     <string name="oldest">Oldest</string>
     <string name="play_screen">Play screen</string>
     <string name="press_back_again_to_exit">Press \'Back\' again to exit</string>
@@ -31,6 +34,7 @@
     <string name="register">Register</string>
     <string name="result">Result</string>
     <string name="result_screen">Result screen</string>
+    <string name="round">Round</string>
     <string name="rounds">Rounds</string>
     <string name="second">second</string>
     <string name="seconds">seconds</string>
@@ -43,7 +47,8 @@
     <string name="version">Version</string>
     <string name="write_review">Write review</string>
 
-    <string name="how_to_play1">If the currently displayed number is the same as the number displayed before N rounds, press the O button, otherwise press the X button.</string>
+    <string name="how_to_play1">If the currently displayed number is the same as the number displayed before N rounds, press the O button, otherwise press the X button.\n\nBelow is an example of 2-Back.
+    </string>
     <string name="how_to_play2">You can set the mode, round and speed on the main screen.</string>
     <string name="how_to_play3">In speed mode, it moves to the next round as soon as you press the button, and in normal mode, it waits for the speed set on the main screen before moving to the next round.</string>
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">N-Back 트레이닝</string>
+
+    <string name="answer">답</string>
     <string name="cancel">취소</string>
     <string name="cancel_ranking_registration_text">랭킹 등록을 취소합니다.</string>
     <string name="cancel_ranking_registration_title">랭킹 등록 취소</string>
@@ -17,6 +19,7 @@
     <string name="next">다음</string>
     <string name="no_rankings_found">랭킹을 찾을 수 없습니다</string>
     <string name="normal_mode">일반 모드</string>
+    <string name="number">숫자</string>
     <string name="oldest">오래된순</string>
     <string name="play_screen">플레이 화면</string>
     <string name="press_back_again_to_exit">\'뒤로\' 버튼을 다시 누르시면 종료됩니다</string>
@@ -31,6 +34,7 @@
     <string name="result">결과</string>
     <string name="result_screen">결과 화면</string>
     <string name="register">등록</string>
+    <string name="round">라운드</string>
     <string name="rounds">라운드</string>
     <string name="second">초</string>
     <string name="seconds">초</string>
@@ -43,7 +47,8 @@
     <string name="version">버전</string>
     <string name="write_review">리뷰 쓰기</string>
 
-    <string name="how_to_play1">현재 표시되는 숫자와 N 라운드 전에 표시된 숫자가 같으면 O 버튼을, 다르면 X 버튼을 누릅니다.</string>
+    <string name="how_to_play1">현재 표시되는 숫자와 N 라운드 전에 표시된 숫자가 같으면 O 버튼을, 다르면 X 버튼을 누릅니다.\n\n다음은 2-Back의 예입니다.
+    </string>
     <string name="how_to_play2">메인 화면에서 모드, 라운드 및 속도를 설정할 수 있습니다.</string>
     <string name="how_to_play3">스피드 모드의 경우 버튼을 누르는 즉시 다음 라운드로 이동하며, 일반 모드의 경우 메인 화면에서 설정한 속도만큼 기다린 후 다음 라운드로 이동합니다.</string>
 

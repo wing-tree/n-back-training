@@ -40,21 +40,21 @@ class OnBoardingPageFourFragment : Fragment() {
                                     Column(modifier = Modifier.horizontalPadding(24.dp)) {
                                         SebangText(
                                             text = "1. ${getString(R.string.ranking1)}",
-                                            textAlign = TextAlign.Justify
+                                            textAlign = TextAlign.Start
                                         )
 
                                         Spacer(modifier = Modifier.height(12.dp))
 
                                         SebangText(
                                             text = "2. ${getString(R.string.ranking2)}",
-                                            textAlign = TextAlign.Justify
+                                            textAlign = TextAlign.Start
                                         )
 
                                         Spacer(modifier = Modifier.height(12.dp))
 
                                         SebangText(
                                             text = "3. ${getString(R.string.ranking3)}",
-                                            textAlign = TextAlign.Justify
+                                            textAlign = TextAlign.Start
                                         )
                                     }
                                 }

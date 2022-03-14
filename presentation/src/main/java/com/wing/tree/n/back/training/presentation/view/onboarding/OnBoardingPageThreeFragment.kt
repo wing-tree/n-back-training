@@ -60,7 +60,7 @@ class OnBoardingPageThreeFragment : Fragment() {
                                     SebangText(
                                         text = "1. ${getString(R.string.result_screen1)}",
                                         modifier = Modifier.horizontalPadding(24.dp),
-                                        textAlign = TextAlign.Justify
+                                        textAlign = TextAlign.Start
                                     )
 
                                     Spacer(modifier = Modifier.height(12.dp))
@@ -68,7 +68,7 @@ class OnBoardingPageThreeFragment : Fragment() {
                                     SebangText(
                                         text = "2. ${getString(R.string.result_screen2)}",
                                         modifier = Modifier.horizontalPadding(24.dp),
-                                        textAlign = TextAlign.Justify
+                                        textAlign = TextAlign.Start
                                     )
 
                                     Spacer(modifier = Modifier.height(12.dp))
@@ -76,7 +76,7 @@ class OnBoardingPageThreeFragment : Fragment() {
                                     SebangText(
                                         text = "3. ${getString(R.string.result_screen3)}",
                                         modifier = Modifier.horizontalPadding(24.dp),
-                                        textAlign = TextAlign.Justify
+                                        textAlign = TextAlign.Start
                                     )
                                 }
 
