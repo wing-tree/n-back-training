@@ -67,9 +67,7 @@
     <string name="ranking2">The larger the N and round, the shorter the elapsed time, the higher the rank.</string>
     <string name="ranking3">Speed has nothing to do with ranking.</string>
 
-    <string-array name="text_colors">
-        <item>gray</item>
-        <item>green</item>
-        <item>red</item>
-    </string-array>
+    <string name="gray">gray</string>
+    <string name="green">green</string>
+    <string name="red">red</string>
 </resources>

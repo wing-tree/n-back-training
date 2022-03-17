@@ -71,11 +71,18 @@ class OnBoardingPageThreeFragment : Fragment() {
 
                                     Spacer(modifier = Modifier.height(12.dp))
 
+                                    val wordToColorHashMap = hashMapOf(
+                                        getString(R.string.gray) to Color.Gray,
+                                        getString(R.string.green) to Green500,
+                                        getString(R.string.red) to Red500
+                                    )
+
                                     NumberedSebangText(
                                         number = 2,
                                         text = getString(R.string.result_screen2),
                                         modifier = Modifier.horizontalPadding(24.dp),
-                                        textAlign = TextAlign.Start
+                                        textAlign = TextAlign.Start,
+                                        wordToColorHashMap = wordToColorHashMap
                                     )
 
                                     Spacer(modifier = Modifier.height(12.dp))
