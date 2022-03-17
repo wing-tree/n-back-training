@@ -7,7 +7,9 @@ import com.wing.tree.n.back.training.domain.repository.RecordRepository
 import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
+import com.wing.tree.n.back.training.domain.usecase.preferences.GetFirstTimeUseCase
 import com.wing.tree.n.back.training.domain.usecase.preferences.GetSortByUseCase
+import com.wing.tree.n.back.training.domain.usecase.preferences.PutIsFirstTimeUseCase
 import com.wing.tree.n.back.training.domain.usecase.preferences.PutSortByUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingsUseCase
@@ -31,6 +33,15 @@ internal object UseCaseModule {
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): CheckRankingUseCase {
         return CheckRankingUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesGetFirstTimeUseCase(
+        repository: PreferencesRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): GetFirstTimeUseCase {
+        return GetFirstTimeUseCase(repository, coroutineDispatcher)
     }
 
     @Provides
@@ -76,6 +87,15 @@ internal object UseCaseModule {
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): InsertRecordUseCase {
         return InsertRecordUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesPutIsFirstTimeUseCase(
+        repository: PreferencesRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): PutIsFirstTimeUseCase {
+        return PutIsFirstTimeUseCase(repository, coroutineDispatcher)
     }
 
     @Provides

@@ -42,7 +42,7 @@ class TrainingViewModel @Inject constructor(
     val elapsedTime: Long
         get() = endTime - startTime
 
-    val n = savedStateHandle.get<Int>(Extra.BACK) ?: N.DEFAULT
+    val n = savedStateHandle.get<Int>(Extra.N) ?: N.DEFAULT
     val rounds = option.rounds
     val speed = option.speed
     val speedMode = option.speedMode

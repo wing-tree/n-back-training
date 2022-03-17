@@ -74,6 +74,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (viewModel.isFirstTime) {
+            startActivity<OnBoardingActivity>()
+            viewModel.updateIsFirstTimeToFalse()
+        }
+
         setContent {
             ApplicationTheme {
                 val coroutineScope = rememberCoroutineScope()
@@ -194,7 +199,7 @@ class MainActivity : ComponentActivity() {
                             item {
                                 NBackButtonGroup(modifier = Modifier.fillMaxWidth()) {
                                     with(Intent(applicationContext, TrainingActivity::class.java)) {
-                                        putExtra(Extra.BACK, it)
+                                        putExtra(Extra.N, it)
                                         putExtra(Extra.OPTION, option)
 
                                         startActivity(this)
