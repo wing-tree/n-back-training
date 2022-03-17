@@ -9,7 +9,10 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.GridCells
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -41,13 +44,11 @@ import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.model.Record
 import com.wing.tree.n.back.training.presentation.ui.theme.*
-import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
-import com.wing.tree.n.back.training.presentation.util.`is`
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.presentation.view.shared.ConfirmAlertDialog
-import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -136,6 +137,7 @@ class RecordActivity : ComponentActivity() {
 @ExperimentalFoundationApi
 @Composable
 fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy: SortBy) {
+    val context = LocalContext.current
     val records: List<Record>? by viewModel.records.observeAsState()
     var selectedRecord by remember { mutableStateOf<Record?>(null) }
     var showDialog by remember { mutableStateOf(false) }
@@ -149,8 +151,9 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
         selectedRecord?.let {
             ConfirmAlertDialog(
                 onDismissRequest = { showDialog = false },
-                title = selectedRecord?.result.toString(),
-                text = selectedRecord?.elapsedTime.toString(),
+                title = context.getString(R.string.delete_record),
+                text = context.getString(R.string.delete_the_record),
+                confirmButtonText = context.getString(R.string.delete),
                 onConfirmButtonClick = {
                     viewModel.delete(it)
                     showDialog = false
@@ -343,7 +346,8 @@ fun Detail(record: Record, onButtonClick: () -> Unit) {
                 shape = CircleShape
             ) {
                 SebangText(
-                    text = context.getString(R.string.confirm)
+                    text = context.getString(R.string.confirm),
+                    fontWeight = FontWeight.Bold
                 )
             }
         }

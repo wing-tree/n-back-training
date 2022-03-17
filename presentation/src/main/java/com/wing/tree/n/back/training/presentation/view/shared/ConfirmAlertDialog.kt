@@ -8,12 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.wing.tree.n.back.training.presentation.R
+import com.wing.tree.n.back.training.presentation.constant.BLANK
+import com.wing.tree.n.back.training.presentation.util.isNull
 
 @Composable
 internal fun ConfirmAlertDialog(
     onDismissRequest: () -> Unit,
     title: String,
     text: String,
+    confirmButtonText: String? = null,
+    dismissButtonText: String? = null,
     onConfirmButtonClick: () -> Unit,
     onDismissButtonClick: () -> Unit
 ) {
@@ -25,12 +29,12 @@ internal fun ConfirmAlertDialog(
         text = { SebangText(text = text) },
         confirmButton = {
             TextButton(onClick = onConfirmButtonClick) {
-                Text(context.getString(R.string.confirm))
+                Text(confirmButtonText ?: context.getString(R.string.confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismissButtonClick) {
-                Text(context.getString(R.string.dismiss))
+                Text(dismissButtonText ?: context.getString(R.string.dismiss))
             }
         },
         shape = RoundedCornerShape(12.dp),

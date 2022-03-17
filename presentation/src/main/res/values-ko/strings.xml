@@ -8,6 +8,9 @@
     <string name="cancel_ranking_registration_title">랭킹 등록 취소</string>
     <string name="confirm">확인</string>
     <string name="country">국가</string>
+    <string name="delete">삭제</string>
+    <string name="delete_record">기록 삭제</string>
+    <string name="delete_the_record">기록을 삭제합니다.</string>
     <string name="dismiss">닫기</string>
     <string name="done">완료</string>
     <string name="elapsed_time">경과 시간</string>
