@@ -15,6 +15,7 @@ import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -84,6 +85,8 @@ class TrainingActivity : ComponentActivity() {
                     val trainingParameter by viewModel.trainingParameter.observeAsState()
                     val title by viewModel.title.observeAsState()
 
+                    var elevation by remember { mutableStateOf(0.dp) }
+
                     Column(modifier = Modifier.fillMaxWidth()) {
                         TopAppbar(
                             title = title ?: "${viewModel.n}-Back",
@@ -101,7 +104,11 @@ class TrainingActivity : ComponentActivity() {
                                 }
                             },
                             footer = {
+                                if (state is State.Result) {
+                                    ResultTitle(viewModel = viewModel, modifier = Modifier.paddingBottom(36.dp))
+                                }
                             },
+                            elevation = elevation,
                             Menu.Text(
                                 text = if (viewModel.speedMode) {
                                     getString(R.string.speed_mode)
@@ -164,6 +171,7 @@ class TrainingActivity : ComponentActivity() {
                                 popUpTo(Route.READY) { inclusive = true }
                             }
                             is State.Result -> navController.navigate(Route.RESULT) {
+                                elevation = 4.dp
                                 launchSingleTop = true
                                 popUpTo(Route.TRAINING) { inclusive = true }
                             }

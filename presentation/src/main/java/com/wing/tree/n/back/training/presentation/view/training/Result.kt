@@ -18,13 +18,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
-import com.wing.tree.n.back.training.presentation.ui.theme.Green500
-import com.wing.tree.n.back.training.presentation.ui.theme.Red500
+import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.not
@@ -38,7 +38,11 @@ internal fun Result(viewModel: TrainingViewModel, onConfirmButtonClick: () -> Un
     val context = LocalContext.current
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        ResultContent(viewModel = viewModel, modifier = Modifier.weight(1.0F))
+        ResultContent(
+            viewModel = viewModel, 
+            modifier = Modifier.weight(1.0F), 
+            showTitle = false
+        )
 
         Surface(elevation = 4.dp) {
             Button(
@@ -68,8 +72,6 @@ internal fun ResultDialog(onDismissRequest: () -> Unit, viewModel: TrainingViewM
             shape = RoundedCornerShape(12.dp)
         ) {
             Column {
-                Spacer(modifier = Modifier.height(36.dp))
-
                 ResultContent(viewModel = viewModel, Modifier.weight(1.0F))
 
                 Surface(elevation = 4.dp) {
@@ -89,17 +91,37 @@ internal fun ResultDialog(onDismissRequest: () -> Unit, viewModel: TrainingViewM
     }
 }
 
-@ExperimentalFoundationApi
 @Composable
-internal fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Modifier) {
+fun ResultTitle(
+    viewModel: TrainingViewModel,
+    modifier: Modifier = Modifier,
+    fontSize: TextUnit = 36.sp
+) {
     val correctAnswerCount = viewModel.problems.filter { it.isCorrect }.count()
     val solutionNotNullCount = viewModel.problems.filter { it.solution.notNull }.count()
 
+    SebangText(
+        text = "$correctAnswerCount/$solutionNotNullCount",
+        modifier = modifier,
+        fontSize = fontSize
+    )
+}
+
+@ExperimentalFoundationApi
+@Composable
+fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Modifier, showTitle: Boolean = true) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        SebangText(
-            text = "$correctAnswerCount/$solutionNotNullCount",
-            fontSize = 36.sp
-        )
+        if (showTitle) {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = 4.dp
+            ) {
+                ResultTitle(
+                    viewModel = viewModel,
+                    modifier = Modifier.verticalPadding(24.dp).paddingTop(4.dp),
+                )
+            }
+        }
 
         with(viewModel.elapsedTime) {
             if (viewModel.speedMode && not(0L)) {
@@ -111,13 +133,12 @@ internal fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Mo
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
-            } else {
-                Spacer(modifier = Modifier.height(24.dp))
             }
         }
 
         LazyVerticalGrid(
             modifier = Modifier.weight(1.0F),
+            contentPadding = PaddingValues(12.dp),
             cells = GridCells.Adaptive(minSize = 72.dp)
         ) {
             items(viewModel.problems) { item ->

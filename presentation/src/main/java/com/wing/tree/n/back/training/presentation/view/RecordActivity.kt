@@ -70,30 +70,26 @@ class RecordActivity : ComponentActivity() {
             ApplicationTheme {
                 Scaffold {
                     Column {
-                        Surface(
+                        TopAppbar(
+                            title = getString(R.string.records),
+                            modifier = Modifier,
+                            navigationIcon = {
+                                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK)
+                            },
+                            navigationOnClick = {
+                                onBackPressed()
+                            },
+                            footer = {
+                            },
                             elevation = 4.dp,
-                            shape = RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp)
-                        ) {
-                            TopAppbar(
-                                title = getString(R.string.records),
-                                modifier = Modifier,
-                                navigationIcon = {
-                                    Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = BLANK)
-                                },
-                                navigationOnClick = {
-                                    onBackPressed()
-                                },
-                                footer = {
-                                },
-                                Menu.Item(
-                                    icon = R.drawable.ic_round_sort_24,
-                                    title = getString(R.string.sort),
-                                    onClick = {
-                                        showDialog = true
-                                    }
-                                )
+                            Menu.Item(
+                                icon = R.drawable.ic_round_sort_24,
+                                title = getString(R.string.sort),
+                                onClick = {
+                                    showDialog = true
+                                }
                             )
-                        }
+                        )
 
                         if (showDialog) {
                             SortDialog(sortBy) {
@@ -108,9 +104,9 @@ class RecordActivity : ComponentActivity() {
                             composable(route = Route.RECORD_LIST) {
                                 RecordList(navController, viewModel, sortBy)
                             }
-                            composable(route = Route.DETAIL) { navBackStackEntry ->
+                            composable(route = Route.RESULT) { navBackStackEntry ->
                                 navBackStackEntry.arguments?.getParcelable<Record>(Key.RECORD)?.let {
-                                    Detail(it) { onBackPressed() }
+                                    Result(it) { onBackPressed() }
                                 }
                             }
                         }
@@ -130,7 +126,7 @@ class RecordActivity : ComponentActivity() {
         private const val OBJECT_NAME = "Route"
 
         const val RECORD_LIST = "$PACKAGE_NAME.$OBJECT_NAME.RECORD_LIST"
-        const val DETAIL = "$PACKAGE_NAME.$OBJECT_NAME.DETAIL"
+        const val RESULT = "$PACKAGE_NAME.$OBJECT_NAME.RESULT"
     }
 }
 
@@ -175,7 +171,7 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
                     .animateItemPlacement(),
                 record,
                 onClick = {
-                    navController.navigate(route = RecordActivity.Route.DETAIL, Bundle().apply {
+                    navController.navigate(route = RecordActivity.Route.RESULT, Bundle().apply {
                         putParcelable(RecordActivity.Key.RECORD, it)
                     })
                 },
@@ -281,26 +277,31 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
 
 @ExperimentalFoundationApi
 @Composable
-fun Detail(record: Record, onButtonClick: () -> Unit) {
+internal fun Result(record: Record, onButtonClick: () -> Unit) {
     val context = LocalContext.current
     val correctAnswerCount = record.problems.filter { it.isCorrect }.count()
     val solutionNotNullCount = record.problems.filter { it.solution.notNull }.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(4.dp))
+
         SebangText(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.verticalPadding(24.dp),
             text = "$correctAnswerCount/$solutionNotNullCount",
-            fontSize = 45.sp,
+            fontSize = 36.sp,
             textAlign = TextAlign.Center
         )
 
+        Divider()
+
         LazyVerticalGrid(
             modifier = Modifier.weight(1.0F),
+            contentPadding = PaddingValues(12.dp),
             cells = GridCells.Adaptive(minSize = 72.dp)
         ) {
             items(record.problems) { item ->
                 Column(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val color = when {

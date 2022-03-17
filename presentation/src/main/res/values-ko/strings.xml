@@ -66,4 +66,10 @@
     <string name="ranking1">3-Back 이상, 20라운드 이상, 그리고 스피드 모드에서 모든 문제를 맞히면 랭킹 등록 조건이 충족되며, 랭킹 등록을 위해서는 상위 50위 안에 들어야 합니다.</string>
     <string name="ranking2">N과 라운드가 클수록, 경과시간이 짧을수록 높게 랭크됩니다.</string>
     <string name="ranking3">속도는 랭킹와 관련이 없습니다.</string>
+
+    <string-array name="text_colors">
+        <item>회색</item>
+        <item>초록색</item>
+        <item>빨간색</item>
+    </string-array>
 </resources>

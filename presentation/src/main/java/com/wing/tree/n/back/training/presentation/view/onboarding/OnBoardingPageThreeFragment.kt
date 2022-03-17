@@ -29,6 +29,7 @@ import com.wing.tree.n.back.training.presentation.model.Problem
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.util.isNull
+import com.wing.tree.n.back.training.presentation.view.shared.NumberedSebangText
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
@@ -52,29 +53,36 @@ class OnBoardingPageThreeFragment : Fragment() {
                             ) {
                                 Spacer(modifier = Modifier.height(4.dp))
 
-                                ResultSample()
+                                ResultSample(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .horizontalPadding(24.dp)
+                                )
 
                                 Spacer(modifier = Modifier.height(24.dp))
 
                                 Column {
-                                    SebangText(
-                                        text = "1. ${getString(R.string.result_screen1)}",
+                                    NumberedSebangText(
+                                        number = 1,
+                                        text = getString(R.string.result_screen1),
                                         modifier = Modifier.horizontalPadding(24.dp),
                                         textAlign = TextAlign.Start
                                     )
 
                                     Spacer(modifier = Modifier.height(12.dp))
 
-                                    SebangText(
-                                        text = "2. ${getString(R.string.result_screen2)}",
+                                    NumberedSebangText(
+                                        number = 2,
+                                        text = getString(R.string.result_screen2),
                                         modifier = Modifier.horizontalPadding(24.dp),
                                         textAlign = TextAlign.Start
                                     )
 
                                     Spacer(modifier = Modifier.height(12.dp))
 
-                                    SebangText(
-                                        text = "3. ${getString(R.string.result_screen3)}",
+                                    NumberedSebangText(
+                                        number= 3,
+                                        text = getString(R.string.result_screen3),
                                         modifier = Modifier.horizontalPadding(24.dp),
                                         textAlign = TextAlign.Start
                                     )
@@ -116,14 +124,14 @@ private val sampleProblems = listOf(
             solution = true,
             number = 4,
             answer = true
-        ),
+        )
+    ),
+    listOf(
         Problem(
             solution = true,
             number = 1,
             answer = true
-        )
-    ),
-    listOf(
+        ),
         Problem(
             solution = true,
             number = 3,
@@ -143,7 +151,9 @@ private val sampleProblems = listOf(
             solution = true,
             number = 3,
             answer = true
-        ),
+        )
+    ),
+    listOf(
         Problem(
             solution = false,
             number = 2,
@@ -153,9 +163,7 @@ private val sampleProblems = listOf(
             solution = false,
             number = 3,
             answer = true
-        )
-    ),
-    listOf(
+        ),
         Problem(
             solution = false,
             number = 1,
@@ -170,7 +178,9 @@ private val sampleProblems = listOf(
             solution = true,
             number = 3,
             answer = true
-        ),
+        )
+    ),
+    listOf(
         Problem(
             solution = false,
             number = 4,
@@ -185,9 +195,7 @@ private val sampleProblems = listOf(
             solution = true,
             number = 3,
             answer = true
-        )
-    ),
-    listOf(
+        ),
         Problem(
             solution = true,
             number = 4,
@@ -206,7 +214,7 @@ private fun ResultSample(modifier: Modifier = Modifier) {
     @Composable
     fun ResultItem(item: Problem, modifier: Modifier = Modifier) {
         Column(
-            modifier = modifier.padding(9.dp),
+            modifier = modifier.verticalPadding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val color = when {
@@ -222,7 +230,7 @@ private fun ResultSample(modifier: Modifier = Modifier) {
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(3.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             when(item.answer) {
                 true -> R.drawable.ic_o_24
@@ -240,23 +248,28 @@ private fun ResultSample(modifier: Modifier = Modifier) {
     }
 
     Surface(
-        modifier = Modifier
-            .wrapContentSize()
-            .horizontalPadding(12.dp),
+        modifier = modifier,
         shape = RoundedCornerShape(12.dp),
         elevation = 4.dp
     ) {
-        Column(modifier = modifier.horizontalPadding(9.dp).verticalPadding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(modifier = Modifier.horizontalPadding(12.dp).verticalPadding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
             SebangText(
                 text = "15/17",
                 fontSize = 27.sp
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Column {
                 sampleProblems.forEach {
-                    Row { it.forEach { ResultItem(item = it, modifier = Modifier.horizontalPadding(3.dp)) } }
+                    Row {
+                        it.forEach {
+                            ResultItem(
+                                item = it,
+                                modifier = Modifier.weight(1.0F)
+                            )
+                        }
+                    }
                 }
             }
         }

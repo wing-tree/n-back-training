@@ -1,6 +1,8 @@
 package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import com.wing.tree.n.back.training.domain.model.Problem
 import com.wing.tree.n.back.training.domain.model.RankCheckParameter
@@ -47,7 +49,7 @@ class TrainingViewModel @Inject constructor(
     val speed = option.speed
     val speedMode = option.speedMode
 
-    private val _state = MutableLiveData<State>(State.Ranking)
+    private val _state = MutableLiveData<State>(State.Ready)
     val state: LiveData<State> get() = _state
 
     private val _title = MutableLiveData("$n-Back")

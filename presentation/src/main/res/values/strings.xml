@@ -66,4 +66,10 @@
     <string name="ranking1">If you get all the questions correct in 3-Back or more, 20 rounds or more, and in speed mode, the conditions for ranking registration are met, and you must be in the top 50 to register for ranking.</string>
     <string name="ranking2">The larger the N and round, the shorter the elapsed time, the higher the rank.</string>
     <string name="ranking3">Speed has nothing to do with ranking.</string>
+
+    <string-array name="text_colors">
+        <item>gray</item>
+        <item>green</item>
+        <item>red</item>
+    </string-array>
 </resources>

@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
@@ -29,6 +30,7 @@ import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
+import com.wing.tree.n.back.training.presentation.view.shared.NumberedSebangText
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
@@ -52,16 +54,18 @@ class OnBoardingPageTwoFragment : Fragment() {
 
                                 Spacer(modifier = Modifier.height(24.dp))
 
-                                SebangText(
-                                    text = "1. ${getString(R.string.play_screen1)}",
+                                NumberedSebangText(
+                                    number = 1,
+                                    text = getString(R.string.play_screen1),
                                     modifier = Modifier.horizontalPadding(24.dp),
                                     textAlign = TextAlign.Start
                                 )
 
                                 Spacer(modifier = Modifier.height(12.dp))
 
-                                SebangText(
-                                    text = "2. ${getString(R.string.play_screen2)}",
+                                NumberedSebangText(
+                                    number = 2,
+                                    text = getString(R.string.play_screen2),
                                     modifier = Modifier.horizontalPadding(24.dp),
                                     textAlign = TextAlign.Start
                                 )
@@ -76,6 +80,7 @@ class OnBoardingPageTwoFragment : Fragment() {
     }
 }
 
+@Preview
 @Composable
 private fun TrainingSample(modifier: Modifier = Modifier) {
     Surface(
@@ -86,7 +91,7 @@ private fun TrainingSample(modifier: Modifier = Modifier) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.height(18.dp))
 
-            SebangText(text = "13/20", fontSize = 24.sp)
+            SebangText(text = "13/20", fontSize = 27.sp)
 
             Spacer(modifier = Modifier.height(18.dp))
 
@@ -110,36 +115,40 @@ private fun TrainingSample(modifier: Modifier = Modifier) {
 
                 Row(modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(24.dp, 27.dp)) {
+                    .horizontalPadding(24.dp)
+                    .verticalPadding(27.dp, 24.dp)
+                ) {
                     Button(
                         onClick = {
                         },
                         modifier = Modifier
-                            .height(36.dp)
+                            .height(56.dp)
                             .weight(1.0F),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_o_24),
+                            modifier = Modifier.size(28.dp),
                             contentDescription = BLANK,
                             colorFilter = ColorFilter.tint(Color.White)
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(24.dp))
+                    Spacer(modifier = Modifier.width(18.dp))
 
                     Button(
                         onClick = {
                         },
                         modifier = Modifier
-                            .height(36.dp)
+                            .height(56.dp)
                             .weight(1.0F),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_x_24),
+                            modifier = Modifier.size(28.dp),
                             contentDescription = BLANK,
                             colorFilter = ColorFilter.tint(Color.White)
                         )

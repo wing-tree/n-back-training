@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
-import com.wing.tree.n.back.training.presentation.view.shared.SebangText
+import com.wing.tree.n.back.training.presentation.view.shared.NumberedSebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
 class OnBoardingPageFourFragment : Fragment() {
@@ -38,22 +38,25 @@ class OnBoardingPageFourFragment : Fragment() {
                             LazyColumn {
                                 item {
                                     Column(modifier = Modifier.horizontalPadding(24.dp)) {
-                                        SebangText(
-                                            text = "1. ${getString(R.string.ranking1)}",
+                                        NumberedSebangText(
+                                            number = 1,
+                                            text = getString(R.string.ranking1),
                                             textAlign = TextAlign.Start
                                         )
 
                                         Spacer(modifier = Modifier.height(12.dp))
 
-                                        SebangText(
-                                            text = "2. ${getString(R.string.ranking2)}",
+                                        NumberedSebangText(
+                                            number = 2,
+                                            text = getString(R.string.ranking2),
                                             textAlign = TextAlign.Start
                                         )
 
                                         Spacer(modifier = Modifier.height(12.dp))
 
-                                        SebangText(
-                                            text = "3. ${getString(R.string.ranking3)}",
+                                        NumberedSebangText(
+                                            number = 3,
+                                            text = getString(R.string.ranking3),
                                             textAlign = TextAlign.Start
                                         )
                                     }

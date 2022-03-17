@@ -12,6 +12,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.wing.tree.n.back.training.presentation.ui.theme.paddingEnd
 import com.wing.tree.n.back.training.presentation.ui.theme.sebangFamily
 
 @Composable
@@ -23,7 +24,8 @@ internal fun SebangText(
     color: Color = Color.Unspecified,
     fontSize: TextUnit = 14.sp,
     fontWeight: FontWeight = FontWeight.Normal,
-    textAlign: TextAlign = TextAlign.Center
+    textAlign: TextAlign = TextAlign.Center,
+    lineHeight: TextUnit = TextUnit.Unspecified
 ) {
     Column(
         modifier = modifier,
@@ -35,6 +37,7 @@ internal fun SebangText(
         Text(
             text = text,
             color = color,
+            lineHeight = lineHeight,
             style = TextStyle(
                 fontSize = fontSize,
                 fontWeight = fontWeight,
@@ -42,5 +45,40 @@ internal fun SebangText(
                 textAlign = textAlign
             )
         )
+    }
+}
+
+@Composable
+internal fun NumberedSebangText(
+    number: Int,
+    text: String,
+    modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    color: Color = Color.Unspecified,
+    fontSize: TextUnit = 14.sp,
+    fontWeight: FontWeight = FontWeight.Normal,
+    textAlign: TextAlign = TextAlign.Center,
+    lineHeight: TextUnit = 20.sp
+) {
+    Row(modifier = modifier) {
+       SebangText(
+           text = "$number",
+           modifier= Modifier.paddingEnd(8.dp),
+           color = color,
+           fontSize = fontSize,
+           fontWeight = FontWeight.Bold
+       )
+
+       SebangText(
+           text = text,
+           verticalArrangement = verticalArrangement,
+           horizontalAlignment = horizontalAlignment,
+           color = color,
+           fontSize = fontSize,
+           fontWeight = fontWeight,
+           textAlign = textAlign,
+           lineHeight = lineHeight
+       )
     }
 }

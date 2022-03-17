@@ -22,6 +22,7 @@ import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
 import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
+import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.`is`
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.quarter
@@ -83,7 +84,11 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                 }
             }
 
-            Row(modifier = Modifier.align(Alignment.CenterHorizontally).padding(24.dp, 48.dp)) {
+            Row(modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .horizontalPadding(24.dp)
+                .verticalPadding(36.dp, 56.dp)
+            ) {
                 Button(
                     onClick = {
                         val problem = viewModel.problems[round]
@@ -99,7 +104,9 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                             }
                         }
                     },
-                    modifier = Modifier.height(64.dp).weight(1.0F),
+                    modifier = Modifier
+                        .height(72.dp)
+                        .weight(1.0F),
                     enabled = enabled,
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
@@ -107,7 +114,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                     Image(
                         painter = painterResource(id = R.drawable.ic_o_24),
                         contentDescription = BLANK,
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(36.dp),
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                 }
@@ -129,7 +136,9 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                             }
                         }
                     },
-                    modifier = Modifier.height(64.dp).weight(1.0F),
+                    modifier = Modifier
+                        .height(72.dp)
+                        .weight(1.0F),
                     enabled = enabled,
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
@@ -137,7 +146,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                     Image(
                         painter = painterResource(id = R.drawable.ic_x_24),
                         contentDescription = BLANK,
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(36.dp),
                         colorFilter = ColorFilter.tint(Color.White)
                     )
                 }

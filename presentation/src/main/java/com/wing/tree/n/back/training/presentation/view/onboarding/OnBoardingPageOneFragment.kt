@@ -31,6 +31,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.Green500
 import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.util.not
+import com.wing.tree.n.back.training.presentation.view.shared.NumberedSebangText
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 
@@ -52,8 +53,9 @@ class OnBoardingPageOneFragment : Fragment() {
                             LazyColumn {
                                 item {
                                     Column(modifier = Modifier.horizontalPadding(24.dp)) {
-                                        SebangText(
-                                            text = "1. ${getString(R.string.how_to_play1)}",
+                                        NumberedSebangText(
+                                            number = 1,
+                                            text = getString(R.string.how_to_play1),
                                             textAlign = TextAlign.Start
                                         )
 
@@ -63,15 +65,17 @@ class OnBoardingPageOneFragment : Fragment() {
 
                                         Spacer(modifier = Modifier.height(24.dp))
 
-                                        SebangText(
-                                            text = "2. ${getString(R.string.how_to_play2)}",
+                                        NumberedSebangText(
+                                            number = 2,
+                                            text = getString(R.string.how_to_play2),
                                             textAlign = TextAlign.Start
                                         )
 
                                         Spacer(modifier = Modifier.height(12.dp))
 
-                                        SebangText(
-                                            text = "3. ${getString(R.string.how_to_play3)}",
+                                        NumberedSebangText(
+                                            number = 3,
+                                            text = getString(R.string.how_to_play3),
                                             textAlign = TextAlign.Start
                                         )
                                         

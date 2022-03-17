@@ -100,52 +100,45 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Surface(
-                            modifier = Modifier.fillMaxWidth(),
-                            elevation = 4.dp,
-                            shape = RoundedCornerShape(bottomEnd = 12.dp, bottomStart = 12.dp)
-                        ) {
-                            Column {
-                                TopAppbar(
-                                    title = getString(R.string.app_name),
-                                    modifier = Modifier,
-                                    navigationIcon = {
-                                        Icon(imageVector = Icons.Rounded.Menu, contentDescription = BLANK)
-                                    },
-                                    navigationOnClick = {
-                                        coroutineScope.launch {
-                                            with(scaffoldState.drawerState) {
-                                                if (isClosed) {
-                                                    open()
-                                                } else {
-                                                    close()
-                                                }
-                                            }
+                        TopAppbar(
+                            title = getString(R.string.app_name),
+                            modifier = Modifier,
+                            navigationIcon = {
+                                Icon(imageVector = Icons.Rounded.Menu, contentDescription = BLANK)
+                            },
+                            navigationOnClick = {
+                                coroutineScope.launch {
+                                    with(scaffoldState.drawerState) {
+                                        if (isClosed) {
+                                            open()
+                                        } else {
+                                            close()
                                         }
-                                    },
-                                    footer = {
-                                        Column {
-                                            HorizontalButtonGroup(
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(24.dp, 0.dp),
-                                                getString(R.string.how_to_play) to { startActivity<OnBoardingActivity>() },
-                                                getString(R.string.ranking) to { startActivity<RankingActivity>() }
-                                            )
-
-                                            Spacer(modifier = Modifier.height(24.dp))
-                                        }
-                                    },
-                                    Menu.Switch(
-                                        option.speedMode,
-                                        getString(R.string.speed_mode),
-                                        getString(R.string.speed_mode)
-                                    ) {
-                                        option.speedMode = it
                                     }
-                                )
+                                }
+                            },
+                            footer = {
+                                Column {
+                                    HorizontalButtonGroup(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(24.dp, 0.dp),
+                                        getString(R.string.how_to_play) to { startActivity<OnBoardingActivity>() },
+                                        getString(R.string.ranking) to { startActivity<RankingActivity>() }
+                                    )
+
+                                    Spacer(modifier = Modifier.height(24.dp))
+                                }
+                            },
+                            elevation = 4.dp,
+                            Menu.Switch(
+                                option.speedMode,
+                                getString(R.string.speed_mode),
+                                getString(R.string.speed_mode)
+                            ) {
+                                option.speedMode = it
                             }
-                        }
+                        )
 
                         LazyColumn(
                             modifier = Modifier
