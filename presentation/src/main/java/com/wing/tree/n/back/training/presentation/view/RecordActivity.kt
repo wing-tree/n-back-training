@@ -23,7 +23,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -283,7 +282,7 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
 @Composable
 internal fun Result(record: Record, onButtonClick: () -> Unit) {
     val context = LocalContext.current
-    val correctAnswerCount = record.problems.filter { it.isCorrect }.count()
+    val correctAnswerCount = record.problems.filter { it.correct }.count()
     val solutionNotNullCount = record.problems.filter { it.solution.notNull }.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -309,7 +308,7 @@ internal fun Result(record: Record, onButtonClick: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val color = when {
-                        item.isCorrect -> ApplicationColor.Green
+                        item.correct -> ApplicationColor.Green
                         item.answer.isNull && item.solution.isNull -> ApplicationColor.Gray
                         else -> ApplicationColor.Red
                     }

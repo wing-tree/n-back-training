@@ -7,12 +7,14 @@ internal const val PACKAGE_NAME = "com.wing.tree.n.back.training.presentation"
 
 internal object N {
     const val DEFAULT = 2
+    const val RANKING_REGISTRATION_CONDITION = 3
 
     val IntRange = IntRange(2, 9)
 }
 
 internal object Rounds {
     const val DEFAULT = 20
+    const val RANKING_REGISTRATION_CONDITION = 30
     const val STEPS = 3
 
     val ValueRange = 10.0F..50.0F
@@ -29,15 +31,8 @@ internal object SpeedMode {
     const val DEFAULT = false
 }
 
-internal object From {
-    const val RANDOM = 0
-}
-
-internal object Offset {
-    const val N = 1
-    const val RANDOM = 4
-}
-
-internal object Until {
-    const val RANDOM = 4
+internal object Random {
+    const val FROM = 0
+    const val OFFSET = 4
+    const val UNTIL = 4
 }

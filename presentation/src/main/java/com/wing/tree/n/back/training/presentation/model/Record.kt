@@ -16,7 +16,7 @@ class Record(
     override val problems: List<Problem>
 ) : DomainModel(), Parcelable {
     val result: String
-        get() = "${problems.filter { it.isCorrect }.count()}/${problems.filter { it.solution.notNull }.count()}"
+        get() = "${problems.filter { it.correct }.count()}/${problems.filter { it.solution.notNull }.count()}"
 
     companion object {
         fun from(model: DomainModel) = with(model) {

@@ -226,7 +226,7 @@ private fun ResultSample(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val color = when {
-                item.isCorrect -> ApplicationColor.Green
+                item.correct -> ApplicationColor.Green
                 item.answer.isNull && item.solution.isNull -> ApplicationColor.Gray
                 else -> ApplicationColor.Red
             }

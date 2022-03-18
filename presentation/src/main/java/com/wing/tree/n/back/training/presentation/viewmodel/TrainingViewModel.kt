@@ -1,8 +1,6 @@
 package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
 import com.wing.tree.n.back.training.domain.model.Problem
 import com.wing.tree.n.back.training.domain.model.RankCheckParameter
@@ -14,7 +12,12 @@ import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUs
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
+import com.wing.tree.n.back.training.presentation.constant.Random.FROM
+import com.wing.tree.n.back.training.presentation.constant.Random.OFFSET
+import com.wing.tree.n.back.training.presentation.constant.Random.UNTIL
 import com.wing.tree.n.back.training.presentation.model.Option
+import com.wing.tree.n.back.training.presentation.util.`is`
+import com.wing.tree.n.back.training.presentation.util.ifElse
 import com.wing.tree.n.back.training.presentation.util.quarter
 import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity.State
 import com.wing.tree.n.back.training.presentation.view.training.ReadyParameter
@@ -64,51 +67,47 @@ class TrainingViewModel @Inject constructor(
     val problems: List<Problem> = run {
         val seed = System.currentTimeMillis()
 
-        var intArray = IntArray(option.rounds)
+        var numbers = IntArray(option.rounds)
         var previousTrueCount = 0
 
         repeat(ONE_HUNDRED.quarter) {
-            val random = Random(seed).nextInt(From.RANDOM, Until.RANDOM)
-            val intRange = IntRange(random, random.plus(Offset.RANDOM))
+            val random = Random(seed).nextInt(FROM, UNTIL)
+            val intRange = IntRange(random, random.plus(OFFSET))
 
             var trueCount = 0
 
             with(IntArray(rounds) { intRange.random() }) {
                 repeat(rounds) {
                     if (it >= n) {
-                        if (get(it - n) == get(it)) {
+                        if (get(it - n).`is`(get(it))) {
                             ++trueCount
                         }
                     }
                 }
 
                 if (previousTrueCount < trueCount) {
-                    intArray = this.clone()
+                    numbers = this.clone()
                     previousTrueCount = trueCount
                 }
             }
         }
 
-        val solutionArray by lazy {
-            val array = arrayOfNulls<Boolean?>(rounds)
-
-            repeat(rounds) {
-               array[it] = if (it < n) {
+        val solutions by lazy {
+            Array(rounds) {
+                if (it < n) {
                     null
                 } else {
-                    intArray[it - n] == intArray[it]
+                    numbers[it - n].`is`(numbers[it])
                 }
             }
-
-            array
         }
 
-        intArray.zip(solutionArray) { value, solution ->
+        numbers.zip(solutions) { number, solution ->
             object : Problem() {
+                override val number: Int
+                    get() = number
                 override val solution: Boolean?
                     get() = solution
-                override val number: Int
-                    get() = value
                 override var answer: Boolean? = null
             }
         }
@@ -179,7 +178,7 @@ class TrainingViewModel @Inject constructor(
             rounds = rounds
         )
 
-        if (speedMode && true /*record.isPerfect*/) {
+        if (checkRankingRegistrationCondition(record)) {
             checkRanking(
                 rankCheckParameter, { isSuccessful, rank ->
                     if (isSuccessful) {
@@ -210,6 +209,15 @@ class TrainingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             insertRecordUseCase.invoke(InsertRecordUseCase.Parameter(record))
         }
+    }
+
+    private fun checkRankingRegistrationCondition(record: Record): Boolean {
+        if (n < N.RANKING_REGISTRATION_CONDITION) return false
+        if (rounds < Rounds.RANKING_REGISTRATION_CONDITION) return false
+        if (speedMode.not()) return false
+        if (record.perfect.not()) return false
+
+        return true
     }
 
     private fun checkRanking(

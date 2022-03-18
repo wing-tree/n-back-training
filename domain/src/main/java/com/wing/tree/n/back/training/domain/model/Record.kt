@@ -10,6 +10,6 @@ abstract class Record {
 
     open val id: Long = 0L
 
-    val isPerfect: Boolean
-        get() = problems.subList(n, problems.size).all { it.isCorrect }
+    val perfect: Boolean
+        get() = problems.subList(n, problems.size).all { it.correct }
 }

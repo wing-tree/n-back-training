@@ -13,7 +13,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -97,7 +96,7 @@ fun ResultTitle(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 36.sp
 ) {
-    val correctAnswerCount = viewModel.problems.filter { it.isCorrect }.count()
+    val correctAnswerCount = viewModel.problems.filter { it.correct }.count()
     val solutionNotNullCount = viewModel.problems.filter { it.solution.notNull }.count()
 
     SebangText(
@@ -147,7 +146,7 @@ fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Modifier, s
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val color = when {
-                        item.isCorrect -> ApplicationColor.Green
+                        item.correct -> ApplicationColor.Green
                         item.answer.isNull && item.solution.isNull -> ApplicationColor.Gray
                         else -> ApplicationColor.Red
                     }
