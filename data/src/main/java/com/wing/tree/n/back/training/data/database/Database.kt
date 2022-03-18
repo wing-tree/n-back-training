@@ -11,7 +11,7 @@ import com.wing.tree.n.back.training.data.typeconverter.TypeConverters
 @androidx.room.Database(
     entities = [Record::class],
     exportSchema = false,
-    version = 1
+    version = 2
 )
 @androidx.room.TypeConverters(TypeConverters::class)
 abstract class Database: RoomDatabase() {
@@ -20,7 +20,7 @@ abstract class Database: RoomDatabase() {
     companion object {
         private const val CLASS_NAME = "Database"
         private const val NAME = "$PACKAGE_NAME.$CLASS_NAME"
-        private const val VERSION = "1.0.0"
+        private const val VERSION = "1.0.1"
 
         @Volatile
         private var INSTANCE: Database? = null

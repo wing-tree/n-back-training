@@ -26,9 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
+import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationColor
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
-import com.wing.tree.n.back.training.presentation.ui.theme.Green500
-import com.wing.tree.n.back.training.presentation.ui.theme.Red500
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.util.not
 import com.wing.tree.n.back.training.presentation.view.shared.NumberedSebangText
@@ -140,9 +139,9 @@ private fun Table(modifier: Modifier = Modifier) {
                 when(item) {
                     is TableItem.Answer -> {
                         when(item.value) {
-                            true -> R.drawable.ic_o_24 to Green500
-                            false -> R.drawable.ic_x_24 to Red500
-                            else -> R.drawable.ic_hypen_24 to Color.Gray
+                            true -> R.drawable.ic_o_24 to ApplicationColor.Green
+                            false -> R.drawable.ic_x_24 to ApplicationColor.Red
+                            else -> R.drawable.ic_hypen_24 to ApplicationColor.Gray
                         }.also { (id, color) ->
                             Box(
                                 modifier = Modifier.height(32.dp),

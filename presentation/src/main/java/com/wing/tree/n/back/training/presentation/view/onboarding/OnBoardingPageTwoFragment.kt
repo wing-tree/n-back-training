@@ -125,7 +125,7 @@ private fun TrainingSample(modifier: Modifier = Modifier) {
                             .height(56.dp)
                             .weight(1.0F),
                         shape = CircleShape,
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
+                        colors = ButtonDefaults.buttonColors(backgroundColor = ApplicationColor.Green)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_o_24),
@@ -144,7 +144,7 @@ private fun TrainingSample(modifier: Modifier = Modifier) {
                             .height(56.dp)
                             .weight(1.0F),
                         shape = CircleShape,
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
+                        colors = ButtonDefaults.buttonColors(backgroundColor = ApplicationColor.Red)
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_x_24),

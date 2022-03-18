@@ -19,8 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
-import com.wing.tree.n.back.training.presentation.ui.theme.Green500
-import com.wing.tree.n.back.training.presentation.ui.theme.Red500
+import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationColor
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.`is`
@@ -109,7 +108,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                         .weight(1.0F),
                     enabled = enabled,
                     shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Green500)
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ApplicationColor.Green)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_o_24),
@@ -141,7 +140,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                         .weight(1.0F),
                     enabled = enabled,
                     shape = CircleShape,
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Red500)
+                    colors = ButtonDefaults.buttonColors(backgroundColor = ApplicationColor.Red)
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_x_24),

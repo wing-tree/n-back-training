@@ -1,6 +1,7 @@
 package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeoutOrNull
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,6 +32,7 @@ class RecordViewModel @Inject constructor(
     val records = getRecordsUseCase.invoke(Unit).map {
         when(it) {
             is Result.Error -> {
+                Timber.e(it.throwable)
                 emptyList()
             }
             is Result.Loading -> emptyList()

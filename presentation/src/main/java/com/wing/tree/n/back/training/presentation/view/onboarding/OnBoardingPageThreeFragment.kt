@@ -14,7 +14,6 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
@@ -26,8 +25,10 @@ import androidx.fragment.app.Fragment
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.model.Problem
-import com.wing.tree.n.back.training.presentation.ui.theme.*
+import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationColor
+import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
+import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.view.shared.NumberedSebangText
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
@@ -72,9 +73,9 @@ class OnBoardingPageThreeFragment : Fragment() {
                                     Spacer(modifier = Modifier.height(12.dp))
 
                                     val wordToColorHashMap = hashMapOf(
-                                        getString(R.string.gray) to Color.Gray,
-                                        getString(R.string.green) to Green500,
-                                        getString(R.string.red) to Red500
+                                        getString(R.string.gray) to ApplicationColor.Gray,
+                                        getString(R.string.green) to ApplicationColor.Green,
+                                        getString(R.string.red) to ApplicationColor.Red
                                     )
 
                                     NumberedSebangText(
@@ -225,9 +226,9 @@ private fun ResultSample(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val color = when {
-                item.isCorrect -> Green500
-                item.answer.isNull && item.solution.isNull -> Color.Gray
-                else -> Red500
+                item.isCorrect -> ApplicationColor.Green
+                item.answer.isNull && item.solution.isNull -> ApplicationColor.Gray
+                else -> ApplicationColor.Red
             }
 
             SebangText(

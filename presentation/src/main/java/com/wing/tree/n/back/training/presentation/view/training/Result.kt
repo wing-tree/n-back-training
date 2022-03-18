@@ -147,9 +147,9 @@ fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Modifier, s
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val color = when {
-                        item.isCorrect -> Green500
-                        item.answer.isNull && item.solution.isNull -> Color.Gray
-                        else -> Red500
+                        item.isCorrect -> ApplicationColor.Green
+                        item.answer.isNull && item.solution.isNull -> ApplicationColor.Gray
+                        else -> ApplicationColor.Red
                     }
 
                     SebangText(

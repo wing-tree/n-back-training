@@ -243,7 +243,11 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
                     }
 
                     IconButton(onClick = { onDeleteIconClick.invoke(record) }) {
-                        Icon(imageVector = Icons.Rounded.Delete, contentDescription = BLANK)
+                        Icon(
+                            imageVector = Icons.Rounded.Delete,
+                            contentDescription = BLANK,
+                            tint = ApplicationColor.Icon
+                        )
                     }
                 }
 
@@ -305,9 +309,9 @@ internal fun Result(record: Record, onButtonClick: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val color = when {
-                        item.isCorrect -> Green500
-                        item.answer.isNull && item.solution.isNull -> Color.Gray
-                        else -> Red500
+                        item.isCorrect -> ApplicationColor.Green
+                        item.answer.isNull && item.solution.isNull -> ApplicationColor.Gray
+                        else -> ApplicationColor.Red
                     }
 
                     SebangText(

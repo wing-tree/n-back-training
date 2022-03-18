@@ -31,6 +31,8 @@ import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.model.Menu
+import com.wing.tree.n.back.training.presentation.timber.TimberSetup
+import com.wing.tree.n.back.training.presentation.timber.TimberSetupImpl
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationTheme
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.ui.theme.paddingBottom
@@ -47,7 +49,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
     private val viewModel by viewModels<MainViewModel>()
 
     private val menu by lazy {
@@ -75,6 +77,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setupTimber()
 
         if (viewModel.isFirstTime) {
             startActivity<OnBoardingActivity>()
@@ -213,10 +216,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun Drawer(menu: List<Menu>) {
-    Column(modifier = Modifier.padding(12.dp, 0.dp)) {
+    Column(modifier = Modifier.horizontalPadding(12.dp)) {
         menu.forEach {
             when(it) {
-                is Menu.Divider -> Divider(modifier = Modifier.padding(16.dp, 0.dp))
+                is Menu.Divider -> Divider(modifier = Modifier.horizontalPadding(16.dp))
                 is Menu.Item -> Menu(item = it)
                 else -> {
                 }

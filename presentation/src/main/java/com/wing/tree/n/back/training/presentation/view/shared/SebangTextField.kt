@@ -33,9 +33,9 @@ import com.wing.tree.n.back.training.presentation.util.ifElse
 internal fun SebangTextFiled(
     onValueChange: (String) -> Unit,
     hint: String = BLANK,
-    hintColor: Color = Color.Gray,
+    hintColor: Color = ApplicationColor.Gray,
     error: String = BLANK,
-    errorColor: Color = Red500,
+    errorColor: Color = ApplicationColor.Red,
     isError: Boolean,
     fontSize: TextUnit = 14.sp,
     fontWeight: FontWeight = FontWeight.Normal,

@@ -343,7 +343,7 @@ private fun CountrySelectionDialog(onDismissRequest: () -> Unit, onClick: (Local
                 .verticalPadding(72.dp),
             shape = RoundedCornerShape(12.dp)
         ) {
-            LazyColumn(modifier = Modifier.verticalPadding(12.dp)) {
+            LazyColumn(modifier = Modifier.padding(12.dp)) {
                 items(items) {
                     Row(
                         modifier = Modifier
