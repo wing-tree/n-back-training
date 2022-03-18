@@ -1,7 +1,6 @@
 package com.wing.tree.n.back.training.presentation.model
 
 import android.os.Parcelable
-import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.domain.model.Record as DomainModel
 import kotlinx.parcelize.Parcelize
 
@@ -16,7 +15,7 @@ class Record(
     override val problems: List<Problem>
 ) : DomainModel(), Parcelable {
     val result: String
-        get() = "${problems.filter { it.correct }.count()}/${problems.filter { it.solution.notNull }.count()}"
+        get() = "${problems.filter { it.correct }.count()}/${rounds.minus(n)}"
 
     companion object {
         fun from(model: DomainModel) = with(model) {

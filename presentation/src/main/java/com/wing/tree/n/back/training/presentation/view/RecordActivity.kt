@@ -207,9 +207,10 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
         shape = RoundedCornerShape(12.dp),
         elevation = 4.dp
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick(record) }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onClick(record) }
         ) {
             Column {
                 Row(
@@ -282,15 +283,13 @@ fun RecordItem(modifier: Modifier, record: Record, onClick: (Record) -> Unit, on
 @Composable
 internal fun Result(record: Record, onButtonClick: () -> Unit) {
     val context = LocalContext.current
-    val correctAnswerCount = record.problems.filter { it.correct }.count()
-    val solutionNotNullCount = record.problems.filter { it.solution.notNull }.count()
 
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(4.dp))
 
         SebangText(
             modifier = Modifier.verticalPadding(24.dp),
-            text = "$correctAnswerCount/$solutionNotNullCount",
+            text = record.result,
             fontSize = 36.sp,
             textAlign = TextAlign.Center
         )

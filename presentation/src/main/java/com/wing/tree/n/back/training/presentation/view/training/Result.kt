@@ -96,11 +96,10 @@ fun ResultTitle(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 36.sp
 ) {
-    val correctAnswerCount = viewModel.problems.filter { it.correct }.count()
-    val solutionNotNullCount = viewModel.problems.filter { it.solution.notNull }.count()
+    val correctCount = viewModel.problems.filter { it.correct }.count()
 
     SebangText(
-        text = "$correctAnswerCount/$solutionNotNullCount",
+        text = "$correctCount/${viewModel.rounds.minus(viewModel.n)}",
         modifier = modifier,
         fontSize = fontSize
     )
@@ -119,19 +118,6 @@ fun ResultContent(viewModel: TrainingViewModel, modifier: Modifier = Modifier, s
                     viewModel = viewModel,
                     modifier = Modifier.verticalPadding(24.dp).paddingTop(4.dp),
                 )
-            }
-        }
-
-        with(viewModel.elapsedTime) {
-            if (viewModel.speedMode && not(0L)) {
-                Spacer(modifier = Modifier.height(12.dp))
-
-                SebangText(
-                    text = String.format("%.3f", viewModel.elapsedTime / 1_000_000_000.0),
-                    fontSize = 16.sp
-                )
-
-                Spacer(modifier = Modifier.height(12.dp))
             }
         }
 
