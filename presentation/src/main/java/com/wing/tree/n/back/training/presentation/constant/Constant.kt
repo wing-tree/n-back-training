@@ -7,14 +7,12 @@ internal const val PACKAGE_NAME = "com.wing.tree.n.back.training.presentation"
 
 internal object N {
     const val DEFAULT = 2
-    const val RANKING_REGISTRATION_CONDITION = 3
 
     val IntRange = IntRange(2, 9)
 }
 
 internal object Rounds {
     const val DEFAULT = 20
-    const val RANKING_REGISTRATION_CONDITION = 30
     const val STEPS = 3
 
     val ValueRange = 10.0F..50.0F

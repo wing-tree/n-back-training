@@ -34,10 +34,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="36dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/no_rankings_found"
-            android:textSize="20sp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
             android:textStyle="bold"
             style="@style/TextView.Sebang" />
 

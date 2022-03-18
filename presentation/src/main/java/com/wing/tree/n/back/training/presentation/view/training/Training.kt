@@ -23,6 +23,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationColor
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.util.`is`
+import com.wing.tree.n.back.training.presentation.util.ifElse
 import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.quarter
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
@@ -72,11 +73,7 @@ internal fun Training(viewModel: TrainingViewModel, trainingParameter: TrainingP
                 shape = RoundedCornerShape(12.dp),
                 elevation = 4.dp
             ) {
-                val text = if (visible) {
-                    "${viewModel.problems[round].number}"
-                } else {
-                    BLANK
-                }
+                val text = visible.ifElse("${viewModel.problems[round].number}", BLANK)
 
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     SebangText(text = text, fontSize = 64.sp)

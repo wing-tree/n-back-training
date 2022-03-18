@@ -64,12 +64,11 @@ class TrainingViewModel @Inject constructor(
     }
 
     val problems: List<Problem> = run {
-        val seed = System.currentTimeMillis()
-
         var numbers = IntArray(option.rounds)
         var previousTrueCount = 0
 
         repeat(ONE_HUNDRED.quarter) {
+            val seed = System.currentTimeMillis()
             val random = Random(seed).nextInt(FROM, UNTIL)
             val intRange = IntRange(random, random.plus(OFFSET))
 
@@ -211,8 +210,8 @@ class TrainingViewModel @Inject constructor(
     }
 
     private fun checkRankingRegistrationCondition(record: Record): Boolean {
-        if (n < N.RANKING_REGISTRATION_CONDITION) return false
-        if (rounds < Rounds.RANKING_REGISTRATION_CONDITION) return false
+        if (n < N.DEFAULT.inc()) return false
+        if (rounds < Rounds.DEFAULT) return false
         if (speedMode.not()) return false
         if (record.perfect.not()) return false
 
