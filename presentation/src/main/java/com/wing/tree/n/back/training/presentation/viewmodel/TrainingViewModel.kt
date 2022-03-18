@@ -17,7 +17,6 @@ import com.wing.tree.n.back.training.presentation.constant.Random.OFFSET
 import com.wing.tree.n.back.training.presentation.constant.Random.UNTIL
 import com.wing.tree.n.back.training.presentation.model.Option
 import com.wing.tree.n.back.training.presentation.util.`is`
-import com.wing.tree.n.back.training.presentation.util.ifElse
 import com.wing.tree.n.back.training.presentation.util.quarter
 import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity.State
 import com.wing.tree.n.back.training.presentation.view.training.ReadyParameter
