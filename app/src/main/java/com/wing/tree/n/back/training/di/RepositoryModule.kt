@@ -13,10 +13,6 @@ import javax.inject.Singleton
 internal abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindsBillingRepository(repository: BillingRepositoryImpl): BillingRepository
-
-    @Binds
-    @Singleton
     abstract fun bindsOptionRepository(repository: OptionRepositoryImpl): OptionRepository
 
     @Binds

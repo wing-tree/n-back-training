@@ -93,7 +93,6 @@ class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
                 val scaffoldState = rememberScaffoldState()
 
                 val option = viewModel.option
-                val removeAds by viewModel.removeAds.observeAsState()
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
                     coroutineScope.launch {
@@ -210,9 +209,7 @@ class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
                             }
                         }
 
-                        if (removeAds.not(true)) {
-                            AdView()
-                        }
+                        AdView()
                     }
                 }
             }
