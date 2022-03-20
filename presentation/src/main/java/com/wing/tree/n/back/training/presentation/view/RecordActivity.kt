@@ -37,14 +37,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.wing.tree.n.back.training.domain.model.SortBy
+import com.wing.tree.n.back.training.domain.util.isNull
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.PACKAGE_NAME
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.model.Record
 import com.wing.tree.n.back.training.presentation.ui.theme.*
-import com.wing.tree.n.back.training.presentation.util.isNull
-import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.presentation.view.shared.ConfirmAlertDialog
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar

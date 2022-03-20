@@ -3,10 +3,10 @@ package com.wing.tree.n.back.training.presentation.view.onboarding
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.wing.tree.n.back.training.domain.util.`is`
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.adapter.OnBoardingFragmentStateAdapter
 import com.wing.tree.n.back.training.presentation.databinding.ActivityOnBoardingBinding
-import com.wing.tree.n.back.training.presentation.util.`is`
 
 class OnBoardingActivity : AppCompatActivity() {
     private val viewBinding by lazy { ActivityOnBoardingBinding.inflate(layoutInflater) }

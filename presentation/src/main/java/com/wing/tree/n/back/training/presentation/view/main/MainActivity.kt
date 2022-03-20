@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.google.android.gms.ads.*
+import com.wing.tree.n.back.training.domain.util.not
+import com.wing.tree.n.back.training.domain.util.notNull
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
@@ -90,6 +93,7 @@ class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
                 val scaffoldState = rememberScaffoldState()
 
                 val option = viewModel.option
+                val removeAds by viewModel.removeAds.observeAsState()
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
                     coroutineScope.launch {
@@ -206,7 +210,9 @@ class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
                             }
                         }
 
-                        AdView()
+                        if (removeAds.not(true)) {
+                            AdView()
+                        }
                     }
                 }
             }

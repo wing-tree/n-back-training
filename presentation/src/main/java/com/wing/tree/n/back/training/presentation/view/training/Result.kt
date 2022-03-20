@@ -21,13 +21,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.wing.tree.n.back.training.domain.util.isNull
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.ui.theme.*
-import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
-import com.wing.tree.n.back.training.presentation.util.isNull
-import com.wing.tree.n.back.training.presentation.util.not
-import com.wing.tree.n.back.training.presentation.util.notNull
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel
 

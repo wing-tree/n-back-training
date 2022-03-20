@@ -1,16 +1,14 @@
 package com.wing.tree.n.back.training.di
 
-import com.wing.tree.n.back.training.domain.repository.OptionRepository
-import com.wing.tree.n.back.training.domain.repository.PreferencesRepository
-import com.wing.tree.n.back.training.domain.repository.RankingRepository
-import com.wing.tree.n.back.training.domain.repository.RecordRepository
+import com.wing.tree.n.back.training.domain.repository.*
 import com.wing.tree.n.back.training.domain.usecase.IOCoroutineDispatcher
+import com.wing.tree.n.back.training.domain.usecase.billing.EndBillingClientConnectionUseCase
+import com.wing.tree.n.back.training.domain.usecase.billing.GetSkuDetailsListUseCase
+import com.wing.tree.n.back.training.domain.usecase.billing.IsRemoveAdsPurchasedUseCase
+import com.wing.tree.n.back.training.domain.usecase.billing.StartBillingClientConnectionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
-import com.wing.tree.n.back.training.domain.usecase.preferences.GetFirstTimeUseCase
-import com.wing.tree.n.back.training.domain.usecase.preferences.GetSortByUseCase
-import com.wing.tree.n.back.training.domain.usecase.preferences.PutIsFirstTimeUseCase
-import com.wing.tree.n.back.training.domain.usecase.preferences.PutSortByUseCase
+import com.wing.tree.n.back.training.domain.usecase.preferences.*
 import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.GetRankingsUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
@@ -33,6 +31,15 @@ internal object UseCaseModule {
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): CheckRankingUseCase {
         return CheckRankingUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesEndBillingClientConnectionUseCase(
+        repository: BillingRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): EndBillingClientConnectionUseCase {
+        return EndBillingClientConnectionUseCase(repository, coroutineDispatcher)
     }
 
     @Provides
@@ -73,11 +80,29 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun providesGetRemoveAdsPurchased(
+        repository: PreferencesRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): GetRemoveAdsPurchased {
+        return GetRemoveAdsPurchased(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
     fun providesGetSortByUseCase(
         repository: PreferencesRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): GetSortByUseCase {
         return GetSortByUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesGetSkuDetailsListUseCase(
+        repository: BillingRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): GetSkuDetailsListUseCase {
+        return GetSkuDetailsListUseCase(repository, coroutineDispatcher)
     }
 
     @Provides
@@ -91,11 +116,29 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
+    fun providesIsRemoveAdsPurchased(
+        repository: BillingRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): IsRemoveAdsPurchasedUseCase {
+        return IsRemoveAdsPurchasedUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
     fun providesPutIsFirstTimeUseCase(
         repository: PreferencesRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): PutIsFirstTimeUseCase {
         return PutIsFirstTimeUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesPutRemoveAdsPurchasedUseCase(
+        repository: PreferencesRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): PutRemoveAdsPurchasedUseCase {
+        return PutRemoveAdsPurchasedUseCase(repository, coroutineDispatcher)
     }
 
     @Provides
@@ -114,6 +157,15 @@ internal object UseCaseModule {
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): RegisterForRankingUseCase {
         return RegisterForRankingUseCase(repository, coroutineDispatcher)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun providesStartBillingClientConnectionUseCase(
+        repository: BillingRepository,
+        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+    ): StartBillingClientConnectionUseCase {
+        return StartBillingClientConnectionUseCase(repository, coroutineDispatcher)
     }
 
     @Provides

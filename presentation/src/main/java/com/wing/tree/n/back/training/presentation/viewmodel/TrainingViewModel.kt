@@ -10,16 +10,16 @@ import com.wing.tree.n.back.training.domain.usecase.option.UpdateOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.CheckRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.ranking.RegisterForRankingUseCase
 import com.wing.tree.n.back.training.domain.usecase.record.InsertRecordUseCase
+import com.wing.tree.n.back.training.domain.util.`is`
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
 import com.wing.tree.n.back.training.presentation.constant.Random.FROM
 import com.wing.tree.n.back.training.presentation.constant.Random.OFFSET
 import com.wing.tree.n.back.training.presentation.constant.Random.UNTIL
 import com.wing.tree.n.back.training.presentation.model.Option
-import com.wing.tree.n.back.training.presentation.util.`is`
 import com.wing.tree.n.back.training.presentation.util.quarter
-import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity.State
 import com.wing.tree.n.back.training.presentation.view.training.ReadyParameter
+import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity.State
 import com.wing.tree.n.back.training.presentation.view.training.TrainingParameter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +38,8 @@ class TrainingViewModel @Inject constructor(
     application: Application,
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
-    private val option = savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default
+    private val option by lazy { savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default }
+    val removeAdsPurchased by lazy { savedStateHandle.get<Boolean>(Extra.REMOVE_ADS_PURCHASED) ?: false }
 
     private var endTime = 0L
     private var startTime = 0L

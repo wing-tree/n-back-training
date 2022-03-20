@@ -50,7 +50,9 @@ class TrainingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupInterstitialAd()
+        if (viewModel.removeAdsPurchased.not()) {
+            setupInterstitialAd()
+        }
 
         setContent {
             val navController = rememberNavController()
@@ -59,7 +61,12 @@ class TrainingActivity : ComponentActivity() {
 
             BackHandler(true) {
                 if (state is State.Result) {
-                    interstitialAd?.show(this) ?: finish()
+                    if (viewModel.removeAdsPurchased) {
+                        finish()
+                    } else {
+                        interstitialAd?.show(this) ?: finish()
+                    }
+
                     return@BackHandler
                 }
 
@@ -95,7 +102,11 @@ class TrainingActivity : ComponentActivity() {
                             navigationOnClick = {
                                 when(state) {
                                     is State.Result -> {
-                                        interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                        if (viewModel.removeAdsPurchased) {
+                                            finish()
+                                        } else {
+                                            interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                        }
                                     }
                                     is State.Ranking -> {
                                         showCancelAlertDialog = true
@@ -133,7 +144,11 @@ class TrainingActivity : ComponentActivity() {
                             composable(Route.TRAINING) { Training(viewModel, trainingParameter) }
                             composable(Route.RESULT) {
                                Result(viewModel) {
-                                    interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                   if (viewModel.removeAdsPurchased) {
+                                       finish()
+                                   } else {
+                                       interstitialAd?.show(this@TrainingActivity) ?: finish()
+                                   }
                                 }
                             }
                             composable(Route.RANKING) {

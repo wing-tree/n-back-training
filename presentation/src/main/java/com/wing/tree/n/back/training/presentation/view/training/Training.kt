@@ -16,15 +16,15 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.wing.tree.n.back.training.domain.util.`is`
+import com.wing.tree.n.back.training.domain.util.isNull
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.constant.ONE_SECOND
 import com.wing.tree.n.back.training.presentation.ui.theme.ApplicationColor
 import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
 import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
-import com.wing.tree.n.back.training.presentation.util.`is`
 import com.wing.tree.n.back.training.presentation.util.ifElse
-import com.wing.tree.n.back.training.presentation.util.isNull
 import com.wing.tree.n.back.training.presentation.util.quarter
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.viewmodel.TrainingViewModel

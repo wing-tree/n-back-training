@@ -5,4 +5,5 @@ internal object Extra {
 
     const val N = "$PACKAGE_NAME.$OBJECT_NAME.N"
     const val OPTION = "$PACKAGE_NAME.$OBJECT_NAME.OPTION"
+    const val REMOVE_ADS_PURCHASED = "$PACKAGE_NAME.$OBJECT_NAME.REMOVE_ADS_PURCHASED"
 }

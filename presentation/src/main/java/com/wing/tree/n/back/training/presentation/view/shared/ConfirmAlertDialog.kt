@@ -8,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.wing.tree.n.back.training.presentation.R
-import com.wing.tree.n.back.training.presentation.constant.BLANK
-import com.wing.tree.n.back.training.presentation.util.isNull
 
 @Composable
 internal fun ConfirmAlertDialog(

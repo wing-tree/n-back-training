@@ -51,6 +51,8 @@ dependencies {
     kapt "androidx.room:room-compiler:2.4.2"
     kapt "androidx.room:room-ktx:2.4.2"
 
+    implementation "com.android.billingclient:billing-ktx:4.1.0"
+
     implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.0.1'
 

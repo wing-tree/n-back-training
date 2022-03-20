@@ -16,16 +16,22 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     private object Name {
         private const val OBJECT_NAME = "Name"
         const val FIRST_TIME = "$PACKAGE_NAME.$OBJECT_NAME.FIRST_TIME"
+        const val REMOVE_ADS_PURCHASED = "$PACKAGE_NAME.$OBJECT_NAME.REMOVE_ADS_PURCHASED"
         const val SORT_BY = "$PACKAGE_NAME.$OBJECT_NAME.SORT_BY"
     }
 
     private object Key {
         val firstTime = booleanPreferencesKey(Name.FIRST_TIME)
+        val removeAdsPurchased = booleanPreferencesKey(Name.REMOVE_ADS_PURCHASED)
         val sortBy = intPreferencesKey(Name.SORT_BY)
     }
 
     override suspend fun getFirstTime(): Boolean {
         return dataStore.data.map { it[Key.firstTime] }.first() ?: true
+    }
+
+    override suspend fun getRemoveAdsPurchased(): Boolean {
+        return dataStore.data.map { it[Key.removeAdsPurchased] }.first() ?: false
     }
 
     override suspend fun getSortBy(): Int {
@@ -35,6 +41,12 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     override suspend fun putIsFirstTime(isFirstTime: Boolean) {
         dataStore.edit {
             it[Key.firstTime] = isFirstTime
+        }
+    }
+
+    override suspend fun putRemoveAdsPurchased(removeAdsPurchased: Boolean) {
+        dataStore.edit {
+            it[Key.removeAdsPurchased] = removeAdsPurchased
         }
     }
 

@@ -106,7 +106,7 @@ class RankingDataSourceImpl @Inject constructor(private val firebaseFirestore: F
                 .orderBy(Field.ELAPSED_TIME)
                 .startAfter(queryCursor)
                 .limit(pageSize)
-                .get(Source.SERVER)
+                .get()
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         task.result?.let { querySnapshot ->

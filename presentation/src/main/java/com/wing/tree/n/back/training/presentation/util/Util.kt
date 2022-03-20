@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.wing.tree.n.back.training.presentation.util
 
 import android.app.Activity
@@ -9,12 +11,6 @@ import androidx.compose.ui.unit.Dp
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
-
-internal fun Any?.`is`(other: Any?) = this == other
-internal fun Any?.not(other: Any?) = this.`is`(other).not()
-
-internal val Any?.isNull get() = this == null
-internal val Any?.notNull get() = this.isNull.not()
 
 internal val Float.int get() = toInt()
 internal val Float.roundedInt get() = roundToInt()
