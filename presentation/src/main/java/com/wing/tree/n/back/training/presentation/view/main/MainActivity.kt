@@ -16,7 +16,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +32,8 @@ import com.wing.tree.n.back.training.domain.util.notNull
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
+import com.wing.tree.n.back.training.presentation.delegate.firebase.FirebaseAuthDelegate
+import com.wing.tree.n.back.training.presentation.delegate.firebase.FirebaseAuthDelegateImpl
 import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.timber.TimberSetup
 import com.wing.tree.n.back.training.presentation.timber.TimberSetupImpl
@@ -50,9 +51,12 @@ import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
+class MainActivity : ComponentActivity(),
+    FirebaseAuthDelegate by FirebaseAuthDelegateImpl(),
+    TimberSetup by TimberSetupImpl() {
     private val viewModel by viewModels<MainViewModel>()
 
     private val menu by lazy {
@@ -81,6 +85,15 @@ class MainActivity : ComponentActivity(), TimberSetup by TimberSetupImpl() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupTimber()
+        signInAnonymously(
+            this,
+            onSuccess = { uid ->
+
+            },
+            onFailure = { exception ->
+                Timber.e(exception)
+            }
+        )
 
         if (viewModel.isFirstTime) {
             startActivity<OnBoardingActivity>()

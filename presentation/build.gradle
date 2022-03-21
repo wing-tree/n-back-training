@@ -82,6 +82,8 @@ dependencies {
 
     implementation "com.airbnb.android:lottie-compose:5.0.2"
 
+    implementation 'com.google.firebase:firebase-auth-ktx:21.0.2'
+
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
