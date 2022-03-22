@@ -7,6 +7,5 @@ interface BillingCallback {
     fun onAcknowledged(purchase: Purchase)
     fun onBillingSetupFinished()
     fun onConsumed(purchase: Purchase)
-    fun onFailure(exception: Exception)
     fun onFailure(responseCode: Int)
 }

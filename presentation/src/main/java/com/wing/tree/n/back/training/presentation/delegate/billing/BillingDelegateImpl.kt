@@ -5,14 +5,9 @@ import androidx.annotation.MainThread
 import com.android.billingclient.api.*
 import com.wing.tree.n.back.training.domain.model.billing.Sku
 import com.wing.tree.n.back.training.domain.util.`is`
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class BillingDelegateImpl : BillingDelegate {
     private val consumableSkusList = listOf(Sku.REMOVE_ADS)
-    private val coroutineScope = CoroutineScope(Dispatchers.IO)
     private val skusList = listOf(Sku.REMOVE_ADS)
 
     private val purchasesUpdatedListener by lazy {
@@ -25,7 +20,7 @@ class BillingDelegateImpl : BillingDelegate {
                         handlePurchase(purchase)
                     }
                 } else {
-                    billingCallback?.onFailure(IllegalStateException("responseCode :${billingResult.responseCode}"))
+                    billingCallback?.onFailure(billingResult.responseCode)
                 }
             }
         }
@@ -78,7 +73,7 @@ class BillingDelegateImpl : BillingDelegate {
                         handlePurchase(purchase)
                     }
                 } else {
-                    billingCallback?.onFailure(responseCode)
+                    billingCallback?.onFailure(billingResult.responseCode)
                 }
             }
         }
@@ -86,19 +81,19 @@ class BillingDelegateImpl : BillingDelegate {
 
     fun querySkuDetails(
         skuType: String = BillingClient.SkuType.INAPP,
-        @MainThread onSkuDetailsResult: (SkuDetailsResult) -> Unit
+        @MainThread onSkuDetailsList: (List<SkuDetails>) -> Unit
     ) {
-        val builder = SkuDetailsParams.newBuilder().apply {
-            setSkusList(skusList).setType(skuType)
-        }
+        val skuDetailsParams = SkuDetailsParams
+            .newBuilder().apply {
+                setSkusList(skusList).setType(skuType)
+            }
+            .build()
 
-        coroutineScope.launch {
-            billingClient?.let {
-                val skuDetailsResult = it.querySkuDetails(builder.build())
-
-                withContext(Dispatchers.Main) {
-                    onSkuDetailsResult.invoke(skuDetailsResult)
-                }
+        billingClient?.querySkuDetailsAsync(skuDetailsParams) { billingResult, skuDetailsList ->
+            if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                skuDetailsList?.let { onSkuDetailsList.invoke(it) }
+            } else {
+                billingCallback?.onFailure(billingResult.responseCode)
             }
         }
     }
@@ -111,35 +106,26 @@ class BillingDelegateImpl : BillingDelegate {
                         .setPurchaseToken(purchase.purchaseToken)
                         .build()
 
-                    coroutineScope.launch {
-                        billingClient?.let {
-                            val consumeResult = it.consumePurchase(consumeParams)
-
-                            withContext(Dispatchers.Main) {
-                                if (consumeResult.billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                                    billingCallback?.onConsumed(purchase)
-                                }
-                            }
+                    billingClient?.consumeAsync(consumeParams) { billingResult, purchaseToken ->
+                        if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                            billingCallback?.onConsumed(purchase)
+                        } else {
+                            billingCallback?.onFailure(billingResult.responseCode)
                         }
                     }
                 }
 
                 purchase.isAcknowledged.not() -> {
-                    val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                    val acknowledgePurchaseParams = AcknowledgePurchaseParams
+                        .newBuilder()
                         .setPurchaseToken(purchase.purchaseToken)
                         .build()
 
-                    coroutineScope.launch {
-                        billingClient?.let {
-                            val billingResult = it.acknowledgePurchase(acknowledgePurchaseParams)
-
-                            withContext(Dispatchers.Main) {
-                                if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                                    billingCallback?.onAcknowledged(purchase)
-                                } else {
-                                    billingCallback?.onFailure(IllegalStateException("responseCode :${billingResult.responseCode}"))
-                                }
-                            }
+                    billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
+                        if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                            billingCallback?.onAcknowledged(purchase)
+                        } else {
+                            billingCallback?.onFailure(billingResult.responseCode)
                         }
                     }
                 }

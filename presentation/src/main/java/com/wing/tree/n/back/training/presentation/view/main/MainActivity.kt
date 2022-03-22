@@ -86,7 +86,6 @@ class MainActivity : ComponentActivity(),
         super.onCreate(savedInstanceState)
         setupTimber()
         signInAnonymously(
-            this,
             onSuccess = { uid ->
 
             },

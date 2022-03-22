@@ -1,11 +1,9 @@
 package com.wing.tree.n.back.training.presentation.delegate.firebase
 
-import android.app.Activity
 import com.google.firebase.auth.FirebaseAuth
 
 class FirebaseAuthDelegateImpl : FirebaseAuthDelegate {
     override fun signInAnonymously(
-        activity: Activity,
         onSuccess: (uid: String) -> Unit,
         onFailure: (Exception) -> Unit
     ) {
@@ -17,7 +15,7 @@ class FirebaseAuthDelegateImpl : FirebaseAuthDelegate {
         } ?: run {
             firebaseAuth
                 .signInAnonymously()
-                .addOnCompleteListener(activity) { task ->
+                .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         firebaseAuth.currentUser?.uid?.let { uid ->
                             onSuccess(uid)
