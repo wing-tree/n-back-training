@@ -1,11 +1,10 @@
 package com.wing.tree.n.back.training.presentation.delegate.billing
 
-import androidx.annotation.MainThread
 import com.android.billingclient.api.Purchase
 
 interface BillingCallback {
-    fun onAcknowledged(purchase: Purchase)
-    fun onBillingSetupFinished()
-    fun onConsumed(purchase: Purchase)
+    fun onBillingSetupFinished() = Unit
     fun onFailure(responseCode: Int)
+    fun onPurchaseAcknowledged(purchase: Purchase) = Unit
+    fun onPurchaseConsumed(purchase: Purchase) = Unit
 }

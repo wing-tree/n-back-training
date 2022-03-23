@@ -16,6 +16,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,12 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.android.billingclient.api.Purchase
 import com.google.android.gms.ads.*
+import com.wing.tree.n.back.training.domain.util.`is`
 import com.wing.tree.n.back.training.domain.util.not
 import com.wing.tree.n.back.training.domain.util.notNull
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
+import com.wing.tree.n.back.training.presentation.delegate.billing.BillingCallback
+import com.wing.tree.n.back.training.presentation.delegate.billing.BillingDelegate
+import com.wing.tree.n.back.training.presentation.delegate.billing.BillingDelegateImpl
 import com.wing.tree.n.back.training.presentation.delegate.firebase.FirebaseAuthDelegate
 import com.wing.tree.n.back.training.presentation.delegate.firebase.FirebaseAuthDelegateImpl
 import com.wing.tree.n.back.training.presentation.model.Menu
@@ -55,6 +61,7 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(),
+    BillingDelegate by BillingDelegateImpl,
     FirebaseAuthDelegate by FirebaseAuthDelegateImpl(),
     TimberSetup by TimberSetupImpl() {
     private val viewModel by viewModels<MainViewModel>()
@@ -85,6 +92,26 @@ class MainActivity : ComponentActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupTimber()
+        build(this, object : BillingCallback {
+            override fun onBillingSetupFinished() {
+                queryPurchasesAsync()
+            }
+
+            override fun onFailure(responseCode: Int) {
+                val message = "responseCode :$responseCode"
+
+                Timber.e(IllegalStateException(message))
+            }
+
+            override fun onPurchaseConsumed(purchase: Purchase) {
+                if (purchase.skus.contains(Sku.REMOVE_ADS)) {
+                    viewModel.notifyAdsRemoved()
+                }
+            }
+        })
+
+        startConnection()
+
         signInAnonymously(
             onSuccess = { uid ->
 
@@ -104,6 +131,7 @@ class MainActivity : ComponentActivity(),
                 val coroutineScope = rememberCoroutineScope()
                 val scaffoldState = rememberScaffoldState()
 
+                val adRemoved by viewModel.adsRemoved.observeAsState()
                 val option = viewModel.option
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
@@ -221,11 +249,18 @@ class MainActivity : ComponentActivity(),
                             }
                         }
 
-                        AdView()
+                        if (adRemoved.not(true)) {
+                            AdView()
+                        }
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        endConnection()
+        super.onDestroy()
     }
 }
 

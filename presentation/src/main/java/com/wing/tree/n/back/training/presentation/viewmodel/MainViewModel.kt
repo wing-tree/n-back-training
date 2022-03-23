@@ -2,6 +2,8 @@ package com.wing.tree.n.back.training.presentation.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.wing.tree.n.back.training.domain.usecase.Result
 import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
@@ -44,6 +46,13 @@ class MainViewModel @Inject constructor(
                 }
             }
         } ?: false
+    }
+
+    private val _adsRemoved = MutableLiveData<Boolean>()
+    val adsRemoved: LiveData<Boolean> get() = _adsRemoved
+
+    fun notifyAdsRemoved() {
+        _adsRemoved.value = true
     }
 
     fun updateIsFirstTimeToFalse() {
