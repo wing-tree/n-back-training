@@ -1,5 +1,6 @@
 package com.wing.tree.n.back.training.presentation.delegate.billing
 
+import android.app.Activity
 import android.content.Context
 import com.android.billingclient.api.*
 import com.wing.tree.n.back.training.domain.util.`is`
@@ -44,6 +45,63 @@ object BillingDelegateImpl : BillingDelegate {
             .build()
     }
 
+    override fun clear() {
+        billingCallback = null
+        billingClient = null
+    }
+
+    override fun endConnection() {
+        billingClient?.endConnection()
+    }
+
+    override fun purchase(activity: Activity, skuDetails: SkuDetails) {
+        val billingFlowParams = BillingFlowParams
+            .newBuilder()
+            .setSkuDetails(skuDetails)
+            .build()
+
+        billingClient?.launchBillingFlow(activity, billingFlowParams)
+    }
+
+    override fun queryPurchasesAsync(skuType: String) {
+        billingClient?.let {
+            it.queryPurchasesAsync(skuType) { billingResult, purchases ->
+                val responseCode = billingResult.responseCode
+
+                if (responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                    for (purchase in purchases) {
+                        handlePurchase(purchase)
+                    }
+                } else {
+                    billingCallback?.onFailure(billingResult.responseCode)
+                }
+            }
+        }
+    }
+
+    override fun querySkuDetails(
+        skuType: String,
+        onSkuDetailsList: (List<SkuDetails>) -> Unit
+    ) {
+        val skuDetailsParams = SkuDetailsParams
+            .newBuilder().apply {
+                setSkusList(skusList).setType(skuType)
+            }
+            .build()
+
+        billingClient?.querySkuDetailsAsync(skuDetailsParams) { billingResult, skuDetailsList ->
+            if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                onSkuDetailsList.invoke(skuDetailsList ?: emptyList())
+            } else {
+                billingCallback?.onFailure(billingResult.responseCode)
+            }
+        }
+    }
+
+    override fun setCallback(callback: BillingCallback) {
+        this.billingCallback = callback
+    }
+
     override fun startConnection() {
         val billingClientStateListener = object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
@@ -55,21 +113,11 @@ object BillingDelegateImpl : BillingDelegate {
             }
 
             override fun onBillingServiceDisconnected() {
-                billingCallback = null
-                billingClient = null
+                clear()
             }
         }
 
         billingClient?.startConnection(billingClientStateListener)
-    }
-
-    override fun endConnection() {
-        billingClient?.endConnection()
-    }
-
-    override fun clear() {
-        billingCallback = null
-        billingClient = null
     }
 
     private fun handlePurchase(purchase: Purchase) {
@@ -105,41 +153,6 @@ object BillingDelegateImpl : BillingDelegate {
                         }
                     }
                 }
-            }
-        }
-    }
-
-    override fun queryPurchasesAsync(skuType: String) {
-        billingClient?.let {
-            it.queryPurchasesAsync(skuType) { billingResult, purchases ->
-                val responseCode = billingResult.responseCode
-
-                if (responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                    for (purchase in purchases) {
-                        handlePurchase(purchase)
-                    }
-                } else {
-                    billingCallback?.onFailure(billingResult.responseCode)
-                }
-            }
-        }
-    }
-
-    override fun querySkuDetails(
-        skuType: String,
-        onSkuDetailsList: (List<SkuDetails>) -> Unit
-    ) {
-        val skuDetailsParams = SkuDetailsParams
-            .newBuilder().apply {
-                setSkusList(skusList).setType(skuType)
-            }
-            .build()
-
-        billingClient?.querySkuDetailsAsync(skuDetailsParams) { billingResult, skuDetailsList ->
-            if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                onSkuDetailsList.invoke(skuDetailsList ?: emptyList())
-            } else {
-                billingCallback?.onFailure(billingResult.responseCode)
             }
         }
     }

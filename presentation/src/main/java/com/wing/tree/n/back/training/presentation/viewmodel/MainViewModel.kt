@@ -10,6 +10,7 @@ import com.wing.tree.n.back.training.domain.usecase.option.GetOptionUseCase
 import com.wing.tree.n.back.training.domain.usecase.preferences.GetFirstTimeUseCase
 import com.wing.tree.n.back.training.domain.usecase.preferences.GetRemoveAdsPurchased
 import com.wing.tree.n.back.training.domain.usecase.preferences.PutIsFirstTimeUseCase
+import com.wing.tree.n.back.training.domain.usecase.preferences.PutRemoveAdsPurchasedUseCase
 import com.wing.tree.n.back.training.presentation.model.Option
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,7 @@ class MainViewModel @Inject constructor(
     private val getOptionUseCase: GetOptionUseCase,
     private val getRemoveAdsPurchased: GetRemoveAdsPurchased,
     private val putIsFirstTimeUseCase: PutIsFirstTimeUseCase,
+    private val putRemoveAdsPurchasedUseCase: PutRemoveAdsPurchasedUseCase,
     application: Application
 ) : AndroidViewModel(application) {
     val option: Option get() = runBlocking {
@@ -48,10 +50,28 @@ class MainViewModel @Inject constructor(
         } ?: false
     }
 
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            with(getRemoveAdsPurchased.invoke(Unit)) {
+                val value = when(this) {
+                    is Result.Error -> false
+                    is Result.Loading -> false
+                    is Result.Success -> this.data
+                }
+
+                _adsRemoved.postValue(value)
+            }
+        }
+    }
+
     private val _adsRemoved = MutableLiveData<Boolean>()
     val adsRemoved: LiveData<Boolean> get() = _adsRemoved
 
     fun notifyAdsRemoved() {
+        viewModelScope.launch(Dispatchers.IO) {
+            putRemoveAdsPurchasedUseCase.invoke(PutRemoveAdsPurchasedUseCase.Parameter(true))
+        }
+
         _adsRemoved.value = true
     }
 

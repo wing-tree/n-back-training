@@ -39,7 +39,7 @@ class TrainingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
     private val option by lazy { savedStateHandle.get<Option>(Extra.OPTION) ?: Option.Default }
-    val removeAdsPurchased by lazy { savedStateHandle.get<Boolean>(Extra.REMOVE_ADS_PURCHASED) ?: false }
+    val adsRemoved by lazy { savedStateHandle.get<Boolean>(Extra.ADS_REMOVED) ?: false }
 
     private var endTime = 0L
     private var startTime = 0L

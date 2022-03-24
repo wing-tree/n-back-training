@@ -50,7 +50,7 @@ class TrainingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (viewModel.removeAdsPurchased.not()) {
+        if (viewModel.adsRemoved.not()) {
             setupInterstitialAd()
         }
 
@@ -61,7 +61,7 @@ class TrainingActivity : ComponentActivity() {
 
             BackHandler(true) {
                 if (state is State.Result) {
-                    if (viewModel.removeAdsPurchased) {
+                    if (viewModel.adsRemoved) {
                         finish()
                     } else {
                         interstitialAd?.show(this) ?: finish()
@@ -102,7 +102,7 @@ class TrainingActivity : ComponentActivity() {
                             navigationOnClick = {
                                 when(state) {
                                     is State.Result -> {
-                                        if (viewModel.removeAdsPurchased) {
+                                        if (viewModel.adsRemoved) {
                                             finish()
                                         } else {
                                             interstitialAd?.show(this@TrainingActivity) ?: finish()
@@ -144,7 +144,7 @@ class TrainingActivity : ComponentActivity() {
                             composable(Route.TRAINING) { Training(viewModel, trainingParameter) }
                             composable(Route.RESULT) {
                                Result(viewModel) {
-                                   if (viewModel.removeAdsPurchased) {
+                                   if (viewModel.adsRemoved) {
                                        finish()
                                    } else {
                                        interstitialAd?.show(this@TrainingActivity) ?: finish()

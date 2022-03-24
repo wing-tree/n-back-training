@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".presentation.view.billing.BillingActivity" />
+
         <activity android:name=".presentation.view.RecordActivity" />
 
         <activity android:name=".presentation.view.training.TrainingActivity" />

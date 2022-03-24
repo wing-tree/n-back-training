@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.android.billingclient.api.Purchase
 import com.google.android.gms.ads.*
-import com.wing.tree.n.back.training.domain.util.`is`
 import com.wing.tree.n.back.training.domain.util.not
 import com.wing.tree.n.back.training.domain.util.notNull
 import com.wing.tree.n.back.training.presentation.BuildConfig
@@ -49,6 +48,7 @@ import com.wing.tree.n.back.training.presentation.ui.theme.paddingBottom
 import com.wing.tree.n.back.training.presentation.ui.theme.paddingTop
 import com.wing.tree.n.back.training.presentation.util.*
 import com.wing.tree.n.back.training.presentation.view.RecordActivity
+import com.wing.tree.n.back.training.presentation.view.billing.BillingActivity
 import com.wing.tree.n.back.training.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.n.back.training.presentation.view.ranking.RankingActivity
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
@@ -78,6 +78,9 @@ class MainActivity : ComponentActivity(),
                 startActivity<RecordActivity>()
             },
             Menu.Divider,
+            Menu.Item(R.drawable.ic_round_payment_24, getString(R.string.in_app_billing)) {
+                startActivity<BillingActivity>()
+            },
             Menu.Item(R.drawable.ic_round_rate_review_24, getString(R.string.write_review)) {
                 Review.launchReviewFlow(this)
             },
@@ -92,25 +95,6 @@ class MainActivity : ComponentActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupTimber()
-        build(this, object : BillingCallback {
-            override fun onBillingSetupFinished() {
-                queryPurchasesAsync()
-            }
-
-            override fun onFailure(responseCode: Int) {
-                val message = "responseCode :$responseCode"
-
-                Timber.e(IllegalStateException(message))
-            }
-
-            override fun onPurchaseConsumed(purchase: Purchase) {
-                if (purchase.skus.contains(Sku.REMOVE_ADS)) {
-                    viewModel.notifyAdsRemoved()
-                }
-            }
-        })
-
-        startConnection()
 
         signInAnonymously(
             onSuccess = { uid ->
@@ -131,7 +115,7 @@ class MainActivity : ComponentActivity(),
                 val coroutineScope = rememberCoroutineScope()
                 val scaffoldState = rememberScaffoldState()
 
-                val adRemoved by viewModel.adsRemoved.observeAsState()
+                val adsRemoved by viewModel.adsRemoved.observeAsState()
                 val option = viewModel.option
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
@@ -240,6 +224,7 @@ class MainActivity : ComponentActivity(),
                             item {
                                 NBackButtonGroup(modifier = Modifier.fillMaxWidth()) {
                                     with(Intent(applicationContext, TrainingActivity::class.java)) {
+                                        putExtra(Extra.ADS_REMOVED, adsRemoved)
                                         putExtra(Extra.N, it)
                                         putExtra(Extra.OPTION, option)
 
@@ -249,7 +234,25 @@ class MainActivity : ComponentActivity(),
                             }
                         }
 
-                        if (adRemoved.not(true)) {
+                        if (adsRemoved.not(true)) {
+                            build(this@MainActivity, object : BillingCallback {
+                                override fun onBillingSetupFinished() {
+                                    queryPurchasesAsync()
+                                }
+
+                                override fun onFailure(responseCode: Int) {
+                                    Timber.e("responseCode :$responseCode")
+                                }
+
+                                override fun onPurchaseConsumed(purchase: Purchase) {
+                                    if (purchase.skus.contains(Sku.REMOVE_ADS)) {
+                                        viewModel.notifyAdsRemoved()
+                                    }
+                                }
+                            })
+
+                            startConnection()
+
                             AdView()
                         }
                     }
