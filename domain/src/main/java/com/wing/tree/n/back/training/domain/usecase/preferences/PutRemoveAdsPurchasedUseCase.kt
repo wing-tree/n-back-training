@@ -11,7 +11,7 @@ class PutRemoveAdsPurchasedUseCase @Inject constructor(
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : CoroutineUseCase<PutRemoveAdsPurchasedUseCase.Parameter, Unit>(coroutineDispatcher) {
     override suspend fun execute(parameter: Parameter) {
-        return repository.putIsFirstTime(parameter.removeAdsPurchased)
+        return repository.putRemoveAdsPurchased(parameter.removeAdsPurchased)
     }
 
     data class Parameter(val removeAdsPurchased: Boolean)

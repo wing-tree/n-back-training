@@ -34,9 +34,10 @@ import com.wing.tree.n.back.training.domain.util.notNull
 import com.wing.tree.n.back.training.presentation.BuildConfig
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.*
-import com.wing.tree.n.back.training.presentation.delegate.billing.BillingCallback
+import com.wing.tree.n.back.training.presentation.delegate.billing.BillingClientStateCallbacks
 import com.wing.tree.n.back.training.presentation.delegate.billing.BillingDelegate
 import com.wing.tree.n.back.training.presentation.delegate.billing.BillingDelegateImpl
+import com.wing.tree.n.back.training.presentation.delegate.billing.PurchaseCallbacks
 import com.wing.tree.n.back.training.presentation.delegate.firebase.FirebaseAuthDelegate
 import com.wing.tree.n.back.training.presentation.delegate.firebase.FirebaseAuthDelegateImpl
 import com.wing.tree.n.back.training.presentation.model.Menu
@@ -96,6 +97,19 @@ class MainActivity : ComponentActivity(),
         super.onCreate(savedInstanceState)
         setupTimber()
 
+        build(this)
+        startConnection(object : BillingClientStateCallbacks {
+            override fun onBillingSetupFinished() {
+                if (viewModel.removeAdsPurchased.not()) {
+                    queryPurchasesAsync()
+                }
+            }
+
+            override fun onFailure(debugMessage: String, responseCode: Int) {
+                Timber.e("debugMessage: $debugMessage, responseCode :$responseCode")
+            }
+        })
+
         signInAnonymously(
             onSuccess = { uid ->
 
@@ -115,7 +129,7 @@ class MainActivity : ComponentActivity(),
                 val coroutineScope = rememberCoroutineScope()
                 val scaffoldState = rememberScaffoldState()
 
-                val adsRemoved by viewModel.adsRemoved.observeAsState()
+                val adsRemoved by viewModel.adsRemoved.observeAsState(viewModel.removeAdsPurchased)
                 val option = viewModel.option
 
                 BackHandler(scaffoldState.drawerState.isOpen) {
@@ -234,30 +248,30 @@ class MainActivity : ComponentActivity(),
                             }
                         }
 
-                        if (adsRemoved.not(true)) {
-                            build(this@MainActivity, object : BillingCallback {
-                                override fun onBillingSetupFinished() {
-                                    queryPurchasesAsync()
-                                }
-
-                                override fun onFailure(responseCode: Int) {
-                                    Timber.e("responseCode :$responseCode")
-                                }
-
-                                override fun onPurchaseConsumed(purchase: Purchase) {
-                                    if (purchase.skus.contains(Sku.REMOVE_ADS)) {
-                                        viewModel.notifyAdsRemoved()
-                                    }
-                                }
-                            })
-
-                            startConnection()
-
-                            AdView()
-                        }
+                        AdView(adsRemoved)
                     }
                 }
             }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerPurchaseCallbacks(object : PurchaseCallbacks {
+            override fun onFailure(debugMessage: String, responseCode: Int) {
+                Timber.e("debugMessage :$debugMessage, responseCode :$responseCode")
+            }
+
+            override fun onPurchaseAcknowledged(purchase: Purchase) {
+                when {
+                    purchase.skus.contains(Sku.REMOVE_ADS) -> viewModel.notifyAdsRemoved()
+                    else -> Timber.d("purchase :$purchase")
+                }
+            }
+        })
+
+        if (viewModel.removeAdsPurchased.not()) {
+            queryPurchasesAsync()
         }
     }
 
@@ -428,11 +442,11 @@ private fun NBackButtonGroup(modifier: Modifier = Modifier, onClick: (Int) -> Un
 }
 
 @Composable
-private fun AdView(modifier: Modifier = Modifier) {
-    var visible by remember { mutableStateOf(true) }
+private fun AdView(adsRemoved: Boolean, modifier: Modifier = Modifier) {
+    var visible by remember { mutableStateOf(adsRemoved.not()) }
 
     if (LocalInspectionMode.current.not()) {
-        if (visible) {
+        if (adsRemoved.not() && visible) {
             Box(
                 modifier = Modifier
                     .height(50.dp)

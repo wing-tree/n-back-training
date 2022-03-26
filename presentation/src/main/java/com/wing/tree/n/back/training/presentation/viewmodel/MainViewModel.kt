@@ -13,10 +13,7 @@ import com.wing.tree.n.back.training.domain.usecase.preferences.PutIsFirstTimeUs
 import com.wing.tree.n.back.training.domain.usecase.preferences.PutRemoveAdsPurchasedUseCase
 import com.wing.tree.n.back.training.presentation.model.Option
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,8 +25,23 @@ class MainViewModel @Inject constructor(
     private val putRemoveAdsPurchasedUseCase: PutRemoveAdsPurchasedUseCase,
     application: Application
 ) : AndroidViewModel(application) {
+    private val _adsRemoved = MutableLiveData<Boolean>()
+    val adsRemoved: LiveData<Boolean> get() = _adsRemoved
+
+    val isFirstTime: Boolean get() = runBlocking {
+        return@runBlocking withTimeoutOrNull(120L) {
+            with(getFirstTimeUseCase.invoke(Unit)) {
+                when(this) {
+                    is Result.Error -> false
+                    is Result.Loading -> false
+                    is Result.Success -> this.data
+                }
+            }
+        } ?: false
+    }
+
     val option: Option get() = runBlocking {
-        return@runBlocking withTimeoutOrNull(250L) {
+        return@runBlocking withTimeoutOrNull(120L) {
             when (val option = getOptionUseCase.invoke(Unit)) {
                 is Result.Error -> Option.Default
                 is Result.Loading -> Option.Default
@@ -38,9 +50,9 @@ class MainViewModel @Inject constructor(
         } ?: Option.Default
     }
 
-    val isFirstTime: Boolean get() = runBlocking {
-        return@runBlocking withTimeoutOrNull(250L) {
-            with(getFirstTimeUseCase.invoke(Unit)) {
+    val removeAdsPurchased = runBlocking {
+        return@runBlocking withTimeoutOrNull(120L) {
+            with(getRemoveAdsPurchased.invoke(Unit)) {
                 when(this) {
                     is Result.Error -> false
                     is Result.Loading -> false
@@ -59,20 +71,19 @@ class MainViewModel @Inject constructor(
                     is Result.Success -> this.data
                 }
 
-                _adsRemoved.postValue(value)
+                withContext(Dispatchers.Main) {
+                    _adsRemoved.value = value
+                }
             }
         }
     }
 
-    private val _adsRemoved = MutableLiveData<Boolean>()
-    val adsRemoved: LiveData<Boolean> get() = _adsRemoved
-
     fun notifyAdsRemoved() {
-        viewModelScope.launch(Dispatchers.IO) {
-            putRemoveAdsPurchasedUseCase.invoke(PutRemoveAdsPurchasedUseCase.Parameter(true))
-        }
+//        viewModelScope.launch(Dispatchers.IO) {
+//            putRemoveAdsPurchasedUseCase.invoke(PutRemoveAdsPurchasedUseCase.Parameter(true))
+//        }
 
-        _adsRemoved.value = true
+        _adsRemoved.postValue(true)
     }
 
     fun updateIsFirstTimeToFalse() {

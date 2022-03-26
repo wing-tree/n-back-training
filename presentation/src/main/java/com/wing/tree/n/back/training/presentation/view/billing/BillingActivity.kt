@@ -26,8 +26,6 @@ import com.wing.tree.n.back.training.domain.util.`is`
 import com.wing.tree.n.back.training.presentation.R
 import com.wing.tree.n.back.training.presentation.constant.BLANK
 import com.wing.tree.n.back.training.presentation.ui.theme.*
-import com.wing.tree.n.back.training.presentation.ui.theme.horizontalPadding
-import com.wing.tree.n.back.training.presentation.ui.theme.verticalPadding
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.viewmodel.BillingViewModel
@@ -62,7 +60,7 @@ class BillingActivity : ComponentActivity() {
                         )
 
                         SkuDetailsList(skuDetailsList ?: emptyList(), Modifier.fillMaxWidth()) {
-                            viewModel.purchase(this@BillingActivity, it)
+                            viewModel.launchBillingFlow(this@BillingActivity, it)
                         }
                     }
                 }

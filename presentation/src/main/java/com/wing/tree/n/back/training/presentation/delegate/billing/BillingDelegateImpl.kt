@@ -8,7 +8,7 @@ import com.wing.tree.n.back.training.presentation.constant.Sku
 import timber.log.Timber
 
 object BillingDelegateImpl : BillingDelegate {
-    private val consumableSkusList = listOf(Sku.REMOVE_ADS)
+    private val consumableSkusList = listOf<String>()
     private val skusList = listOf(Sku.REMOVE_ADS)
 
     private val purchasesUpdatedListener by lazy {
@@ -21,23 +21,40 @@ object BillingDelegateImpl : BillingDelegate {
                         handlePurchase(purchase)
                     }
                 } else {
-                    billingCallback?.onFailure(billingResult.responseCode)
+                    purchaseCallbacks?.onFailure(billingResult.debugMessage, billingResult.responseCode)
                 }
             }
         }
     }
 
     private var billingClient: BillingClient? = null
-    private var billingCallback: BillingCallback? = null
+    private var purchaseCallbacks: PurchaseCallbacks? = null
 
-    override fun build(context: Context, billingCallback: BillingCallback) {
-        if (billingClient?.isReady.`is`(true)) {
-            billingClient?.endConnection()
+    private fun acknowledgePurchase(purchase: Purchase) {
+        verifyPurchase(purchase) {
+            if (purchase.isAcknowledged.not()) {
+                val acknowledgePurchaseParams = AcknowledgePurchaseParams
+                    .newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
+
+                billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
+                    if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                        purchaseCallbacks?.onPurchaseAcknowledged(purchase)
+                    } else {
+                        purchaseCallbacks?.onFailure(
+                            billingResult.debugMessage,
+                            billingResult.responseCode
+                        )
+                    }
+                }
+            } else {
+                purchaseCallbacks?.onPurchaseAcknowledged(purchase)
+            }
         }
+    }
 
-        this.billingClient = null
-        this.billingCallback = billingCallback
-
+    override fun build(context: Context) {
         billingClient = BillingClient
             .newBuilder(context)
             .setListener(purchasesUpdatedListener)
@@ -45,16 +62,58 @@ object BillingDelegateImpl : BillingDelegate {
             .build()
     }
 
-    override fun clear() {
-        billingCallback = null
+    private fun consumePurchase(purchase: Purchase) {
+        verifyPurchase(purchase) {
+            if (purchase.hasConsumableSkus) {
+                val consumeParams = ConsumeParams.newBuilder()
+                    .setPurchaseToken(purchase.purchaseToken)
+                    .build()
+
+                billingClient?.consumeAsync(consumeParams) { billingResult, _ ->
+                    if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
+                        purchaseCallbacks?.onPurchaseConsumed(purchase)
+                    } else {
+                        purchaseCallbacks?.onFailure(
+                            billingResult.debugMessage,
+                            billingResult.responseCode
+                        )
+                    }
+                }
+            } else {
+                val message = "purchase.hasConsumableSkus :${purchase.hasConsumableSkus}"
+
+                Timber.d(message)
+            }
+        }
+    }
+
+    private fun clear() {
         billingClient = null
+        purchaseCallbacks = null
+    }
+
+    private fun handlePurchase(purchase: Purchase) {
+        if (purchase.isPurchased) {
+            if (purchase.hasConsumableSkus) {
+                consumePurchase(purchase)
+            } else {
+                acknowledgePurchase(purchase)
+            }
+        } else {
+            Timber.d("purchase :$purchase")
+        }
+    }
+
+    private fun verifyPurchase(purchase: Purchase, onPurchaseVerified: (Purchase) -> Unit) {
+        onPurchaseVerified(purchase)
     }
 
     override fun endConnection() {
         billingClient?.endConnection()
+        clear()
     }
 
-    override fun purchase(activity: Activity, skuDetails: SkuDetails) {
+    override fun launchBillingFlow(activity: Activity, skuDetails: SkuDetails) {
         val billingFlowParams = BillingFlowParams
             .newBuilder()
             .setSkuDetails(skuDetails)
@@ -73,7 +132,7 @@ object BillingDelegateImpl : BillingDelegate {
                         handlePurchase(purchase)
                     }
                 } else {
-                    billingCallback?.onFailure(billingResult.responseCode)
+                    purchaseCallbacks?.onFailure(billingResult.debugMessage, responseCode)
                 }
             }
         }
@@ -93,22 +152,22 @@ object BillingDelegateImpl : BillingDelegate {
             if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
                 onSkuDetailsList.invoke(skuDetailsList ?: emptyList())
             } else {
-                billingCallback?.onFailure(billingResult.responseCode)
+                purchaseCallbacks?.onFailure(billingResult.debugMessage, billingResult.responseCode)
             }
         }
     }
 
-    override fun setCallback(callback: BillingCallback) {
-        this.billingCallback = callback
+    override fun registerPurchaseCallbacks(purchaseCallbacks: PurchaseCallbacks) {
+        this.purchaseCallbacks = purchaseCallbacks
     }
 
-    override fun startConnection() {
+    override fun startConnection(billingClientStateCallbacks: BillingClientStateCallbacks) {
         val billingClientStateListener = object : BillingClientStateListener {
             override fun onBillingSetupFinished(billingResult: BillingResult) {
                 if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                    billingCallback?.onBillingSetupFinished()
+                    billingClientStateCallbacks.onBillingSetupFinished()
                 } else {
-                    billingCallback?.onFailure(billingResult.responseCode)
+                    billingClientStateCallbacks.onFailure(billingResult.debugMessage, billingResult.responseCode)
                 }
             }
 
@@ -120,40 +179,6 @@ object BillingDelegateImpl : BillingDelegate {
         billingClient?.startConnection(billingClientStateListener)
     }
 
-    private fun handlePurchase(purchase: Purchase) {
-        Timber.d("purchase :$purchase")
-
-        if (purchase.purchaseState.`is`(Purchase.PurchaseState.PURCHASED)) {
-            when {
-                consumableSkusList.containsAll(purchase.skus) -> {
-                    val consumeParams = ConsumeParams.newBuilder()
-                        .setPurchaseToken(purchase.purchaseToken)
-                        .build()
-
-                    billingClient?.consumeAsync(consumeParams) { billingResult, _ ->
-                        if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                            billingCallback?.onPurchaseConsumed(purchase)
-                        } else {
-                            billingCallback?.onFailure(billingResult.responseCode)
-                        }
-                    }
-                }
-
-                purchase.isAcknowledged.not() -> {
-                    val acknowledgePurchaseParams = AcknowledgePurchaseParams
-                        .newBuilder()
-                        .setPurchaseToken(purchase.purchaseToken)
-                        .build()
-
-                    billingClient?.acknowledgePurchase(acknowledgePurchaseParams) { billingResult ->
-                        if (billingResult.responseCode.`is`(BillingClient.BillingResponseCode.OK)) {
-                            billingCallback?.onPurchaseAcknowledged(purchase)
-                        } else {
-                            billingCallback?.onFailure(billingResult.responseCode)
-                        }
-                    }
-                }
-            }
-        }
-    }
+    private val Purchase.hasConsumableSkus: Boolean get() = consumableSkusList.containsAll(skus)
+    private val Purchase.isPurchased: Boolean get() = purchaseState.`is`(Purchase.PurchaseState.PURCHASED)
 }
