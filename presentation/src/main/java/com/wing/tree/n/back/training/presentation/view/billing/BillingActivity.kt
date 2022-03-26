@@ -1,6 +1,7 @@
 package com.wing.tree.n.back.training.presentation.view.billing
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -40,6 +41,7 @@ class BillingActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initData()
 
         setContent {
             val skuDetailsList by viewModel.skuDetailsList.observeAsState()
@@ -64,6 +66,14 @@ class BillingActivity : ComponentActivity() {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private fun initData() {
+        viewModel.removeAdsPurchased.observe(this) {
+            if (it) {
+                Toast.makeText(this, getString(R.string.purchased_remove_ads), Toast.LENGTH_LONG).show()
             }
         }
     }

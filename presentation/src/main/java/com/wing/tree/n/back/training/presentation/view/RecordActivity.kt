@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.annotation.StringRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
@@ -23,6 +24,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -45,6 +47,7 @@ import com.wing.tree.n.back.training.presentation.model.Menu
 import com.wing.tree.n.back.training.presentation.model.Record
 import com.wing.tree.n.back.training.presentation.ui.theme.*
 import com.wing.tree.n.back.training.presentation.view.shared.ConfirmAlertDialog
+import com.wing.tree.n.back.training.presentation.view.shared.EmptyMessage
 import com.wing.tree.n.back.training.presentation.view.shared.SebangText
 import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.viewmodel.RecordViewModel
@@ -67,7 +70,7 @@ class RecordActivity : ComponentActivity() {
 
             ApplicationTheme {
                 Scaffold {
-                    Column {
+                    Column(modifier = Modifier.fillMaxSize()) {
                         TopAppbar(
                             title = getString(R.string.records),
                             modifier = Modifier,
@@ -98,7 +101,10 @@ class RecordActivity : ComponentActivity() {
                             }
                         }
 
-                        NavHost(navController = navController, startDestination = Route.RECORD_LIST) {
+                        NavHost(
+                            navController = navController,
+                            startDestination = Route.RECORD_LIST
+                        ) {
                             composable(route = Route.RECORD_LIST) {
                                 RecordList(navController, viewModel, sortBy)
                             }
@@ -158,27 +164,31 @@ fun RecordList(navController: NavController, viewModel: RecordViewModel, sortBy:
         }
     }
 
-    LazyColumn {
-        item { Spacer(modifier = Modifier.height(12.dp)) }
-        
-        items(items, key = { it }) { record ->
-            RecordItem(
-                Modifier
-                    .horizontalPadding(16.dp)
-                    .paddingBottom(12.dp)
-                    .animateItemPlacement(),
-                record,
-                onClick = {
-                    navController.navigate(route = RecordActivity.Route.RESULT, Bundle().apply {
-                        putParcelable(RecordActivity.Key.RECORD, it)
-                    })
-                },
-                onDeleteIconClick = {
-                    selectedRecord = it
-                    showDialog = true
-                }
-            )
+    if (items.isNotEmpty()) {
+        LazyColumn {
+            item { Spacer(modifier = Modifier.height(12.dp)) }
+
+            items(items, key = { it }) { record ->
+                RecordItem(
+                    Modifier
+                        .horizontalPadding(16.dp)
+                        .paddingBottom(12.dp)
+                        .animateItemPlacement(),
+                    record,
+                    onClick = {
+                        navController.navigate(route = RecordActivity.Route.RESULT, Bundle().apply {
+                            putParcelable(RecordActivity.Key.RECORD, it)
+                        })
+                    },
+                    onDeleteIconClick = {
+                        selectedRecord = it
+                        showDialog = true
+                    }
+                )
+            }
         }
+    } else {
+        EmptyMessage(message = R.string.no_records_found, modifier = Modifier.fillMaxSize())
     }
 }
 

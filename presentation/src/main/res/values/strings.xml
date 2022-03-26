@@ -23,12 +23,14 @@
     <string name="newest">Newest</string>
     <string name="next">Next</string>
     <string name="no_rankings_found">No rankings found</string>
+    <string name="no_records_found">No records found</string>
     <string name="normal_mode">Normal Mode</string>
     <string name="number">Number</string>
     <string name="oldest">Oldest</string>
     <string name="play_screen">Play screen</string>
     <string name="press_back_again_to_exit">Press \'Back\' again to exit</string>
     <string name="previous">Previous</string>
+    <string name="purchased_remove_ads">Purchased Remove Ads</string>
     <string name="ranking">Ranking</string>
     <string name="ranking_registration_failed">Ranking registration failed</string>
     <string name="ranking_registration">Ranking Registration</string>
