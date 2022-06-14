@@ -3,7 +3,7 @@
 [_**Google Play**_](https://play.google.com/store/apps/details?id=com.wing.tree.n.back.training)
 
 # Preview
-https://user-images.githubusercontent.com/80195353/173703802-82aa62f6-e7c2-4a75-a38c-b10f9021e5c6.mp4
+<p align="center">https://user-images.githubusercontent.com/80195353/173703802-82aa62f6-e7c2-4a75-a38c-b10f9021e5c6.mp4</p>
 
 # Features
 1. 메인
