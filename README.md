@@ -4,9 +4,10 @@
 
 <img src="https://lh3.googleusercontent.com/OMMWlyYOLHtpqkIY5ru36MvJ3_n-VAirmY92zNENpNhzIwioDdmdn18yDSogDp-n9eA" alt="image" /></br>
 
-## Preview
+# Preview
+[![N-Back Training]([https://i.imgur.com/vKb2F1B.png)](https://play.google.com/store/apps/details?id=com.wing.tree.n.back.training)](https://www.youtube.com/shorts/2ElQ4g1LIXs)
 
-## Features
+# Features
 1. 메인
 
 2. 플레이
@@ -21,9 +22,10 @@
 | version | log |
 | --- | --- |
 | 1 (1.0) | 첫 번째 버전 출시 |
-| 2 (1.1) |  |
+| 2 (1.1) | 인앱 결제 추가 |
 | 5 (1.2) | Firebase Crashlytics 추가 |
-## Tech Stack
+
+# Tech Stack
 - AAC (Android Architecture Components)
 - Clean Architecture(Multi Modules)
 - Kotlin Coroutine, Flow
