@@ -4,11 +4,25 @@
 
 <img src="https://lh3.googleusercontent.com/OMMWlyYOLHtpqkIY5ru36MvJ3_n-VAirmY92zNENpNhzIwioDdmdn18yDSogDp-n9eA" alt="image" /></br>
 
-## Description
-N-Back Training 게임 앱입니다.<br>
-플레이 방법은 현재 표시되는 숫자와 N 라운드 전에 표시된 숫자가 같으면 O 버튼을, 다르면 X 버튼을 누르는 것입니다.<br>
-자세한 설명은 앱 내에서 확인하실 수 있습니다.
+## Preview
 
+## Features
+1. 메인
+
+2. 플레이
+
+3. 랭킹
+
+4. 기록
+
+5. 인앱 결제
+
+# Release Note
+| version | log |
+| --- | --- |
+| 1 (1.0) | 첫 번째 버전 출시 |
+| 2 (1.1) |  |
+| 5 (1.2) | Firebase Crashlytics 추가 |
 ## Tech Stack
 - AAC (Android Architecture Components)
 - Clean Architecture(Multi Modules)
