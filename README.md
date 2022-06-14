@@ -7,6 +7,7 @@
 
 # Features
 1. 메인
+
 <img src="https://lh3.googleusercontent.com/OMMWlyYOLHtpqkIY5ru36MvJ3_n-VAirmY92zNENpNhzIwioDdmdn18yDSogDp-n9eA" alt="image" /></br>
 - 게임 옵션 설정
 - 다른 화면으로 이동
