@@ -23,7 +23,6 @@
 - 플레이 기록을 확인할 수 있으며, 삭제 기능을 지원합니다.
 
 ## 온보딩
-<img src="https://lh3.googleusercontent.com/OMMWlyYOLHtpqkIY5ru36MvJ3_n-VAirmY92zNENpNhzIwioDdmdn18yDSogDp-n9eA" alt="image" /></br>
 - N-Back Training의 플레이 방법을 소개합니다.
 - 앱을 처음 실행하면 즉시 표시됩니다.
 - 메인의 '플레이 방법' 버튼을 클릭하여 진입할 수 있습니다.
