@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.lifecycleScope
 import com.android.billingclient.api.Purchase
 import com.google.android.gms.ads.*
 import com.wing.tree.n.back.training.domain.util.not
@@ -57,8 +58,10 @@ import com.wing.tree.n.back.training.presentation.view.shared.TopAppbar
 import com.wing.tree.n.back.training.presentation.view.training.TrainingActivity
 import com.wing.tree.n.back.training.presentation.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.lang.RuntimeException
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(),
@@ -456,7 +459,7 @@ private fun AdView(adsRemoved: Boolean, modifier: Modifier = Modifier) {
                     modifier = modifier.fillMaxWidth(),
                     factory = { context ->
                         AdView(context).apply {
-                            adSize = AdSize.BANNER
+                            setAdSize(AdSize.BANNER)
                             adUnitId = context.getString(
                                 if (BuildConfig.DEBUG) {
                                     R.string.sample_banner_ad_unit_id
